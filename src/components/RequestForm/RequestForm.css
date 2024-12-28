@@ -1,0 +1,132 @@
+.request-header {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.request-header h1{
+    color:#02BC77;
+    border-bottom: 2px solid black; 
+    display:inline-block; 
+}
+
+.request-form-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.request-container1{
+    margin-top: 20px;
+    /* background-color: aqua; */
+    border-radius: 5px;
+    width: 50vw;
+    height: 30vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    border-top: 0.1px solid rgba(0, 0, 0, 0.1); 
+}
+
+.request-container1-row1{
+    display: flex;
+    justify-content: space-around;
+}
+
+.request-container1-row2{
+    display: flex;
+    justify-content: space-around
+}
+
+.request-container1 label{
+  display: block; /* ทำให้ label อยู่คนละบรรทัด */
+  margin-bottom: 8px; /* เพิ่มระยะห่างระหว่าง label กับ input */
+  font-size: 18px;
+}
+
+.request-container1 input{
+    width: 270px;
+    height: 25px;
+  }
+
+  .request-container2{
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 30px;
+    /* background-color: rgb(0, 255, 26); */
+    border-radius: 5px;
+    width: 50vw;
+    height: 45vh;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    border-top: 0.1px solid rgba(0, 0, 0, 0.1); 
+}
+
+.request-container2 p{
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.request-container2 input{
+    margin-right: 10px;
+    margin-left: 20px;
+}
+
+.radio-control {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; 
+    align-items: flex-start; 
+    gap: 20px; 
+}
+
+.radio-item {
+    display: flex; 
+    align-items: center; 
+}
+
+mark{
+    font-size: 16px;
+}
+#health{
+    background-color: rgba(72, 139, 240, 0.445);
+    border-radius: 8px;
+    width: fit-content;
+    padding: 4px;
+}
+
+#entrepreneur{
+    background-color: rgba(72, 170, 240, 0.445);
+    border-radius: 8px;
+    padding: 4px;
+    width: fit-content;
+}
+
+#aesthetics{
+    background-color: rgba(72, 240, 201, 0.445);
+    border-radius: 8px;
+    padding: 4px;
+    width: fit-content;
+}
+
+#language{
+    background-color: rgba(72, 240, 89, 0.445);
+    border-radius: 8px;
+    padding: 4px;
+    width: fit-content;
+}
+#citizen{
+    background-color: rgba(204, 240, 72, 0.445);
+    border-radius: 8px;
+    padding: 4px;
+    width: fit-content;
+}
+
+.submit-form button{
+    border: none;
+    width: 140px;
+    height: 50px;
+    background-color: #02BC77;
+    border-radius: 10px;
+    color: rgb(255, 255, 255);
+    margin-bottom: 20px;
+}

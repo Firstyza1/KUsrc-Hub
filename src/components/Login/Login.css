@@ -1,0 +1,74 @@
+.login-page {
+    background-image: url("src/assets/images/1.png");
+    background-size: cover; /* ให้รูปภาพครอบคลุมพื้นที่ */
+    background-position: center; /* จัดตำแหน่งรูปภาพให้อยู่ตรงกลาง */
+    height: 83vh; /* ให้ความสูงเต็มหน้าจอ */
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center; 
+  }
+  
+  .login-container{
+    background-color: rgba(255, 255, 255, 0.88);
+    width: 500px;
+    height: 500px;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .email-control {
+    padding-right: 70px;
+ }
+
+ .password-control {
+    padding-right: 50px;
+ }
+
+.email-control label{
+    display: block; /* ทำให้ label อยู่คนละบรรทัด */
+  margin-bottom: 8px; /* เพิ่มระยะห่างระหว่าง label กับ input */
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.email-control input{
+    width: 270px;
+    height: 25px;
+    border: none;
+    border-radius: 5px;
+    background-color: rgba(142, 138, 138, 0.226);
+}
+
+.password-control label{
+    display: block; /* ทำให้ label อยู่คนละบรรทัด */
+  margin-bottom: 8px; /* เพิ่มระยะห่างระหว่าง label กับ input */
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.password-control input{
+    margin-right: 10px;
+    width: 270px;
+    height: 25px;
+    border: none;
+    border-radius: 5px;
+    background-color: rgba(142, 138, 138, 0.26);
+}
+
+.submit-button button{
+    border: none;
+    width: 120px;
+    height: 40px;
+    background-color: #02BC77;
+    border-radius: 10px;
+    color: rgb(255, 255, 255);
+}
+
+.icon-hide{
+    display: inline;
+}
+
