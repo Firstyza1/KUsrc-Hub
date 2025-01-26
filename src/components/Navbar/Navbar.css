@@ -1,67 +1,128 @@
-.header{
-    box-shadow: 0px 2px 5px rgba(59, 59, 59, 0.3);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 60px;
+.header {
+  box-shadow: 0px 2px 5px rgba(59, 59, 59, 0.3);
+  display: flex;
+  padding: 10px 20px;
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 1;
+  background-color: white;
+  height: 80px;
+}
+body {
+  padding-top: 81px;
 }
 
-.header a{
-    text-decoration: none;
-    color: #000;
-    font-size: 20px;
+.header a {
+  text-decoration: none;
+  color: #000;
+  font-size: 16px;
 }
 
 .navbar {
-    display: flex;
-    gap: 60px; /* ระยะห่างระหว่างลิงก์ */
-    margin-right: 200px;
-  }
+  display: flex;
+  width: 100%;
+  align-items: center;
+}
 
-  .navbar-button {
-    display: flex;
-    align-items: center; 
-    gap: 60px; /* ระยะห่างระหว่างลิงก์ */
-  }
+.navbar-link {
+  display: flex;
+  gap: 60px;
+  margin-left: 60px;
+}
 
-  .navbar-button i{
+.navbar-button {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  
+}
+
+.navbar-button i {
+  color: #f6e440;
+  font-size: 20px;
+}
+
+.register-button {
+  border: 2px solid gray;
+  border-radius: 20px;
+  padding: 10px 20px;
+  transition: transform 0.2s ease;
+}
+
+.login-button {
+  background-color: #02bc77;
+  border-radius: 20px;
+  padding: 10px 20px;
+  color: #ffffff !important;
+  transition: transform 0.2s ease;
+}
+
+.logo-image {
+  width: 50px; 
+  height: auto; 
+}
+
+.navbar-link a:hover {
+  color: #02bc77;
+  transform: scale(1.1);
+}
+
+.register-button:hover {
+  transform: scale(1.05);
+}
+
+.login-button:hover {
+  transform: scale(1.05);
+}
+
+.navMoblie {
+  display: none;
+}
+
+@media screen and (max-width: 768px) {
+  .notification-btn i {
     color: #f6e440;
   }
-
-  .register-button{
-    border: 2px solid gray;
-    border-radius: 20px;
-    padding: 20px;
-  }
-
-  .login-button{
-    background-color: #02BC77;
-    border-radius: 20px;
-    padding: 20px;
-    color: #ffffff !important;
-  }
-
-  .logo-image{
-    width: 80px;
-    height: 80px;
-  }
-
-  .navbar a:hover {
-    color: #02BC77;  /* เปลี่ยนสีของข้อความเมื่อ hover */
-  }
-
-  .register-button:hover {
-    transform: scale(1.1);
-    border-radius: 20px;
-    padding: 20px;
-    /* color: #ffffff !important; */
-  }
-
-  .login-button:hover {
-    background-color: #02BC77;
-    border-radius: 20px;
-    padding: 20px;
-    color: #ffffff !important;
+  .navMenu:hover {
     transform: scale(1.1);
   }
-  
+  .navMoblie {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: 15px;
+    font-size: 24px;
+    width: 100%;
+  }
+  .navbar {
+    width: 100%;
+    height: auto;
+    display: flex;
+    position: absolute;
+    flex-direction: column;
+    top: -200%;
+    right: 0;
+    opacity: 1;
+  }
+  .navbar-button {
+    display: none;
+  }
+  .navbar.active {
+    top: 80px;
+    opacity: 1;
+    z-index: 1;
+    align-content: center;
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  .navbar-link {
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+    align-items: center;
+    margin-left: 0px;
+  }
+}

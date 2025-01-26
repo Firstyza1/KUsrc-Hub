@@ -1,113 +1,120 @@
 .register-page {
-    background-image: url("src/assets/images/1.png");
-    background-size: cover; /* ให้รูปภาพครอบคลุมพื้นที่ */
-    background-position: center; /* จัดตำแหน่งรูปภาพให้อยู่ตรงกลาง */
-    height: 83vh; /* ให้ความสูงเต็มหน้าจอ */
-    width: 100vw;
-    display: flex;
-    justify-content: center;
-    align-items: center; 
-  }
-  
-  .register-container{
-    background-color: rgba(255, 255, 255, 0.88);
-    width: 500px;
-    height: 500px;
-    border-radius: 20px;
+  background-image: url("src/assets/images/1.png");
+  background-size: cover; 
+  background-position: center; 
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; 
+  padding-bottom: 81px;
+}
+
+.input i {
+  font-size: 23px;
+  margin: 0px 15px;
+}
+
+.register-container {
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(255, 255, 255);
+  border-radius: 15px;
+  /* margin: auto; */
+  /* margin-top: 80px; */
+  padding-bottom: 30px;
+  width: 500px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  border-top: 0.1px solid rgba(0, 0, 0, 0.1);
+}
+
+.register-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-top: 30px;
+  gap: 9px;
+}
+
+.register-header .text {
+  color: #02bc77;
+  font-size: 25px;
+  font-weight: 700;
+}
+
+.register-header .underline {
+  height: 0.1em;
+  width: 100%;
+  background-color: #02bc77;
+  border-radius: 9px;
+}
+
+.inputs {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  border-radius: 20px;
+}
+
+.input {
+  display: flex;
+  align-items: center;
+  margin: auto;
+  /* width: 480px;
+  height: 80px; */
+  /* background-color: #eaeaea; */
+  width: 350px;
+  height: 40px;
+  background-color: #e8f0fe;
+  border-radius: 5px;
+}
+.input:hover {
+  border: 0.2px solid #02bc77;
+}
+
+.input input {
+  height: 30px;
+  width: 400px;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #797979;
+  font-size: 15px;
+  margin-right: 15px;
+}
+
+.submit {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #02bc77;
+  border-radius: 20px;
+  padding: 10px 20px;
+  color: #ffffff !important;
+  cursor: pointer;
+}
+
+.submit-containter {
+  margin-top: 50px;
+  justify-content: center;
+  display: flex;
+}
+
+@media screen and (max-width: 500px) {
+  .register-container {
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
+    background-color: rgb(255, 255, 255);
+    width: 100%;
+    height: 100%;
+    border-radius: 0px;
+    margin-top: 0px;
   }
-
-  .register-email-control {
-    padding-right: 70px;
- }
-
- .register-username-control {
-    padding-right: 70px;
- }
-
- .register-password-control {
-    padding-right: 50px;
- }
-
- .register-confirm-password-control {
-    padding-right: 50px;
- }
-
-.register-email-control label{
-    display: block; /* ทำให้ label อยู่คนละบรรทัด */
-  margin-bottom: 8px; /* เพิ่มระยะห่างระหว่าง label กับ input */
-  font-weight: bold;
-  font-size: 18px;
+  .register-page {
+    background-color: rgb(255, 255, 255);
+  }
 }
-
-.register-email-control input{
-    width: 270px;
-    height: 25px;
-    border: none;
-    border-radius: 5px;
-    background-color: rgba(142, 138, 138, 0.226);
-}
-
-.register-username-control label{
-    display: block; /* ทำให้ label อยู่คนละบรรทัด */
-  margin-bottom: 8px; /* เพิ่มระยะห่างระหว่าง label กับ input */
-  font-weight: bold;
-  font-size: 18px;
-}
-
-.register-username-control input{
-    width: 270px;;
-    height: 25px;
-    border: none;
-    border-radius: 5px;
-    background-color: rgba(142, 138, 138, 0.226);
-}
-
-.register-password-control label{
-    display: block; /* ทำให้ label อยู่คนละบรรทัด */
-  margin-bottom: 8px; /* เพิ่มระยะห่างระหว่าง label กับ input */
-  font-weight: bold;
-  font-size: 18px;
-}
-
-.register-password-control input{
-    margin-right: 10px;
-    width: 270px;;
-    height: 25px;
-    border: none;
-    border-radius: 5px;
-    background-color: rgba(142, 138, 138, 0.26);
-}
-
-.register-confirm-password-control label{
-    display: block; /* ทำให้ label อยู่คนละบรรทัด */
-  margin-bottom: 8px; /* เพิ่มระยะห่างระหว่าง label กับ input */
-  font-weight: bold;
-  font-size: 18px;
-}
-
-.register-confirm-password-control input{
-    margin-right: 10px;
-    width: 270px;;
-    height: 25px;
-    border: none;
-    border-radius: 5px;
-    background-color: rgba(142, 138, 138, 0.26);
-}
-
-.register-submit-button button{
-    border: none;
-    width: 120px;
-    height: 40px;
-    background-color: #02BC77;
-    border-radius: 10px;
-    color: rgb(255, 255, 255);
-}
-
-.icon-hide{
-    display: inline;
-}
-

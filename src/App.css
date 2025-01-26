@@ -7,7 +7,7 @@
 .review-subject-container {
     display: flex;
     justify-content: space-between; /* จัดปุ่มไปทางขวา */
-    padding: 40px;
+    margin: 40px;
 }
 
 .requset-button{

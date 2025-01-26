@@ -1,48 +1,43 @@
-import {React,useState} from 'react'
-import Navbar from '../Navbar/Navbar'
-import './Register.css';
+import { React, useState } from "react";
+import Navbar from "../Navbar/Navbar";
+import "./Register.css";
+
 function Register() {
-    const [isPasswordHide, setIsPasswordHide] = useState(true);
-    const showPassword = ()=> setIsPasswordHide(!isPasswordHide);
-    const [isConfirmPasswordHide, setIsConfirmPasswordHide] = useState(true);
-    const showConfirmPassword = ()=> setIsConfirmPasswordHide(!isConfirmPasswordHide);
   return (
     <>
-    <Navbar/>
-    <div className='register-page'>
-          <form className="register-container">
-              <h1>ลงทะเบียน</h1>
-              <div className="register-email-control">
-                  <label>อีเมล</label>
-                  <input type="text" />
-              </div>
-              <div className="register-username-control">
-                  <label>ชื่อผู้ใช้</label>
-                  <input type="text" />
-              </div>
-                <div className="register-password-control">
-                  <label>รหัสผ่าน</label>
-                  <input type={isPasswordHide ? "password":"text"} />
-                  <div className='icon-hide' onClick={showPassword}>
-                   {isPasswordHide ?<i class='bx bx-hide'></i> :<i class='bx bx-show'></i>}
-                  </div>
-                  
-                </div>
-                <div className="register-confirm-password-control">
-                  <label>ยืนยันรหัสผ่าน</label>
-                  <input type={isPasswordHide ? "password":"text"} />
-                  <div className='icon-hide' onClick={showConfirmPassword}>
-                   {isConfirmPasswordHide ?<i class='bx bx-hide'></i> :<i class='bx bx-show'></i>}
-                  </div>
-                  
-                </div>
-              <div className='submit-button'>
-                <button type="submit">ลงทะเบียน</button>
-              </div>
-          </form>
-    </div>
-</>
-  )
+      <Navbar />
+      <div className="register-page">
+        <div className="register-container">
+          <div className="register-header">
+            <div className="text">
+              ลงทะเบียน<div className="underline"></div>
+            </div>
+          </div>
+          <dev className="inputs">
+            <div className="input">
+              <i class="bx bxs-envelope"></i>
+              <input type="text" placeholder="อีเมล" maxLength="40"></input>
+            </div>
+            <div className="input">
+              <i class="bx bxs-user-circle"></i>
+              <input type="text" placeholder="ชื่อผู้ใช้"></input>
+            </div>{" "}
+            <div className="input">
+              <i class="bx bxs-lock-alt"></i>
+              <input type="password" placeholder="รหัสผ่าน"></input>
+            </div>{" "}
+            <div className="input">
+              <i class="bx bxs-lock-alt"></i>
+              <input type="password" placeholder="ยืนยันรหัสผ่าน"></input>
+            </div>
+          </dev>
+          <div className="submit-containter">
+            <div className="submit">ลงทะเบียน</div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
 }
 
-export default Register
+export default Register;
