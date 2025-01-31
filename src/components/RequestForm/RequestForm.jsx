@@ -1,11 +1,20 @@
-import React from "react";
+import { React, useState } from "react";
 import "./RequestForm.css";
 import Navbar from "../Navbar/Navbar";
 import { requestFormSchema } from "../YupValidation/Validation";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useUser } from "../User";
+import axios from "axios";
+import ClipLoader from "react-spinners/ClipLoader";
 
 function RequestForm() {
+  const { user } = useUser();
+  const [error, setError] = useState("");
+  const [showErrorPopup, setShowErrorPopup] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const url = "http://localhost:3000/requestSubject";
+  
   const {
     handleSubmit,
     formState: { errors },
@@ -16,9 +25,41 @@ function RequestForm() {
   });
 
   const onSubmit = async (data) => {
-    console.log(data);
+    setLoading(true);
+    try {
+      const response = await axios.post(url, {
+        user_id: user.user_id,
+        username: user.username,
+        subject_id: data.subjectID,
+        subject_thai: data.subjectThai,
+        subject_eng: data.subjectEnglish,
+        credit: data.credit,
+        category_id: data.selectedSubject,
+      });
+      setError("ส่งคำร้องสำเร็จ!");
+      console.log("Response:", response.data);
+      // alert("ส่งคำร้องสำเร็จ!");
+      reset();
+    } catch (error) {
+      console.error("Error occurred:", error);
+
+      if (error.response) {
+        console.log("Response Error Data:", error.response.data);
+        setError("เกิดข้อผิดพลาด ไม่สามารถส่งคำร้องได้");
+      } else if (error.request) {
+        setError("ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้ กรุณาลองใหม่อีกครั้ง");
+      } else {
+        setError(`เกิดข้อผิดพลาด: ${error.message}`);
+      }
+      setShowErrorPopup(true);
+    } finally {
+      setLoading(false);
+    }
   };
 
+  const closePopup = () => {
+    setShowErrorPopup(false);
+  };
   return (
     <>
       <Navbar />
@@ -52,7 +93,9 @@ function RequestForm() {
                 {...register("subjectThai")}
               ></input>
               {errors.subjectThai && (
-                <div className="request-error">{errors.subjectThai.message}</div>
+                <div className="request-error">
+                  {errors.subjectThai.message}
+                </div>
               )}
             </div>
             <div className="request-input">
@@ -64,7 +107,9 @@ function RequestForm() {
                 {...register("subjectEnglish")}
               ></input>
               {errors.subjectEnglish && (
-                <div className="request-error">{errors.subjectEnglish.message}</div>
+                <div className="request-error">
+                  {errors.subjectEnglish.message}
+                </div>
               )}
             </div>
             <div className="request-input">
@@ -128,16 +173,34 @@ function RequestForm() {
               <mark id="citizen">กลุ่มสาระพลเมืองไทยและพลเมืองโลก</mark>
             </div>
             {errors.selectedSubject && (
-              <div className="request-error">{errors.selectedSubject.message}</div>
+              <div className="request-error">
+                {errors.selectedSubject.message}
+              </div>
             )}
           </div>
           <div className="request-submit">
-            <div className="submit" onClick={handleSubmit(onSubmit)}>
-              ส่งคำร้อง
-            </div>
+            <button
+              className="btn-submit"
+              onClick={handleSubmit(onSubmit)}
+              disabled={loading}
+            >
+              {loading ? (
+                <ClipLoader color={"#ffffff"} size={18} />
+              ) : (
+                "ส่งคำร้อง"
+              )}
+            </button>
           </div>
         </div>
-      </div>
+      </div>{" "}
+      {showErrorPopup && (
+        <div className="error-popup">
+          <div className="popup-content">
+            <p>{error}</p>
+            <button onClick={closePopup}>ปิด</button>
+          </div>
+        </div>
+      )}
     </>
   );
 }

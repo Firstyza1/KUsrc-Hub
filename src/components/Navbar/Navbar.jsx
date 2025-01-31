@@ -39,26 +39,25 @@ const Navbar = () => {
             </div>
 
             <div className="navbar-button" onClick={closeMenu}>
-              {!loading && (
+              {loading ? (
+                // กำลังโหลด
+                <div className="loading-placeholder">กำลังโหลด...</div>
+              ) : user ? (
                 <>
-                  {user ? (
-                    <>
-                      <a className="notification" href="#">
-                        <i className="bx bxs-bell"></i>
-                      </a>
-                      <span>{user.email}</span>
-                      <i className="bx bx-log-out" onClick={logoutUser}></i>
-                    </>
-                  ) : (
-                    <>
-                      <Link className="register-button" to="/Register">
-                        ลงทะเบียน
-                      </Link>
-                      <Link className="login-button" to="/Login">
-                        เข้าสู่ระบบ
-                      </Link>
-                    </>
-                  )}
+                  <a className="notification" href="#">
+                    <i className="bx bxs-bell"></i>
+                  </a>
+                  <span>{user.username}</span>
+                  <i className="bx bx-log-out" onClick={logoutUser}></i>
+                </>
+              ) : (
+                <>
+                  <Link className="register-button" to="/Register">
+                    ลงทะเบียน
+                  </Link>
+                  <Link className="login-button" to="/Login">
+                    เข้าสู่ระบบ
+                  </Link>
                 </>
               )}
             </div>
@@ -70,7 +69,7 @@ const Navbar = () => {
           <i className="bx bxs-bell"></i>
         </div>
         <div className="navMenu" onClick={toggleMenu}>
-          {isMenuOpen ? <i class="bx bx-x"></i> : <i class="bx bx-menu"></i>}
+          {isMenuOpen ? <i className="bx bx-x"></i> : <i className="bx bx-menu"></i>}
         </div>
       </div>
     </header>

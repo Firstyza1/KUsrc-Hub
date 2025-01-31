@@ -1,18 +1,18 @@
 .register-page {
   background-image: url("src/assets/images/1.png");
-  background-size: cover; 
-  background-position: center; 
+  background-size: cover;
+  background-position: center;
   height: 100vh;
   width: 100vw;
   position: fixed;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center; 
+  align-items: center;
   padding-bottom: 81px;
 }
 
-.input i {
+.register-input i {
   font-size: 23px;
   margin: 0px 15px;
 }
@@ -22,10 +22,12 @@
   flex-direction: column;
   background-color: rgb(255, 255, 255);
   border-radius: 15px;
-  /* margin: auto; */
-  /* margin-top: 80px; */
-  padding-bottom: 30px;
+  max-width: 95%;
   width: 500px;
+  /* margin: auto; */
+  /* margin-top: 100px; */
+  /* padding-bottom: 40px; */
+  /* width: 500px; */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
   border-top: 0.1px solid rgba(0, 0, 0, 0.1);
 }
@@ -52,31 +54,32 @@
   border-radius: 9px;
 }
 
-.inputs {
+.register-inputs {
   margin-top: 50px;
   display: flex;
   flex-direction: column;
   gap: 25px;
   border-radius: 20px;
+  margin-right: 80px;
+  margin-left: 80px;
 }
 
-.input {
+.register-input {
   display: flex;
   align-items: center;
   margin: auto;
-  /* width: 480px;
-  height: 80px; */
-  /* background-color: #eaeaea; */
   width: 350px;
   height: 40px;
   background-color: #e8f0fe;
   border-radius: 5px;
+  width: 100%;
+  padding: 5px 10px;
 }
-.input:hover {
+.register-input:hover {
   border: 0.2px solid #02bc77;
 }
 
-.input input {
+.register-input input {
   height: 30px;
   width: 400px;
   background: transparent;
@@ -85,6 +88,7 @@
   color: #797979;
   font-size: 15px;
   margin-right: 15px;
+  width: 100%;
 }
 
 .submit {
@@ -96,16 +100,20 @@
   padding: 10px 20px;
   color: #ffffff !important;
   cursor: pointer;
+  width: 100%;
 }
 
 .submit-containter {
   margin-top: 50px;
   justify-content: center;
   display: flex;
+  margin-bottom: 50px;
+  margin-right: 80px;
+  margin-left: 80px;
 }
 
 @media screen and (max-width: 500px) {
-  .register-container {
+  /* .register-container {
     display: flex;
     flex-direction: column;
     background-color: rgb(255, 255, 255);
@@ -116,5 +124,17 @@
   }
   .register-page {
     background-color: rgb(255, 255, 255);
-  }
+  } */
+}
+
+.Button-register {
+  display: flex;
+  justify-content: center;
+  font-size: 14px;
+  color: #02bc77;
+  cursor: pointer;
+  margin: 5px 77px;
+}
+.Button-register a {
+  color: #02bc77;
 }
