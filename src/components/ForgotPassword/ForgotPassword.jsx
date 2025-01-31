@@ -7,6 +7,7 @@ import { ResetPasswordFormSchema } from "../YupValidation/Validation";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import ClipLoader from "react-spinners/ClipLoader";
+
 function ForgotPassword() {
   const navigate = useNavigate();
   const [error, setError] = useState("");

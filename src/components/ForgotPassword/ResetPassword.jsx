@@ -31,7 +31,7 @@ function ResetPassword() {
     try {
       const response = await axios.post("http://localhost:3000/resetPassword", {
         email: email,
-        ResetPassword: data.confirmPassword,
+        newPassword: data.confirmPassword,
       });
       // localStorage.removeItem("email");
       navigate("/login");
