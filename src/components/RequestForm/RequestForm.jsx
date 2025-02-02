@@ -10,11 +10,9 @@ import ClipLoader from "react-spinners/ClipLoader";
 
 function RequestForm() {
   const { user } = useUser();
-  const [error, setError] = useState("");
-  const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [loading, setLoading] = useState(false);
   const url = "http://localhost:3000/requestSubject";
-  
+
   const {
     handleSubmit,
     formState: { errors },
@@ -36,30 +34,26 @@ function RequestForm() {
         credit: data.credit,
         category_id: data.selectedSubject,
       });
-      setError("ส่งคำร้องสำเร็จ!");
+      alert("ส่งคำร้องสำเร็จ!");
       console.log("Response:", response.data);
       // alert("ส่งคำร้องสำเร็จ!");
       reset();
     } catch (error) {
       console.error("Error occurred:", error);
-
+      alert("Error occurred:", error);
       if (error.response) {
         console.log("Response Error Data:", error.response.data);
-        setError("เกิดข้อผิดพลาด ไม่สามารถส่งคำร้องได้");
+        alert("เกิดข้อผิดพลาด ไม่สามารถส่งคำร้องได้");
       } else if (error.request) {
-        setError("ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้ กรุณาลองใหม่อีกครั้ง");
+        alert("ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้ กรุณาลองใหม่อีกครั้ง");
       } else {
-        setError(`เกิดข้อผิดพลาด: ${error.message}`);
+        alert("เกิดข้อผิดพลาด: ${error.message}");
       }
-      setShowErrorPopup(true);
     } finally {
       setLoading(false);
     }
   };
 
-  const closePopup = () => {
-    setShowErrorPopup(false);
-  };
   return (
     <>
       <Navbar />
@@ -193,14 +187,6 @@ function RequestForm() {
           </div>
         </div>
       </div>{" "}
-      {showErrorPopup && (
-        <div className="error-popup">
-          <div className="popup-content">
-            <p>{error}</p>
-            <button onClick={closePopup}>ปิด</button>
-          </div>
-        </div>
-      )}
     </>
   );
 }

@@ -12,8 +12,6 @@ import ClipLoader from "react-spinners/ClipLoader";
 function EmailVerify() {
   const location = useLocation();
   const { email } = location.state || {};
-  const [error, setError] = useState("");
-  const [showErrorPopup, setShowErrorPopup] = useState(false);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
@@ -37,21 +35,15 @@ function EmailVerify() {
       navigate("/ResetPassword", { state: { email: email } });
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        setError("รหัส OTP ไม่ถูกต้อง");
-        setShowErrorPopup(true);
+        alert("รหัส OTP ไม่ถูกต้อง");
       } else if (error.response && error.response.status === 400) {
-        setError("รหัส OTP หมดอายุ");
-        setShowErrorPopup(true);
+        alert("รหัส OTP หมดอายุ");
       } else {
-        setError("เกิดข้อผิดพลาด");
-        setShowErrorPopup(true);
+        alert("เกิดข้อผิดพลาด");
       }
     } finally {
       setLoading(false);
     }
-  };
-  const closePopup = () => {
-    setShowErrorPopup(false);
   };
 
   return (
@@ -98,14 +90,6 @@ function EmailVerify() {
           </div>
         </div>
       </div>{" "}
-      {showErrorPopup && (
-        <div className="error-popup">
-          <div className="popup-content">
-            <p>{error}</p>
-            <button onClick={closePopup}>ปิด</button>
-          </div>
-        </div>
-      )}
     </>
   );
 }

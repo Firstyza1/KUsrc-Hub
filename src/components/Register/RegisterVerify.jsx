@@ -7,12 +7,11 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import ClipLoader from "react-spinners/ClipLoader";
 
 function RegisterVerify() {
   const location = useLocation();
   const { email, password, username } = location.state || {};
-  const [error, setError] = useState("");
-  const [showErrorPopup, setShowErrorPopup] = useState(false);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const {
@@ -37,21 +36,15 @@ function RegisterVerify() {
       navigate("/login");
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        setError("รหัส OTP ไม่ถูกต้อง");
-        setShowErrorPopup(true);
+        alert("รหัส OTP ไม่ถูกต้อง");
       } else if (error.response && error.response.status === 400) {
-        setError("รหัส OTP หมดอายุ");
-        setShowErrorPopup(true);
+        alert("รหัส OTP หมดอายุ");
       } else {
-        setError("เกิดข้อผิดพลาด");
-        setShowErrorPopup(true);
+        alert("เกิดข้อผิดพลาด");
       }
     } finally {
       setLoading(false);
     }
-  };
-  const closePopup = () => {
-    setShowErrorPopup(false);
   };
 
   return (
@@ -98,14 +91,6 @@ function RegisterVerify() {
           </div>
         </div>
       </div>{" "}
-      {showErrorPopup && (
-        <div className="error-popup">
-          <div className="popup-content">
-            <p>{error}</p>
-            <button onClick={closePopup}>ปิด</button>
-          </div>
-        </div>
-      )}
     </>
   );
 }

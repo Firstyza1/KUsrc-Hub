@@ -10,12 +10,13 @@ import { PasswordFormSchema } from "../YupValidation/Validation";
 import ClipLoader from "react-spinners/ClipLoader";
 
 function ResetPassword() {
-  const [error, setError] = useState("");
-  const [showErrorPopup, setShowErrorPopup] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const { email } = location.state || {};
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConPassword, setshowConPassword] = useState(false);
+
   const {
     handleSubmit,
     formState: { errors },
@@ -36,14 +37,10 @@ function ResetPassword() {
       // localStorage.removeItem("email");
       navigate("/login");
     } catch (error) {
-      setError("เกิดข้อผิดพลาด");
-      setShowErrorPopup(true);
+      alert("เกิดข้อผิดพลาด");
     } finally {
       setLoading(false);
     }
-  };
-  const closePopup = () => {
-    setShowErrorPopup(false);
   };
 
   return (
@@ -67,10 +64,15 @@ function ResetPassword() {
               <div className="login-input">
                 <i className="bx bxs-lock-alt"></i>
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   placeholder="รหัสผ่าน"
                   {...register("password")}
                 ></input>
+                <i
+                  className={showPassword ? "bx bx-show" : " bx bx-hide"}
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{ cursor: "pointer", margin: 0 }}
+                ></i>
               </div>
               {errors.password && (
                 <div className="text-error">{errors.password.message}</div>
@@ -80,10 +82,15 @@ function ResetPassword() {
               <div className="login-input">
                 <i className="bx bxs-lock-alt"></i>
                 <input
-                  type="password"
+                  type={showConPassword ? "text" : "password"}
                   placeholder="ยืนยันรหัสผ่าน"
                   {...register("confirmPassword")}
-                ></input>
+                ></input>{" "}
+                <i
+                  className={showConPassword ? "bx bx-show" : " bx bx-hide"}
+                  onClick={() => setshowConPassword(!showConPassword)}
+                  style={{ cursor: "pointer", margin: 0 }}
+                ></i>
               </div>
               {errors.confirmPassword && (
                 <div className="text-error">
@@ -103,14 +110,6 @@ function ResetPassword() {
           </div>
         </div>
       </div>{" "}
-      {showErrorPopup && (
-        <div className="error-popup">
-          <div className="popup-content">
-            <p>{error}</p>
-            <button onClick={closePopup}>ปิด</button>
-          </div>
-        </div>
-      )}
     </>
   );
 }

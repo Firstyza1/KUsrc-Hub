@@ -10,10 +10,11 @@ import axios from "axios";
 import ClipLoader from "react-spinners/ClipLoader";
 
 function Register() {
-  const [error, setError] = useState("");
-  const [showErrorPopup, setShowErrorPopup] = useState(false);
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConPassword, setshowConPassword] = useState(false);
+
   const {
     handleSubmit,
     formState: { errors },
@@ -24,7 +25,7 @@ function Register() {
   });
   const onSubmit = async (data) => {
     console.log(data);
-    setLoading(true); 
+    setLoading(true);
     try {
       const response = await axios.post("http://localhost:3000/sendOTP", {
         email: data.email,
@@ -41,22 +42,17 @@ function Register() {
       });
     } catch (error) {
       if (error.response && error.response.status === 400) {
-        setError("อีเมลถูกใช้ไปแล้ว");
-        setShowErrorPopup(true);
+        alert("อีเมลถูกใช้ไปแล้ว");
       } else if (error.response && error.response.status === 401) {
-        setError("ชื่อผู้ใช้ถูกใช้ไปแล้ว");
-        setShowErrorPopup(true);
+        alert("ชื่อผู้ใช้ถูกใช้ไปแล้ว");
       } else {
-        setError("เกิดข้อผิดพลาด");
-        setShowErrorPopup(true);
+        alert("เกิดข้อผิดพลาด");
       }
-    }finally {
-      setLoading(false); 
+    } finally {
+      setLoading(false);
     }
   };
-  const closePopup = () => {
-    setShowErrorPopup(false);
-  };
+
   return (
     <>
       <Navbar />
@@ -99,10 +95,15 @@ function Register() {
               <div className="register-input">
                 <i class="bx bxs-lock-alt"></i>
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   placeholder="รหัสผ่าน"
                   {...register("password")}
-                ></input>
+                ></input>{" "}
+                <i
+                  className={showPassword ? "bx bx-show" : " bx bx-hide"}
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{ cursor: "pointer", margin: 0 }}
+                ></i>
               </div>
               {errors.password && (
                 <div className="text-error">{errors.password.message}</div>
@@ -112,10 +113,15 @@ function Register() {
               <div className="register-input">
                 <i class="bx bxs-lock-alt"></i>
                 <input
-                  type="password"
+                  type={showConPassword ? "text" : "password"}
                   placeholder="ยืนยันรหัสผ่าน"
                   {...register("confirmPassword")}
                 ></input>
+                <i
+                  className={showConPassword ? "bx bx-show" : " bx bx-hide"}
+                  onClick={() => setshowConPassword(!showConPassword)}
+                  style={{ cursor: "pointer", margin: 0 }}
+                ></i>
               </div>
               {errors.confirmPassword && (
                 <div className="text-error">
@@ -125,10 +131,10 @@ function Register() {
             </div>
           </div>
           <div className="Button-register">
-            <Link to="/login">มีบัญอยู่แล้ว</Link>
+            <Link to="/login">มีบัญชีอยู่แล้ว</Link>
           </div>
           <div className="submit-containter">
-          <button
+            <button
               className="submit"
               onClick={handleSubmit(onSubmit)}
               disabled={loading}
@@ -142,14 +148,6 @@ function Register() {
           </div>
         </div>
       </div>{" "}
-      {showErrorPopup && (
-        <div className="error-popup">
-          <div className="popup-content">
-            <p>{error}</p>
-            <button onClick={closePopup}>ปิด</button>
-          </div>
-        </div>
-      )}
     </>
   );
 }

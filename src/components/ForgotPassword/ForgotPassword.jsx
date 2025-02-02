@@ -10,8 +10,6 @@ import ClipLoader from "react-spinners/ClipLoader";
 
 function ForgotPassword() {
   const navigate = useNavigate();
-  const [error, setError] = useState("");
-  const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [loading, setLoading] = useState(false);
   const {
     handleSubmit,
@@ -35,19 +33,15 @@ function ForgotPassword() {
       navigate("/EmailVerify", { state: { email: data.email } });
     } catch (error) {
       if (error.response && error.response.status === 404) {
-        setError("อีเมลไม่ถูกต้อง");
-        setShowErrorPopup(true);
+        alert("อีเมลไม่ถูกต้อง");
       } else {
-        setError("เกิดข้อผิดพลาด");
-        setShowErrorPopup(true);
+        alert("เกิดข้อผิดพลาด");
       }
     } finally {
       setLoading(false);
     }
   };
-  const closePopup = () => {
-    setShowErrorPopup(false);
-  };
+
   return (
     <>
       <Navbar />
@@ -88,14 +82,6 @@ function ForgotPassword() {
           </div>
         </div>
       </div>{" "}
-      {showErrorPopup && (
-        <div className="error-popup">
-          <div className="popup-content">
-            <p>{error}</p>
-            <button onClick={closePopup}>ปิด</button>
-          </div>
-        </div>
-      )}
     </>
   );
 }

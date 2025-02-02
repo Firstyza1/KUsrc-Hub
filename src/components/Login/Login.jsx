@@ -11,11 +11,10 @@ import { useUser } from "../User";
 import ClipLoader from "react-spinners/ClipLoader";
 
 function Login() {
-  const [error, setError] = useState("");
-  const [showErrorPopup, setShowErrorPopup] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { loginUser } = useUser();
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
     handleSubmit,
@@ -36,23 +35,18 @@ function Login() {
 
       if (response.data.token) {
         loginUser(response.data.user, response.data.token);
-        console.log(response.data.user)
+        console.log(response.data.user);
         navigate("/");
       }
     } catch (error) {
       if (error.response?.status === 404 || error.response?.status === 401) {
-        setError("อีเมลหรือรหัสผ่านไม่ถูกต้อง");
+        alert("อีเมลหรือรหัสผ่านไม่ถูกต้อง");
       } else {
-        setError("เกิดข้อผิดพลาด");
+        alert("เกิดข้อผิดพลาด");
       }
-      setShowErrorPopup(true);
     } finally {
       setLoading(false);
     }
-  };
-
-  const closePopup = () => {
-    setShowErrorPopup(false);
   };
 
   return (
@@ -84,10 +78,15 @@ function Login() {
               <div className="login-input">
                 <i className="bx bxs-lock-alt"></i>
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   placeholder="รหัสผ่าน"
                   {...register("password")}
                 />
+                <i
+                  className={showPassword ? "bx bx-show" : " bx bx-hide"}
+                  onClick={() => setShowPassword(!showPassword)}
+                  style={{ cursor: "pointer", margin: 0 }}
+                ></i>
               </div>
               {errors.password && (
                 <div className="text-error">{errors.password.message}</div>
@@ -95,8 +94,8 @@ function Login() {
             </div>
           </div>
           <div className="Button-login">
-            <Link to="/register">มีบัญชีไหม</Link>
-            <Link to="/ForgotPassword">ลืมรหัสผ่านใช่หรือไม่</Link>
+            <Link to="/register">มีบัญชีไหม ?</Link>
+            <Link to="/ForgotPassword">ลืมรหัสผ่านใช่หรือไม่ ?</Link>
           </div>
           <div className="submit-container">
             <button
@@ -113,15 +112,6 @@ function Login() {
           </div>
         </div>
       </div>
-
-      {showErrorPopup && (
-        <div className="error-popup">
-          <div className="popup-content">
-            <p>{error}</p>
-            <button onClick={closePopup}>ปิด</button>
-          </div>
-        </div>
-      )}
     </>
   );
 }
