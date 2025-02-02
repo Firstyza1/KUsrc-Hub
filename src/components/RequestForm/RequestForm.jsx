@@ -36,18 +36,22 @@ function RequestForm() {
       });
       alert("ส่งคำร้องสำเร็จ!");
       console.log("Response:", response.data);
-      // alert("ส่งคำร้องสำเร็จ!");
       reset();
     } catch (error) {
       console.error("Error occurred:", error);
-      alert("Error occurred:", error);
       if (error.response) {
         console.log("Response Error Data:", error.response.data);
-        alert("เกิดข้อผิดพลาด ไม่สามารถส่งคำร้องได้");
+        alert(
+          `เกิดข้อผิดพลาด: ${
+            error.response.data.message || "ไม่สามารถส่งคำร้องได้"
+          }`
+        );
       } else if (error.request) {
+        console.log("Request Error:", error.request);
         alert("ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้ กรุณาลองใหม่อีกครั้ง");
       } else {
-        alert("เกิดข้อผิดพลาด: ${error.message}");
+        console.log("General Error:", error.message);
+        alert(`เกิดข้อผิดพลาด: ${error.message}`);
       }
     } finally {
       setLoading(false);
