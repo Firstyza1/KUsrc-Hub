@@ -1,0 +1,204 @@
+/* ตั้งค่าหน้าหลักให้กึ่งกลาง */
+.edit-subject-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 500px; /* ทำให้เต็มจอ */
+  }
+  
+  /* กล่องฟอร์ม */
+  .edit-subject-container {
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    padding: 20px 80px; /* เพิ่ม padding แนวนอน */
+    max-width: 800px; /* จำกัดขนาด */
+    width: 100%;
+  }
+  
+  /* ส่วนหัว */
+  .edit-subject-header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .edit-subject-header .text {
+    color: #02bc77;
+    font-size: clamp(20px, 2.5vw, 25px);
+    font-weight: 700;
+  }
+  
+  .edit-subject .underline {
+    height: 0.1em;
+    width: 100%;
+    background-color: #02bc77;
+    border-radius: 9px;
+  }
+  
+  /* ฟอร์มข้อมูล */
+  .edit-subject-inputs {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2 คอลัมน์ */
+    gap: 15px;
+    margin: 20px 0;
+  }
+  
+  .edit-subject-input {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  
+  .edit-subject-input label {
+    font-size: 14px;
+    font-weight: 600;
+  }
+  
+  .edit-subject-input input {
+    height: 35px;
+    background: #e8f0fe;
+    border: none;
+    outline: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+  }
+  
+  .edit-subject-input input:hover {
+    border: 1px solid #02bc77;
+  }
+  
+  /* ส่วนเลือกหมวดหมู่ */
+  .edit-subject-inputs-2 {
+    margin: 20px 0;
+  }
+  
+  .edit-subject-inputs-2 .radio-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  
+  .radio-item input[type="radio"] {
+    width: 16px;
+    height: 16px;
+  }
+  
+  mark {
+    font-size: 15px;
+  }
+  
+  #health {
+    background-color: rgba(72, 139, 240, 0.445);
+    border-radius: 8px;
+    padding: 4px;
+  }
+  
+  #entrepreneur {
+    background-color: rgba(72, 170, 240, 0.445);
+    border-radius: 8px;
+    padding: 4px;
+  }
+  
+  #aesthetics {
+    background-color: rgba(72, 240, 201, 0.445);
+    border-radius: 8px;
+    padding: 4px;
+  }
+  
+  #language {
+    background-color: rgba(72, 240, 89, 0.445);
+    border-radius: 8px;
+    padding: 4px;
+  }
+  
+  #citizen {
+    background-color: rgba(204, 240, 72, 0.445);
+    border-radius: 8px;
+    padding: 4px;
+  }
+  
+  /* ปุ่มส่ง */
+  .edit-subject-submit {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .edit-subject-submit .btn-submit {
+    background-color: #02bc77;
+    border-radius: 20px;
+    padding: 10px 20px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    width: 150px;
+    text-align: center;
+  }
+  
+  .edit-subject-submit .btn-submit:disabled {
+    background-color: gray;
+    cursor: not-allowed;
+  }
+  
+  /* แจ้งข้อผิดพลาด */
+  .edit-subject-error {
+    font-size: 13px;
+    color: red;
+  }
+
+  /* ✅ สไตล์สำหรับ Loader Popup */
+.loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* พื้นหลังโปร่งแสง */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.loader {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* ✅ Popup แจ้งเตือน */
+.popup-message {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: white;
+  padding: 15px 20px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+}
+
+/* ✅ กำหนดขนาดไอคอน */
+.popup-message i {
+  font-size: 24px;
+}
+  
+  /* Responsive */
+  @media screen and (max-width: 768px) {
+    .edit-subject-inputs {
+      grid-template-columns: repeat(1, 1fr); /* แสดงเป็น 1 คอลัมน์ */
+    }
+  
+    .edit-subject-container {
+      width: 100%;
+      padding: 20px;
+    }
+  }
