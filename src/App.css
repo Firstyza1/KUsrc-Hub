@@ -1,3 +1,23 @@
+/* body {
+  padding-top: 71px;
+}
+body.no-padding {
+  padding-top:  71 !important;
+} */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+input[type="password"]::-ms-reveal,  /* สำหรับ Edge */
+input[type="password"]::-ms-clear,   /* สำหรับ Edge */
+input[type="password"]::-webkit-credentials-auto-fill-button {
+  /* สำหรับ Chrome */
+  display: none;
+}
+
 .error-popup {
   position: fixed;
   top: 0;
@@ -17,44 +37,59 @@
   font-size: 13px;
   color: red;
 }
-.icon i {
-  margin: 5px 5px;
-  font-size: 27px;
-  cursor: pointer;
-  color: #6f6f6f;
-}
 
-input[type="password"]::-ms-reveal,  /* สำหรับ Edge */
-input[type="password"]::-ms-clear,   /* สำหรับ Edge */
-input[type="password"]::-webkit-credentials-auto-fill-button { /* สำหรับ Chrome */
-  display: none;
-}
-
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-.review-subject-container {
+.popup-page {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(1px);
   display: flex;
-  justify-content: space-between; /* จัดปุ่มไปทางขวา */
-  margin: 40px;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
 }
 
-.requset-button {
-  border: 2px solid gray;
-  border-radius: 10px;
-  padding: 12px;
+button {
+  border: none;
+  outline: none;
 }
 
-a {
-  text-decoration: none;
-  color: black;
+.bxs-dislike {
+  color: #ff0000;
 }
 
-.review-subject-container h1 {
-  color: #02bc77;
-  border-bottom: 2px solid black;
+.bxs-like {
+  color: #543dfc;
 }
+
+.dateTime {
+  position: relative;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.dateTime i{
+  font-size: 15px;
+
+}
+
+/* ลบส่วนนี้หากไม่ต้องการแสดง Tooltip ด้วย CSS */
+/* .dateTime:hover::after {
+  content: attr(title);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 10;
+} */

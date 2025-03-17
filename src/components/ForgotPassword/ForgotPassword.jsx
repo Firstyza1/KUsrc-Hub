@@ -47,14 +47,11 @@ function ForgotPassword() {
       <Navbar />
       <div className="login-page">
         <div className="login-container">
-          <div className="icon" onClick={() => navigate(-1)}>
-            <i className="bx bx-chevron-left"></i>
+          <div className="login-header" >
+            <i className="bx bx-chevron-left" onClick={() => navigate(-1)}></i>
+            <h2 className="text">ลืมรหัสผ่าน</h2>
           </div>
-          <div className="login-header">
-            <div className="text">
-              ลืมรหัสผ่าน<div className="underline"></div>
-            </div>
-          </div>
+
           <div className="login-inputs">
             <div className="email-input">
               <div className="login-input">
@@ -77,7 +74,11 @@ function ForgotPassword() {
               onClick={handleSubmit(onSubmit)}
               disabled={loading}
             >
-              {loading ? <ClipLoader color={"#ffffff"} size={18} /> : "ยืนยัน"}
+              {loading ? (
+                <ClipLoader color={"#ffffff"} size={18} />
+              ) : (
+                <h4>ยืนยัน</h4>
+              )}
             </button>
           </div>
         </div>

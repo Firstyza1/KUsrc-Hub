@@ -32,7 +32,6 @@ function Register() {
         username: data.username,
         password: data.confirmPassword,
       });
-
       navigate("/RegisterVerify", {
         state: {
           email: data.email,
@@ -59,14 +58,14 @@ function Register() {
       <div className="register-page">
         <div className="register-container">
           <div className="register-header">
-            <div className="text">
-              ลงทะเบียน<div className="underline"></div>
-            </div>
+            <h2 className="text">
+              ลงทะเบียน
+            </h2>
           </div>
           <div className="register-inputs">
             <div>
               <div className="register-input">
-                <i class="bx bxs-envelope"></i>
+                <i className="bx bxs-envelope"></i>
                 <input
                   type="text"
                   placeholder="อีเมล"
@@ -80,7 +79,7 @@ function Register() {
             </div>
             <div>
               <div className="register-input">
-                <i class="bx bxs-user-circle"></i>
+                <i className="bx bxs-user-circle"></i>
                 <input
                   type="text"
                   placeholder="ชื่อผู้ใช้"
@@ -93,7 +92,7 @@ function Register() {
             </div>
             <div>
               <div className="register-input">
-                <i class="bx bxs-lock-alt"></i>
+                <i className="bx bxs-lock-alt"></i>
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder="รหัสผ่าน"
@@ -111,7 +110,7 @@ function Register() {
             </div>
             <div>
               <div className="register-input">
-                <i class="bx bxs-lock-alt"></i>
+                <i className="bx bxs-lock-alt"></i>
                 <input
                   type={showConPassword ? "text" : "password"}
                   placeholder="ยืนยันรหัสผ่าน"
@@ -133,7 +132,7 @@ function Register() {
           <div className="Button-register">
             <Link to="/login">มีบัญชีอยู่แล้ว</Link>
           </div>
-          <div className="submit-containter">
+          <div className="submit-container">
             <button
               className="submit"
               onClick={handleSubmit(onSubmit)}
@@ -142,7 +141,7 @@ function Register() {
               {loading ? (
                 <ClipLoader color={"#ffffff"} size={18} />
               ) : (
-                "ลงทะเบียน"
+                <h4>ลงทะเบียน</h4>
               )}
             </button>
           </div>

@@ -48,14 +48,13 @@ function ResetPassword() {
       <Navbar />
       <div className="login-page">
         <div className="login-container">
-          <div className="icon" onClick={() => navigate(-1)}>
-            <i className="bx bx-chevron-left"></i>
+          <div className="login-header" >
+            <i className="bx bx-chevron-left" onClick={() => navigate(-1)}></i>
+            <h2 className="text">เปลี่ยนรหัสผ่าน</h2>
           </div>
-          <div className="login-header">
-            <div className="text">
-              เปลี่ยนรหัสผ่าน<div className="underline"></div>
-            </div>
-          </div>
+          {/* <div className="login-header">
+            <h2 className="text">เปลี่ยนรหัสผ่าน</h2>
+          </div> */}
           <div className="email-text">
             กรุณาใส่รหัสผ่านใหม่สำหรับอีเมล {email}
           </div>
@@ -105,7 +104,11 @@ function ResetPassword() {
               onClick={handleSubmit(onSubmit)}
               disabled={loading}
             >
-              {loading ? <ClipLoader color={"#ffffff"} size={18} /> : "ยืนยัน"}
+              {loading ? (
+                <ClipLoader color={"#ffffff"} size={18} />
+              ) : (
+                <h4>ยืนยัน</h4>
+              )}
             </button>
           </div>
         </div>

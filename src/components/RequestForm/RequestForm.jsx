@@ -65,7 +65,7 @@ function RequestForm() {
         <div className="request-container">
           <div className="request-header">
             <div className="text">
-              แบบฟอร์มเพิ่มรายวิชาลงในระบบ
+              <h4>แบบฟอร์มเพิ่มรายวิชาลงในระบบ</h4>
               <div className="underline"></div>
             </div>
           </div>

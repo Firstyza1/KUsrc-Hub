@@ -1,0 +1,255 @@
+.review-comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+.profile-comment {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.profile-image {
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  object-fit: cover;
+  border: 2px solid #ccc;
+}
+
+.overall-score,
+.pdf-path {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: #e5ebee;
+  padding: 6px 10px;
+  border-radius: 20px;
+}
+.review-btn-container {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background-color: #e5ebee;
+  /* padding: 6px 10px; */
+  border-radius: 20px;
+  padding-right: 10px;
+}
+
+.like-btn i,
+.dis-like-btn i {
+  font-size: 18px;
+  border-radius: 50px;
+  padding: 6px;
+}
+
+.like-btn i:hover,
+.dis-like-btn i:hover,
+.pdf-path:hover {
+  background-color: #dbe4e9;
+}
+.pdf-path:active {
+  background-color: #bac2c6;
+}
+
+.dis-like-btn i:hover {
+  color: #ff0000;
+}
+
+.like-btn i:hover {
+  color: #543dfc;
+}
+
+.dis-like-btn:active i,
+.like-btn:active i {
+  background-color: #bac2c6;
+}
+
+.review-footer {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.bx-dots-horizontal-rounded,
+.bx-edit-alt,
+.bx-trash,
+.bx-flag {
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.dis-like-btn,
+.like-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dis-like-btn i,
+.like-btn i {
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.popup-menu {
+  position: absolute;
+  top: -10px;
+  right: 0;
+  margin-right: 30px;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.2);
+  width: 130px;
+  padding: 10px;
+  z-index: 9;
+}
+
+.popup-menu ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.popup-menu li {
+  padding: 7px 10px;
+  cursor: pointer;
+}
+
+.popup-item {
+  display: flex;
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.popup-menu li:hover {
+  background-color: #e5ebee;
+}
+.popup-menu li:active {
+  background-color: #bac2c6;
+}
+.no-review {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+  /* color: #918e8e; */
+}
+
+.grade {
+  border: 1px solid #02bc77;
+  border-radius: 50%;
+  padding: 3px 6px;
+}
+.profile-info {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+.term {
+  font-size: 14px;
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  align-items: end;
+}
+
+.review-menu {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: space-between;
+}
+.review-btn-containter {
+  display: flex;
+  /* gap: 15px; */
+  flex-wrap: wrap;
+}
+.review-btn {
+  cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  /* background-color: #e5ebee; */
+  color: #000000;
+}
+
+.review-btn:hover {
+  /* background-color: #dbdbdb; */
+  background-color: #e5ebee;
+}
+.review-btn.active {
+  background-color: #02bc77;
+  color: #ffffff;
+}
+
+.review-comment {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin: 10px 0px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+  background: white;
+}
+
+.review-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.review-comment-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.academic-year-filter,
+.term-year-filter {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.filter-review-container {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.overall-score i {
+  font-size: 20px;
+  display: flex;
+  align-items: flex-end;
+  height: 100%;
+}
+.pdf-link {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.pdf-link i {
+  font-size: 18px;
+}
+.hover-effect {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+
+.hover-effect:hover {
+  background-color: #dbe4e9;
+  cursor: pointer;
+}
+.hover-effect:active {
+  background-color: #bac2c6;
+}

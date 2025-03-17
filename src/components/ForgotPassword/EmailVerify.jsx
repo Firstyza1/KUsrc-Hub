@@ -51,15 +51,14 @@ function EmailVerify() {
       <Navbar />
       <div className="login-page">
         <div className="login-container">
-          <div className="icon" onClick={() => navigate(-1)}>
+          <div className="login-header" onClick={() => navigate(-1)}>
             <i className="bx bx-chevron-left"></i>
+            <h2 className="text">ยืนยันอีเมล</h2>
           </div>
-          <div className="login-header">
-            <div className="text">
-              ยืนยันอีเมล<div className="underline"></div>
-            </div>
+
+          <div className="email-text">
+            <p>เราได้ส่งรหัส OTP ไปที่อีเมล</p> <p>{email}</p>
           </div>
-          <div className="email-text">เราได้ส่งรหัส OTP ไปที่อีเมล {email}</div>
           <div className="login-inputs">
             <div className="otp-input">
               <div className="login-input">
@@ -85,7 +84,11 @@ function EmailVerify() {
               onClick={handleSubmit(onSubmit)}
               disabled={loading}
             >
-              {loading ? <ClipLoader color={"#ffffff"} size={18} /> : "ยืนยัน"}
+              {loading ? (
+                <ClipLoader color={"#ffffff"} size={18} />
+              ) : (
+                <h4>ยืนยัน</h4>
+              )}
             </button>
           </div>
         </div>

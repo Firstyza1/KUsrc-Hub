@@ -36,7 +36,7 @@ function Login() {
       if (response.data.token) {
         loginUser(response.data.user, response.data.token);
         console.log(response.data.user);
-        navigate("/");
+        navigate("/Subjects");
       }
     } catch (error) {
       if (error.response?.status === 404 || error.response?.status === 401) {
@@ -55,9 +55,7 @@ function Login() {
       <div className="login-page">
         <div className="login-container">
           <div className="login-header">
-            <div className="text">
-              เข้าสู่ระบบ<div className="underline"></div>
-            </div>
+            <h2 className="text">เข้าสู่ระบบ</h2>
           </div>
           <div className="login-inputs">
             <div>
@@ -106,7 +104,7 @@ function Login() {
               {loading ? (
                 <ClipLoader color={"#ffffff"} size={18} />
               ) : (
-                "เข้าสู่ระบบ"
+                <h4>ข้าสู่ระบบ</h4>
               )}
             </button>
           </div>

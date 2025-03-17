@@ -13,10 +13,10 @@ export const UserProvider = ({ children }) => {
   };
 
   const logoutUser = () => {
+    window.location.href = "/login";
     localStorage.removeItem("authToken");
     localStorage.removeItem("user");
     setUser(null);
-    window.location.href = "/login";
   };
 
   useEffect(() => {
@@ -26,13 +26,13 @@ export const UserProvider = ({ children }) => {
       if (token && storedUser) {
         try {
           const parsedUser = JSON.parse(storedUser);
-          setUser(parsedUser); 
+          setUser(parsedUser);
         } catch (error) {
           console.error("เกิดข้อผิดพลาดในการแปลงข้อมูล user:", error);
           logoutUser();
         }
       }
-      setLoading(false); 
+      setLoading(false);
     };
 
     initializeUser();

@@ -33,6 +33,7 @@ function RegisterVerify() {
         password: password,
         otp: data.otp,
       });
+      alert("สมัครสมาชิกสำเร็จ");
       navigate("/login");
     } catch (error) {
       if (error.response && error.response.status === 401) {
@@ -56,9 +57,9 @@ function RegisterVerify() {
             <i className="bx bx-chevron-left"></i>
           </div>
           <div className="register-header">
-            <div className="text">
+            <h2 className="text">
               ยืนยันอีเมล<div className="underline"></div>
-            </div>
+            </h2>
           </div>
           <div className="email-text">เราได้ส่งรหัส OTP ไปที่อีเมล {email}</div>
           <div className="register-inputs">
@@ -86,11 +87,15 @@ function RegisterVerify() {
               onClick={handleSubmit(onSubmit)}
               disabled={loading}
             >
-              {loading ? <ClipLoader color={"#ffffff"} size={18} /> : "ยืนยัน"}
+              {loading ? (
+                <ClipLoader color={"#ffffff"} size={18} />
+              ) : (
+                <h4>ยืนยัน</h4>
+              )}
             </button>
           </div>
         </div>
-      </div>{" "}
+      </div>
     </>
   );
 }

@@ -27,12 +27,14 @@ export const RegisterFormSchema = yup.object({
   email: yup
     .string()
     .required("* กรุณากรอกอีเมล")
-    .email("* รูปแบบอีเมลไม่ถูกต้อง")
-    .matches(/^[a-zA-Z0-9._%+-]+@ku\.th$/, "* อีเมลต้องใช้ @ku.th เท่านั้น"),
+    .email("* รูปแบบอีเมลไม่ถูกต้อง"),
+  // .matches(/^[a-zA-Z0-9._%+-]+@ku\.th$/, "* อีเมลต้องใช้ @ku.th เท่านั้น"),
   username: yup
     .string()
     .required("* กรุณากรอกชื่อผู้ใช้")
-    .matches(/^[a-zA-Z_]+$/, "* ชื่อผู้ใช้ต้องเป็นภาษาอังกฤษ"),
+    .matches(/^[a-zA-Z_]+$/, "* ชื่อผู้ใช้ต้องเป็นภาษาอังกฤษ")
+    .min(5, "* ชื่อผู้ใช้ต้องมีอย่างน้อย 5 ตัวอักษร")
+    .max(15, "* ชื่อผู้ใช้ต้องไม่เกิน 15 ตัวอักษร"),
   password: yup
     .string()
     .required("* กรุณากรอกรหัสผ่าน")
@@ -105,4 +107,41 @@ export const PasswordFormSchema = yup.object({
     .required("* กรุณากรอกรหัสผ่าน")
     .oneOf([yup.ref("password")], "* รหัสผ่านไม่ตรงกัน")
     .min(6, "* รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร"),
+});
+
+export const ReviewdForm = {
+  review_desc: "",
+  score0: null,
+  score1: null,
+  score2: null,
+  grade: "",
+  semester: "",
+  year: "",
+};
+
+export const ReviewdFormSchema = yup.object().shape({
+  review_desc: yup.string().required("* กรุณากรอกรีวิว"),
+  score0: yup.number().required("* กรุณาให้คะแนน"),
+  score1: yup.number().required("* กรุณาให้คะแนน"),
+  score2: yup.number().required("* กรุณาให้คะแนน"),
+  // grade: yup.string().required("* กรุณาเลือกเกรดที่ได้"),
+  semester: yup.string().required("* กรุณาเลือกภาคเรียน"),
+  year: yup.string().required("* กรุณาเลือกกรอกปีการศึกษา"),
+});
+
+export const PostForm = {
+  post_desc: "",
+};
+
+export const PostFormSchema = yup.object().shape({
+  post_desc: yup.string().required("* กรุณากรอกโพสต์"),
+});
+
+
+export const CommentForm = {
+  comment_desc: "",
+};
+
+export const  CommentFormSchema = yup.object().shape({
+  comment_desc: yup.string().required("* กรุณากรอกความคิดเห็น"),
 });
