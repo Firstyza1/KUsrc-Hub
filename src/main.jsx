@@ -28,7 +28,17 @@ import Comment from "./components/Community/Comment.jsx";
 import DeleteConfirmationPopup from "./components/Popup/DeleteConfirmationPopup.jsx";
 // Create a new QueryClient instance
 const queryClient = new QueryClient();
-
+//admin
+import ManageUser from "./components-admin/ManageUser/ManageUser.jsx";
+import ManageSubject from "./components-admin/ManageSubject/ManageSubject.jsx";
+import ManagePost from "./components-admin/ManagePost/ManagePost.jsx";
+import EditProfileAdmin from "./components-admin/EditProfileAdmin/EditProfileAdmin.jsx";
+import CreateSubjectForm from "./components-admin/CreateSubjectAdmin/CreateSubjectAdmin.jsx";
+import EditSubjectAdmin from "./components-admin/EditSubjectAdmin/EditSubjectAdmin.jsx";
+import ManageReview from "./components-admin/ManageReview/ManageReview.jsx";
+import ManageReportReview from "./components-admin/ManageReportReview/ManageReportReview.jsx";
+import ManageReportPost from "./components-admin/ManageReportPost/ManageReportPost.jsx";
+import ManageReportComment from "./components-admin/ManageReportComment/ManageReportComment.jsx";
 const router = createBrowserRouter([
   {
     path: "/DeleteConfirmationPopup",
@@ -118,6 +128,46 @@ const router = createBrowserRouter([
         <Editprofile />
       </ProtectedRoute>
     ),
+  }, //admin
+  {
+    path: "/ManageUser",
+    element: <ManageUser />,
+  },
+  {
+    path: "/ManageSubject",
+    element: <ManageSubject />,
+  },
+  {
+    path: "/ManagePost",
+    element: <ManagePost />,
+  },
+  {
+    path: "/EditProfileAdmin/:id",
+    element: <EditProfileAdmin />,
+  },
+  {
+    path: "/CreateSubject",
+    element: <CreateSubjectForm />,
+  },
+  {
+    path: "/EditSubjectAdmin/:subject_id",
+    element: <EditSubjectAdmin />,
+  },
+  {
+    path: "/ManageReview",
+    element: <ManageReview />,
+  },
+  {
+    path: "/ManageReportReview",
+    element: <ManageReportReview />,
+  },
+  {
+    path: "/ManageReportPost",
+    element: <ManageReportPost />,
+  },
+  {
+    path: "/ManageReportComment",
+    element: <ManageReportComment />,
   },
 ]);
 

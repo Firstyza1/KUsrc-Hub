@@ -1,0 +1,96 @@
+/* ✅ กำหนด Sidebar */
+.sidebar-container {
+    background-color: #02BC77;
+    width: 60px; /* ✅ ค่าเริ่มต้น Sidebar ปิด */
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: width 0.3s ease;
+    position: fixed;
+    left: 0;
+    top: 0;
+    overflow: hidden;
+}
+
+/* ✅ เมื่อ Sidebar เปิด */
+.sidebar-container.open {
+    width: 250px;
+}
+
+/* ✅ โลโก้ */
+.logo-container-admin {
+    width: 100%;
+    text-align: center;
+    margin-top: 15px;
+}
+
+.logo {
+    width: 40px;
+    transition: width 0.3s ease;
+}
+
+.sidebar-container.open .logo {
+    width: 100px;
+}
+
+/* ✅ เมนูลิงก์ */
+.sidebar-link {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+/* ✅ ปรับให้แต่ละเมนูมีขนาดเท่ากัน */
+.sidebar-link a {
+    text-decoration: none;
+    color: white;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    width: 100%;
+    min-height: 40px; /* ✅ บังคับให้ทุกเมนูสูงเท่ากัน */
+    padding: 10px;
+    transition: background 0.3s ease;
+    white-space: nowrap; /* ✅ ป้องกันข้อความขึ้นบรรทัดใหม่ */
+}
+
+/* ✅ ปรับขนาดไอคอน */
+.sidebar-link a i {
+    font-size: 24px;
+    width: 40px; /* ✅ บังคับให้ไอคอนเท่ากัน */
+    text-align: center;
+}
+
+/* ✅ เมื่อ Sidebar เปิด */
+.sidebar-container.open .sidebar-link a {
+    justify-content: flex-start;
+    padding-left: 20px;
+}
+
+/* ✅ เมื่อ Sidebar ปิด */
+.sidebar-container:not(.open) .sidebar-link a {
+    justify-content: center;
+}
+
+/* ✅ ซ่อนข้อความเมื่อ Sidebar ปิด */
+.sidebar-container:not(.open) .sidebar-link a span {
+    display: none;
+}
+
+/* ✅ ลิงก์ที่ถูกเลือก */
+.sidebar-link .active-link {
+    background-color: #006C67;
+}
+
+/* ✅ เพิ่ม Hover Effect */
+.sidebar-link a:hover {
+    color: #008B74;
+}
+
+/* ✅ ปิดการ Hover สำหรับลิงก์ที่กำลัง Active */
+.sidebar-link .active-link:hover {
+    background-color: #006C67; /* ✅ คงสีเดิม ไม่เปลี่ยนเมื่อ Hover */
+    color: white; /* ✅ ป้องกันการเปลี่ยนสีข้อความ */
+    cursor: default; /* ✅ เปลี่ยนเมาส์เป็นค่าเริ่มต้น */
+}

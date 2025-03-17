@@ -1,0 +1,298 @@
+body.no-padding {
+    padding-top: 0 !important;
+  }
+
+  .manage-report-post-header{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between; 
+    align-items: center; 
+  padding: 30px 124px 0px 180px; /* เพิ่มระยะห่าง */
+  }
+
+.manage-report-post-header p{
+font-size: 24px;
+color: #02BC77;
+}
+
+.admin-profile{
+  width: 200px;
+  height: 50px;
+  border: 1px solid #000000;
+  border-radius: 10px;
+}
+
+.search-report-post-container {
+  display: flex;
+  align-items: center; /* จัดให้อยู่ตรงกลางในแนวตั้ง */
+  justify-content: space-between; /* จัดให้ปุ่มอยู่ด้านขวา */
+  gap: 10px; /* ระยะห่างระหว่าง input กับปุ่ม */
+}
+
+.input-search-report-post {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* ระยะห่างระหว่าง input กับปุ่ม */
+  padding-left: 180px;
+  margin-top: 30px;
+}
+
+.input-search-report-post input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  width: 640px; /* ปรับขนาด input */
+  height: 40px;
+}
+
+.report-post-table-container{
+  height: 68vh;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  color: #4f546c;
+  font-size: 0.9rem;
+  background-color: #ffffff;
+  margin-top: 10px;
+}
+  
+.report-post-button-container {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+/* ✅ ปรับสไตล์ปุ่มให้ไอคอน + ข้อความอยู่ตรงกลาง */
+button.show-button,
+button.delete-button,button.accept-button {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* จัดให้อยู่กึ่งกลาง */
+  gap: 5px;
+  padding: 10px 15px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
+  border-radius: 5px;
+  width: 110px; /* ✅ กำหนดให้ปุ่มมีขนาดเท่ากัน */
+  height: 40px; /* ✅ กำหนดความสูงให้ปุ่ม */
+}
+
+/* ✅ ปรับสีปุ่ม */
+button.show-button {
+  background-color: #57c2d7;
+  color: rgb(255, 255, 255);
+  padding: 10px 24px;
+}
+
+button.delete-button {
+  background-color: #f98b70;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* ✅ จัดให้อยู่กึ่งกลาง */
+  gap: 5px; /* ✅ ระยะห่างระหว่างไอคอนกับข้อความ */
+  padding: 10px 20px; /* ✅ ปรับ padding ให้เหมาะสม */
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 5px;
+  height: 40px;
+}
+
+button.accept-button {
+    background-color: #95eca8;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* ✅ จัดให้อยู่กึ่งกลาง */
+    gap: 5px; /* ✅ ระยะห่างระหว่างไอคอนกับข้อความ */
+    padding: 10px 20px; /* ✅ ปรับ padding ให้เหมาะสม */
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 5px;
+    height: 40px;
+  }
+
+/* ✅ เพิ่ม hover effect */
+button.show-button:hover {
+  background-color: #4ca9bc;
+}
+
+button.delete-button:hover {
+  background-color: #f56a4d;
+}
+
+button.accept-button:hover {
+    background-color: #84d194;
+  }
+
+/* ✅ ปรับขนาดไอคอนให้อยู่ตรงกลาง */
+.manage-post-page button i {
+  font-size: 18px;
+}
+
+.manage-report-post-page table {
+    border-collapse: collapse;
+  box-shadow: 0 5px 10px #e1e5ee;
+  background-color: white;
+  text-align: left;
+  overflow: hidden;
+  min-height: 430px;
+  width: auto;
+  min-width: 1250px;
+  table-layout: fixed; 
+  margin-left: 200px;
+  margin-right: 130px;
+  thead {
+    box-shadow: 0 5px 10px #e1e5ee;
+  }
+
+  th {
+    padding: 1rem 3.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+    font-size: 0.8rem;
+    font-weight: 900;
+    text-align: center;
+  }
+
+  td {
+    padding: 0.5rem 1.6rem;
+    font-size: 0.8rem;
+    text-align: center;
+  }
+
+  a {
+    text-decoration: none;
+    color: #02BC77;
+  }
+ 
+  
+  td:nth-child(2),td:nth-child(3) {
+    overflow-wrap: break-word;
+    word-break: break-all;
+    text-overflow: ellipsis; /* ✅ ใส่ … ถ้าข้อความยาวเกิน */
+    max-width: 50%;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #f4f6fb;
+  }
+
+}
+
+.pagination button {
+  padding: 8px 12px;
+  margin: 5px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* ปุ่มเลขหน้าปกติ */
+.pagination button.active {
+  background-color: #02BC77;
+  color: white;
+  font-weight: bold;
+}
+
+/* ปุ่มเปลี่ยนหน้า */
+.pagination .prev-next-button {
+  background-color: black; /* ✅ สีดำเมื่อกดได้ */
+  color: white;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border-radius: 5px;
+  padding: 8px 12px;
+}
+
+/* ปุ่มเปลี่ยนหน้าเมื่อกดไม่ได้ */
+.pagination .prev-next-button:disabled {
+  background-color: lightgray; /* ✅ สีเทาเมื่อกดไม่ได้ */
+  color: darkgray;
+  cursor: not-allowed;
+}
+
+
+.search-icon-report-review{
+  position: absolute;
+  right: 710px;
+  top: 102px;
+  background: transparent;
+  border: none;
+}
+
+.search-icon-report-review  i {
+  font-size: 18px;
+  color: rgb(168, 165, 165);
+}
+
+
+
+
+.delete-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.delete-popup {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  width: 400px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.popup-buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.cancel-popup-button, .confirm-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.cancel-popup-button {
+  background-color: #ccc;
+  color: rgb(255, 255, 255);
+}
+
+.cancel-popup-button:hover {
+  background-color: #b3b3b3;
+}
+
+
+
+.approve-button{
+  background-color: #95ccec;
+  color: white;
+}
+
+.approve-button:hover {
+  background-color: #7baac5;
+}
