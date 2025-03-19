@@ -24,6 +24,7 @@ import ManageReview from "./components/ManageReview/ManageReview.jsx";
 import ManageReportReview from "./components/ManageReportReview/ManageReportReview.jsx";
 import ManageReportPost from "./components/ManageReportPost/ManageReportPost.jsx";
 import ManageReportComment from "./components/ManageReportComment/ManageReportComment.jsx";
+import Dashboard from "./components/DashBoard/DashBoard.jsx";
 
 const router = createBrowserRouter([
   {
@@ -114,6 +115,7 @@ const router = createBrowserRouter([
     path: "/ManageReportComment",
     element: <ManageReportComment/>,
   },
+  { path: "/Dashboard", element: <Dashboard/> },
 ]);
 
 createRoot(document.getElementById("root")).render(

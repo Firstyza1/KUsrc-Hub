@@ -39,6 +39,9 @@ function SideBar() {
         <NavLink to="/ManageReportComment" className={({ isActive }) => isActive ? "active-link" : ""}>
           <i className="bx bx-task-x"></i> <span>จัดการคำร้องความคิดเห็น</span>
         </NavLink>
+		<NavLink to="/DashBoard" className={({ isActive }) => isActive ? "active-link" : ""}>
+          <i className="bx bx-task-x"></i> <span>แดชบอร์ด</span>
+        </NavLink>
       </div>
     </div>
   );
