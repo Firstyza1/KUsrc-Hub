@@ -12,6 +12,18 @@ import EmailVerify from "./components/ForgotPassword/EmailVerify.jsx";
 import RequestForm from "./components/RequestForm/RequestForm.jsx";
 import ResetPassword from "./components/ForgotPassword/ResetPassword.jsx";
 import RegisterVerify from "./components/Register/RegisterVerify.jsx";
+import EditProfile from "./components/EditProfile/EditProfile.jsx";
+import Profile from "./components/Profile/Profile.jsx";
+import ManageUser from "./components/ManageUser/ManageUser.jsx";
+import ManageSubject from "./components/ManageSubject/ManageSubject.jsx";
+import ManagePost from "./components/ManagePost/ManagePost.jsx";
+import EditProfileAdmin from "./components/EditProfileAdmin/EditProfileAdmin.jsx";
+import CreateSubjectForm from "./components/CreateSubjectAdmin/CreateSubjectAdmin.jsx";
+import EditSubjectAdmin from "./components/EditSubjectAdmin/EditSubjectAdmin.jsx";
+import ManageReview from "./components/ManageReview/ManageReview.jsx";
+import ManageReportReview from "./components/ManageReportReview/ManageReportReview.jsx";
+import ManageReportPost from "./components/ManageReportPost/ManageReportPost.jsx";
+import ManageReportComment from "./components/ManageReportComment/ManageReportComment.jsx";
 
 const router = createBrowserRouter([
   {
@@ -53,6 +65,54 @@ const router = createBrowserRouter([
   {
     path: "/RegisterVerify",
     element: <RegisterVerify />,
+  },
+  {
+    path: "/EditProfile/:id",
+    element: <EditProfile/>,
+  },
+  {
+    path: "/Profile/:id",
+    element: <Profile/>,
+  },
+  {
+    path: "/ManageUser",
+    element: <ManageUser/>,
+  },
+  {
+    path: "/ManageSubject",
+    element: <ManageSubject/>,
+  },
+  {
+    path: "/ManagePost",
+    element: <ManagePost/>,
+  },
+  {
+    path: "/EditProfileAdmin/:id",
+    element: <EditProfileAdmin/>,
+  },
+  {
+    path: "/CreateSubject",
+    element: <CreateSubjectForm/>,
+  },
+  {
+    path: "/EditSubjectAdmin/:subject_id",
+    element: <EditSubjectAdmin/>,
+  },
+  {
+    path: "/ManageReview",
+    element: <ManageReview/>,
+  },
+  {
+    path: "/ManageReportReview",
+    element: <ManageReportReview/>,
+  },
+  {
+    path: "/ManageReportPost",
+    element: <ManageReportPost/>,
+  },
+  {
+    path: "/ManageReportComment",
+    element: <ManageReportComment/>,
   },
 ]);
 

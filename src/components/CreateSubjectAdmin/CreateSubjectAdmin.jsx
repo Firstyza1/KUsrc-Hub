@@ -1,24 +1,25 @@
 import { React, useState } from "react";
-import "./RequestForm.css";
-import Navbar from "../Navbar/Navbar";
-import { requestFormSchema } from "../YupValidation/Validation";
+import "./CreateSubjectAdmin.css";
+import { createSubjectFormSchema } from "../YupValidation/Validation";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useUser } from "../User";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import ClipLoader from "react-spinners/ClipLoader";
-
-function RequestForm() {
-  const { user } = useUser();
+import SideBar from "../SideBar/SideBar";
+function CreateSubjectForm() {
   const [loading, setLoading] = useState(false);
   const url = "http://localhost:3000/requestSubject";
-
+  const navigate = useNavigate();
+  const handleGoBack = () => {
+    navigate(-1);
+  };
   const {
     handleSubmit,
     formState: { errors },
     register,
   } = useForm({
-    resolver: yupResolver(requestFormSchema),
+    resolver: yupResolver(createSubjectFormSchema),
     reValidateMode: "onSubmit",
   });
 
@@ -26,15 +27,13 @@ function RequestForm() {
     setLoading(true);
     try {
       const response = await axios.post(url, {
-        user_id: user.user_id,
-        username: user.username,
         subject_id: data.subjectID,
         subject_thai: data.subjectThai,
         subject_eng: data.subjectEnglish,
         credit: data.credit,
         category_id: data.selectedSubject,
       });
-      alert("ส่งคำร้องสำเร็จ!");
+      alert("สร้างรายวิชาสำเร็จ!");
       console.log("Response:", response.data);
       window.location.reload();
     } catch (error) {
@@ -60,17 +59,18 @@ function RequestForm() {
 
   return (
     <>
-      <Navbar />
-      <div className="request-page">
-        <div className="request-container">
-          <div className="request-header">
+      <SideBar />
+      <div className="create-subject-page">
+        <div className="create-subject-container">
+          <div className="create-subject-header">
+          <i className="bx bx-chevron-left back-icon" onClick={handleGoBack}></i>
             <div className="text">
               แบบฟอร์มเพิ่มรายวิชาลงในระบบ
               <div className="underline"></div>
             </div>
           </div>
-          <div className="request-inputs-1">
-            <div className="request-input">
+          <div className="create-subject-inputs-1">
+            <div className="create-subject-input">
               <label>รหัสวิชา</label>
               <input
                 type="text"
@@ -79,10 +79,12 @@ function RequestForm() {
                 {...register("subjectID")}
               ></input>
               {errors.subjectID && (
-                <div className="request-error">{errors.subjectID.message}</div>
+                <div className="create-subject-error">
+                  {errors.subjectID.message}
+                </div>
               )}
             </div>
-            <div className="request-input">
+            <div className="create-subject-input">
               <label>ชื่อรายวิชา ภาษาไทย</label>
               <input
                 type="text"
@@ -91,12 +93,12 @@ function RequestForm() {
                 {...register("subjectThai")}
               ></input>
               {errors.subjectThai && (
-                <div className="request-error">
+                <div className="create-subject-error">
                   {errors.subjectThai.message}
                 </div>
               )}
             </div>
-            <div className="request-input">
+            <div className="create-subject-input">
               <label>ชื่อรายวิชา ภาษาอังกฤษ</label>
               <input
                 type="text"
@@ -105,12 +107,12 @@ function RequestForm() {
                 {...register("subjectEnglish")}
               ></input>
               {errors.subjectEnglish && (
-                <div className="request-error">
+                <div className="create-subject-error">
                   {errors.subjectEnglish.message}
                 </div>
               )}
             </div>
-            <div className="request-input">
+            <div className="create-subject-input">
               <label>หน่วยกิต</label>
               <input
                 type="text"
@@ -119,11 +121,13 @@ function RequestForm() {
                 {...register("credit")}
               ></input>
               {errors.credit && (
-                <div className="request-error">{errors.credit.message}</div>
+                <div className="create-subject-error">
+                  {errors.credit.message}
+                </div>
               )}
             </div>
           </div>
-          <div className="request-inputs-2">
+          <div className="create-subject-inputs-2">
             <label>หมวดหมู่ศึกษาทั่วไป</label>
             <div className="radio-item">
               <input
@@ -171,12 +175,12 @@ function RequestForm() {
               <mark id="citizen">กลุ่มสาระพลเมืองไทยและพลเมืองโลก</mark>
             </div>
             {errors.selectedSubject && (
-              <div className="request-error">
+              <div className="create-subject-error">
                 {errors.selectedSubject.message}
               </div>
             )}
           </div>
-          <div className="request-submit">
+          <div className="create-subject-submit">
             <button
               className="btn-submit"
               onClick={handleSubmit(onSubmit)}
@@ -195,4 +199,4 @@ function RequestForm() {
   );
 }
 
-export default RequestForm;
+export default CreateSubjectForm;

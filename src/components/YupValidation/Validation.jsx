@@ -68,6 +68,22 @@ export const requestFormSchema = yup.object({
     .required("* กรุณาเลือกหมวดหมู่ศึกษาทั่วไป"),
 });
 
+export const createSubjectFormSchema = yup.object({
+  subjectID: yup.string().required("* กรุณากรอกรหัสวิชา"),
+  subjectThai: yup.string().required("* กรุณากรอกชื่อรายวิชา ภาษาไทย"),
+  subjectEnglish: yup.string().required("* กรุณากรอกชื่อรายวิชา ภาษาอังกฤษ"),
+  credit: yup
+    .number("* กรุณาเลือกหมวดหมู่ศึกษาทั่วไป")
+    .typeError("* กรุณากรอกหน่วยกิตเป็นตัวเลข")
+    .positive("* หน่วยกิตต้องเป็นตัวเลขบวก")
+    .integer("* หน่วยกิตต้องเป็นจำนวนเต็ม"),
+  selectedSubject: yup
+    .number("* กรุณาเลือกหมวดหมู่ศึกษาทั่วไป")
+    .typeError("* กรุณาเลือกหมวดหมู่ศึกษาทั่วไป")
+    .oneOf([1, 2, 3, 4, 5], "* กรุณาเลือกหมวดหมู่ที่ถูกต้อง")
+    .required("* กรุณาเลือกหมวดหมู่ศึกษาทั่วไป"),
+});
+
 export const ResetPasswordForm = {
   email: "",
 };
