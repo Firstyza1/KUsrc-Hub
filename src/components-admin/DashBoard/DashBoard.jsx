@@ -66,9 +66,9 @@ export default function Dashboard() {
         <div className="complaints-container">
           <h2 className="complaints-title">ภาพรวมการร้องเรียน</h2>
           <div className="complaints-list">
-            <ComplaintRow type="การร้องเรียนการรีวิว" count={stat?.stats?.total_reported_reviews} icon={<AlertTriangle className="icon-small" />} />
-            <ComplaintRow type="การร้องเรียนโพสต์" count={stat?.stats?.total_reported_posts} icon={<Flag className="icon-small" />} />
-            <ComplaintRow type="การร้องเรียนความคิดเห็น" count={stat?.stats?.total_reported_comments} icon={<MessageSquare className="icon-small" />} />
+            <ComplaintRow type="รายงานแจ้งลบรีวิว" count={stat?.stats?.total_reported_reviews} icon={<AlertTriangle className="icon-small" />} />
+            <ComplaintRow type="รายงานแจ้งลบโพสต์" count={stat?.stats?.total_reported_posts} icon={<Flag className="icon-small" />} />
+            <ComplaintRow type="รายงานแจ้งลบความคิดเห็น" count={stat?.stats?.total_reported_comments} icon={<MessageSquare className="icon-small" />} />
           </div>
         </div>
       </div>

@@ -21,11 +21,11 @@ function SideBar() {
       case "/ManageReview":
         return "จัดการรีวิว";
       case "/ManageReportReview":
-        return "จัดการคำร้องรีวิว";
+        return "จัดการรายงานแจ้งลบรีวิว";
       case "/ManageReportPost":
-        return "จัดการคำร้องโพสต์";
+        return "จัดการรายงานแจ้งลบโพสต์";
       case "/ManageReportComment":
-        return "จัดการคำร้องความคิดเห็น";
+        return "จัดการรายงานแจ้งลบความคิดเห็น";
       default:
         return "";
     }
@@ -94,20 +94,20 @@ function SideBar() {
             to="/ManageReportReview"
             className={({ isActive }) => (isActive ? "active-link" : "")}
           >
-            <i className="bx bx-task-x"></i> <span>จัดการคำร้องรีวิว</span>
+            <i className="bx bx-task-x"></i> <span>จัดการรายงานแจ้งลบรีวิว</span>
           </NavLink>
           <NavLink
             to="/ManageReportPost"
             className={({ isActive }) => (isActive ? "active-link" : "")}
           >
-            <i className="bx bx-task-x"></i> <span>จัดการคำร้องโพสต์</span>
+            <i className="bx bx-task-x"></i> <span>จัดการรายงานแจ้งลบโพสต์</span>
           </NavLink>
           <NavLink
             to="/ManageReportComment"
             className={({ isActive }) => (isActive ? "active-link" : "")}
           >
             <i className="bx bx-task-x"></i>{" "}
-            <span>จัดการคำร้องความคิดเห็น</span>
+            <span>จัดการรายงานแจ้งลบความคิดเห็น</span>
           </NavLink>
         </div>
       </div>
