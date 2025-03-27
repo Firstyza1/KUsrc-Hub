@@ -1,249 +1,322 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import DataTable from "react-data-table-component";
 import SideBar from "../SideBar/SideBar";
 import { useNavigate } from "react-router-dom";
-import "./ManageUser.css";
-
+import { toast } from "react-toastify";
+import { useUser } from "../../components/UserContext/User";
 function ManageUser() {
   const [users, setUsers] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
+  const [filteredUsers, setFilteredUsers] = useState([]);
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
-  
-  const [errorMessage, setErrorMessage] = useState("");
-
-  useEffect(() => {
-    document.body.classList.add("no-padding");
-    return () => {
-      document.body.classList.remove("no-padding");
-    };
-  }, []);
-
-  const usersPerPage = 5;
   const navigate = useNavigate();
-
+  const [error, setError] = useState(null);
+  const { user } = useUser();
+  // ดึงข้อมูลผู้ใช้จาก API
   useEffect(() => {
     fetchUsers();
   }, []);
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:3000/getUser"
-      );
-      if (response.data.users.length === 0) {
-        setErrorMessage("ไม่มีผู้ใช้");
+      const response = await axios.get("http://localhost:3000/getUser");
+
+      if (response.data.users === 0) {
+        setError("ไม่มีข้อมูล");
       } else {
         setUsers(response.data.users);
-        setErrorMessage("");
+        setFilteredUsers(response.data.users);
       }
     } catch (error) {
-      if (error.response && error.response.status === 404) {
-        setErrorMessage("ไม่มีผู้ใช้");
+      if (error.response.status) {
+        {
+          setError(`เกิดข้อผิดพลาด: ${error.response.status}`);
+        }
       } else {
-        setErrorMessage("เกิดข้อผิดพลาดในการโหลดข้อมูล");
+        setError("เกิดข้อผิดพลาดในการเชื่อมต่อ");
       }
-      console.error("Error fetching users:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
- 
+  // การค้นหา
+  const handleSearch = (e) => {
+    const searchValue = e.target.value.toLowerCase();
+    setSearchText(searchValue);
+
+    const filteredData = users.filter((user) => {
+      return (
+        user.user_id.toString().includes(searchValue) ||
+        user.username.toLowerCase().includes(searchValue) ||
+        user.email.toLowerCase().includes(searchValue) // เพิ่มการค้นหาด้วยอีเมล
+      );
+    });
+    setFilteredUsers(filteredData);
+  };
+
+  // การลบผู้ใช้
   const openDeletePopup = (user) => {
     setSelectedUser(user);
     setShowDeletePopup(true);
   };
 
   const closeDeletePopup = () => {
-    setSelectedUser(null);
     setShowDeletePopup(false);
+    setSelectedUser(null);
   };
 
   const handleDeleteUser = async () => {
     if (!selectedUser) return;
     try {
-      await axios.delete(`http://localhost:3000/deleteUser/${selectedUser.user_id}`);
-      setUsers(users.filter((user) => user.user_id !== selectedUser.user_id));
+      await axios.delete(
+        `http://localhost:3000/deleteUser/${selectedUser.user_id}`,
+        {
+          headers: {
+            authtoken: `Bearer ${user?.token}`,
+          },
+        }
+      );
+      const updatedUsers = users.filter(
+        (user) => user.user_id !== selectedUser.user_id
+      );
+      setUsers(updatedUsers);
+      setFilteredUsers(updatedUsers);
       closeDeletePopup();
+      toast.success("ลบผู้ใช้สำเร็จ", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     } catch (error) {
-      console.error("Error deleting user:", error);
+      // console.error("Error deleting user:", error);
+      toast.error("เกิดข้อผิดพลาด", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   };
 
-  const indexOfLastUser = currentPage * usersPerPage;
-  const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentUsers = users.slice(
-    indexOfFirstUser,
-    indexOfLastUser
-  );
-  const totalPages = Math.ceil(users.length / usersPerPage);
+  // กำหนดคอลัมน์ของ DataTable
+  const columns = [
+    {
+      name: "ลำดับ",
+      selector: (row, index) => index + 1,
+      width: "65px",
+      sortable: false,
+      conditionalCellStyles: [
+        {
+          when: (row) => true,
+          style: {
+            display: "flex",
+            justifyContent: "center",
+          },
+        },
+      ],
+    },
+    {
+      name: "รหัสผู้ใช้",
+      selector: (row) => row.user_id,
+      sortable: true,
+      width: "100px",
+      conditionalCellStyles: [
+        {
+          when: (row) => true,
+          style: {
+            display: "flex",
+            justifyContent: "center",
+          },
+        },
+      ],
+    },
+    {
+      name: "รูปโปรไฟล์",
+      width: "96px",
+      cell: (row) => (
+        <img
+          src={row.user_profile}
+          alt="Profile"
+          className="profile-img"
+          style={{ width: "38px", height: "38px", borderRadius: "50%" }}
+        />
+      ),
+      conditionalCellStyles: [
+        {
+          when: (row) => true,
+          style: {
+            display: "flex",
+            justifyContent: "center",
+          },
+        },
+      ],
+    },
+    {
+      name: "ชื่อผู้ใช้",
+      selector: (row) => row.username,
+      sortable: true,
+    },
+    {
+      name: "อีเมล",
+      selector: (row) => row.email,
+      sortable: true,
+    },
+    {
+      name: "บทบาท",
+      selector: (row) => row.role,
+      sortable: true,
+      width: "130px",
+      conditionalCellStyles: [
+        {
+          when: (row) => true,
+          style: {
+            display: "flex",
+            justifyContent: "center",
+          },
+        },
+      ],
+    },
+    {
+      name: "วันที่สร้าง",
+      selector: (row) =>
+        new Date(row.created_at).toLocaleDateString("th-TH", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        }),
+      sortable: true,
+      width: "130px",
+      conditionalCellStyles: [
+        {
+          when: (row) => true,
+          style: {
+            display: "flex",
+            justifyContent: "center",
+          },
+        },
+      ],
+    },
+    {
+      name: "การดำเนินการ",
+      width: "110px",
+      cell: (row) => (
+        <div className="action-button">
+          <i
+            className="bx bx-pencil"
+            onClick={() => navigate(`/EditProfileAdmin/${row.user_id}`)}
+          ></i>
+          <i className="bx bx-trash" onClick={() => openDeletePopup(row)}></i>
+        </div>
+      ),
+      ignoreRowClick: true,
+      // allowOverflow: true,
+      // button: true,
+    },
+  ];
 
-  const paginate = (pageNumber) => {
-    if (pageNumber >= 1 && pageNumber <= totalPages) {
-      setCurrentPage(pageNumber);
-    }
-  };
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return `${date.getDate()}/${date.getMonth() + 1}/${
-      date.getFullYear() + 543
-    }`;
-  };
   return (
     <>
       <SideBar />
-      <div className="manage-user-page">
-        <div className="manage-user-header">
-          <p>จัดการผู้ใช้</p>
-          <div className="admin-profile"></div>
-        </div>
-
-        <div className="search-user-container">
-          <div className="input-search-user">
-            <input
-              type="text"
-              placeholder="ค้นหาด้วยชื่อผู้ใช้/รหัสผู้ใช้"
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-            />
-            <button
-              className="search-icon"
-              onClick={() => setSearchText("")}
-            >
-              <i className={searchText ? "bx bx-x" : "bx bx-search"}></i>
-            </button>
-          </div>
-        </div>
-
-        <div className="table-container">
-          <table>
-          <thead>
-              <tr>
-                {/* <th>ลำดับที่</th> */}
-                <th>รหัสผู้ใช้</th>
-                <th>รูปโปรไฟล์ผู้ใช้</th>
-                <th>ชื่อผู้ใช้</th>
-                <th>อีเมล</th>
-                <th>วันที่สร้าง</th>
-                <th>การดำเนินการ</th>
-              </tr>
-            </thead>
-            <tbody>
-              {errorMessage ? (
-                <tr>
-                  <td
-                    colSpan="6"
-                    style={{
-                      textAlign: "center",
-                      padding: "20px",
-                      color: "black",
-                    }}
-                  >
-                    {errorMessage}
-                  </td>
-                </tr>
-              ) : currentUsers.length > 0 ? (
-                <>
-                  {currentUsers.map((user, index) => (
-                <tr key={user.user_id}>
-                  {/* <td>{index + indexOfFirstUser + 1}</td> */}
-                  <td>{user.user_id}</td>
-                  <td>
-                    <img src={user.user_profile || "https://i.pinimg.com/736x/2c/47/d5/2c47d5dd5b532f83bb55c4cd6f5bd1ef.jpg"} alt="Profile" className="profile-img" />
-                  </td>
-                  <td>{user.username}</td>
-                  <td>{user.email}</td>
-                  <td>{formatDate(user.created_at)}</td>
-                  <td>
-                    <div className="user-button-container">
-                      <button className="edit-button" onClick={() => navigate(`/EditProfileAdmin/${user.user_id}`)}>
-                        <i className="bx bx-edit"></i> แก้ไข
-                      </button>
-                      <button className="delete-button" onClick={() => openDeletePopup(user)}>
-                        <i className="bx bx-trash"></i> ลบ
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-
-                  {/* 🔹 เติมแถวว่างให้ครบ 5 แถว */}
-                  {Array.from({
-                    length: usersPerPage - currentUsers.length,
-                  }).map((_, i) => (
-                    <tr
-                      key={`empty-${i}`}
-                      style={{ height: "70px", backgroundColor: "#fff" }}
-                    >
-                      <td colSpan="6"></td>
-                    </tr>
-                  ))}
-                </>
-              ) : (
-                <tr>
-                  <td
-                    colSpan="6"
-                    style={{
-                      textAlign: "center",
-                      padding: "20px",
-                      color: "gray",
-                    }}
-                  >
-                    ไม่มีข้อมูล
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-
-        <div className="pagination">
-          <button
-            onClick={() => paginate(currentPage - 1)}
-            disabled={currentPage === 1 || users.length === 0}
-            className={
-              currentPage === 1 || users.length === 0
-                ? "prev-next-button disabled"
-                : "prev-next-button"
-            }
-          >
-            <i className="bx bx-chevron-left"></i>
-          </button>
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button
-              key={i + 1}
-              onClick={() => paginate(i + 1)}
-              className={currentPage === i + 1 ? "active" : ""}
-            >
-              {i + 1}
-            </button>
-          ))}
-          <button
-            onClick={() => paginate(currentPage + 1)}
-            disabled={currentPage === totalPages || users.length === 0}
-            className={
-              currentPage === totalPages || users.length === 0
-                ? "prev-next-button disabled"
-                : "prev-next-button"
-            }
-          >
-            <i className="bx bx-chevron-right"></i>
-          </button>
-        </div>
-      </div>
-
       {showDeletePopup && (
-        <div className="delete-popup-overlay">
-          <div className="delete-popup">
+        <div className="deletePopupOverlay">
+          <div className="deletePopup">
             <h3>คุณต้องการลบผู้ใช้รายนี้ใช่ไหม?</h3>
-            <p>ชื่อผู้ใช้: <strong>{selectedUser?.username}</strong></p>
-            <div className="popup-buttons">
-              <button className="cancel-popup-button" onClick={closeDeletePopup}>ยกเลิก</button>
-              <button className="confirm-button" onClick={handleDeleteUser}>ยืนยัน</button>
+            <p style={{ marginTop: "10px" }}>
+              ชื่อผู้ใช้: {selectedUser?.username}
+            </p>
+            <div className="deletePopupButtons">
+              <button onClick={closeDeletePopup} className="cancelButton">
+                ยกเลิก
+              </button>{" "}
+              <button onClick={handleDeleteUser} className="confirmButton">
+                ยืนยัน
+              </button>
             </div>
           </div>
         </div>
       )}
+      <div className="manage-data-page">
+        <div className="manage-data-container">
+          <div className="table-wrapper">
+            <div className="table-header">
+              <div className="table-search">
+                <i className="bx bx-search"></i>
+                <input
+                  type="text"
+                  placeholder="ค้นหาด้วยชื่อผู้ใช้, รหัสผู้ใช้, หรืออีเมล"
+                  value={searchText}
+                  onChange={handleSearch}
+                  className="search-input"
+                />
+              </div>
+            </div>
+            {loading ? (
+              <div className="no-data-message">กำลังโหลด...</div>
+            ) : (
+              <>
+                {error ? (
+                  <div className="no-data-message">{error}</div>
+                ) : (
+                  <DataTable
+                    columns={columns}
+                    data={filteredUsers}
+                    pagination
+                    highlightOnHover
+                    responsive
+                    striped
+                    defaultSortFieldId={1}
+                    noDataComponent={
+                      <div className="no-data-message">ไม่พบข้อมูล</div>
+                    }
+                    customStyles={{
+                      table: {
+                        style: {
+                          border: "1px solid #ccc", // เส้นขอบรอบตาราง
+                        },
+                      },
+                      headCells: {
+                        style: {
+                          backgroundColor: "white",
+                          color: "black",
+                          fontWeight: "bold",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          whiteSpace: "normal",
+                          wordWrap: "break-word",
+                          boxShadow: "0 6px 6px -5px #e1e5ee;",
+                          // border: "1px solid #ddd", // เส้นแบ่งระหว่างหัวคอลัมน์
+                        },
+                      },
+                      cells: {
+                        style: {
+                          // borderRight: "1px solid #ddd", // เส้นแบ่งระหว่างเซลล์
+                        },
+                      },
+                      rows: {
+                        stripedStyle: {
+                          backgroundColor: "#f4f6fb", // สีพื้นหลังสำหรับแถวสลับ
+                        },
+                      },
+                    }}
+                  />
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      </div>
     </>
   );
 }

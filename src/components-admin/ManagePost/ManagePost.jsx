@@ -1,59 +1,65 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import DataTable from "react-data-table-component";
 import SideBar from "../SideBar/SideBar";
 import { useNavigate } from "react-router-dom";
-import "./ManagePost.css";
-
+import { useUser } from "../../components/UserContext/User";
+import { toast } from "react-toastify";
 function ManagePost() {
   const [posts, setPosts] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [searchText, setSearchText] = useState("");
+  const [filteredPosts, setFilteredPosts] = useState([]);
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
-  
-  const [errorMessage, setErrorMessage] = useState("");
-  const formatDate = (isoString) => {
-    if (!isoString) return "-";
-    const date = new Date(isoString);
-    const day = date.getDate();
-    const month = date.getMonth() + 1;
-    const year = date.getFullYear() + 543;
-    return `${day}/${month}/${year}`;
-  };
-  useEffect(() => {
-    document.body.classList.add("no-padding");
-    return () => {
-      document.body.classList.remove("no-padding");
-    };
-  }, []);
-
-  const subjectsPerPage = 5;
   const navigate = useNavigate();
-
+  const { user } = useUser();
+  // Fetch posts from API
   useEffect(() => {
     fetchPosts();
   }, []);
 
   const fetchPosts = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/getPost");
-      if (response.data.posts.length === 0) {
-        setErrorMessage("ไม่มีข้อมูลโพสต์");
+      const response = await axios.get("http://localhost:3000/getAllPost");
+
+      if (response.data.length === 0) {
+        setError("ไม่มีข้อมูล");
       } else {
-        setPosts(response.data.posts);
-        setErrorMessage("");
+        setPosts(response.data);
+        setFilteredPosts(response.data);
       }
     } catch (error) {
-      if (error.response && error.response.status === 404) {
-        setErrorMessage("ไม่มีข้อมูลโพสต์");
+      if (error.response.status) {
+        {
+          setError(`เกิดข้อผิดพลาด: ${error.response.status}`);
+        }
       } else {
-        setErrorMessage("เกิดข้อผิดพลาดในการโหลดข้อมูล");
+        setError("เกิดข้อผิดพลาดในการเชื่อมต่อ");
       }
-      console.error("Error fetching posts:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
- 
+  // Handle search
+  const handleSearch = (e) => {
+    const searchValue = e.target.value.toLowerCase();
+    setSearchText(searchValue);
+
+    const filteredData = posts.filter((post) => {
+      return (
+        post.post_id.toString().includes(searchValue) ||
+        post.username.toLowerCase().includes(searchValue)
+        //  ||
+        // formatDate(post.created_at).includes(searchValue)
+      );
+    });
+    setFilteredPosts(filteredData);
+  };
+
+  // Handle delete
   const openDeletePopup = (post) => {
     setSelectedPost(post);
     setShowDeletePopup(true);
@@ -67,185 +73,268 @@ function ManagePost() {
   const handleDeletePost = async () => {
     if (!selectedPost) return;
     try {
-      await axios.delete(`http://localhost:3000/deletePost/${selectedPost.post_id}`);
-      const updatedPosts = posts.filter((post) => post.post_id !== selectedPost.post_id);
+      await axios.delete(
+        `http://localhost:3000/deletePost/${selectedPost.post_id}`,
+        {
+          headers: {
+            authtoken: `Bearer ${user?.token}`,
+          },
+        }
+      );
+      const updatedPosts = posts.filter(
+        (post) => post.post_id !== selectedPost.post_id
+      );
       setPosts(updatedPosts);
-
-      if (updatedPosts.slice(indexOfFirstPost, indexOfLastPost).length === 0 && currentPage > 1) {
-        setCurrentPage((prev) => prev - 1);
-      }
-
+      setFilteredPosts(updatedPosts);
       closeDeletePopup();
+      toast.success("ลบโพสต์สำเร็จ", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     } catch (error) {
-      console.error("Error deleting post:", error);
+      // console.error("Error deleting post:", error);
+      toast.error("เกิดข้อผิดพลาด", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   };
 
-  const indexOfLastPost = currentPage * subjectsPerPage;
-  const indexOfFirstPost = indexOfLastPost - subjectsPerPage;
-  const currentPosts = posts.slice(
-    indexOfFirstPost,
-    indexOfLastPost
-  );
-  const totalPages = Math.ceil(posts.length / subjectsPerPage);
+  // Define columns for DataTable
+  const columns = [
+    {
+      name: "ลำดับ",
+      selector: (row, index) => index + 1,
+      width: "65px",
+      sortable: false,
+      conditionalCellStyles: [
+        {
+          when: (row) => true,
+          style: {
+            display: "flex",
+            justifyContent: "center",
+          },
+        },
+      ],
+    },
+    {
+      name: "รหัสโพสต์",
+      selector: (row) => row.post_id,
+      sortable: true,
+      width: "105px",
+      conditionalCellStyles: [
+        {
+          when: (row) => true,
+          style: {
+            display: "flex",
+            justifyContent: "center",
+          },
+        },
+      ],
+    },
+    {
+      name: "เนื้อหา",
+      selector: (row) => row.post_desc,
+      sortable: true,
+      width: "460px",
+    },
+    {
+      name: "จำนวนดิสไลค์",
+      selector: (row) => row.dislike_count,
+      sortable: true,
+      width: "125px",
+      cell: (row) => <div className="table-cell">{row.dislike_count}</div>,
+      conditionalCellStyles: [
+        {
+          when: (row) => true,
+          style: {
+            display: "flex",
+            justifyContent: "center",
+          },
+        },
+      ],
+    },
+    {
+      name: "จำนวนไลค์",
+      selector: (row) => row.like_count,
+      sortable: true,
+      // width: "115px",
+      cell: (row) => <div className="table-cell">{row.like_count}</div>,
+      conditionalCellStyles: [
+        {
+          when: (row) => true,
+          style: {
+            display: "flex",
+            justifyContent: "center",
+          },
+        },
+      ],
+    },
+    {
+      name: "ความคิดเห็น",
+      selector: (row) => row.comment_count,
+      sortable: true,
+      // width: "115px",
+      conditionalCellStyles: [
+        {
+          when: (row) => true,
+          style: {
+            display: "flex",
+            justifyContent: "center",
+          },
+        },
+      ],
+    },
 
-  const paginate = (pageNumber) => {
-    if (pageNumber >= 1 && pageNumber <= totalPages) {
-      setCurrentPage(pageNumber);
-    }
-  };
+    {
+      name: "ผู้เขียน",
+      selector: (row) => row.username,
+      sortable: true,
+      width: "160px",
+      cell: (row) => <div className="table-cell">{row.username}</div>,
+    },
+    {
+      name: "วันที่สร้าง",
+      selector: (row) =>
+        new Date(row.created_at).toLocaleDateString("th-TH", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        }),
+      sortable: true,
+      width: "130px",
+      conditionalCellStyles: [
+        {
+          when: (row) => true,
+          style: {
+            display: "flex",
+            justifyContent: "center",
+          },
+        },
+      ],
+    },
+
+    {
+      name: "การดำเนินการ",
+      width: "110px",
+      cell: (row) => (
+        <div className="action-button">
+          <i
+            className="bx bx-show"
+            onClick={() => navigate(`/Post/${row.post_id}`)}
+          ></i>
+          <i className="bx bx-trash" onClick={() => openDeletePopup(row)}></i>
+        </div>
+      ),
+      ignoreRowClick: true,
+      // allowOverflow: true,
+      // button: true,
+    },
+  ];
 
   return (
     <>
       <SideBar />
-      <div className="manage-post-page">
-        <div className="manage-post-header">
-          <p>จัดการโพสต์</p>
-          <div className="admin-profile"></div>
-        </div>
-
-        <div className="search-post-container">
-          <div className="input-search-post">
-            <input
-              type="text"
-              placeholder="ค้นหาด้วยชื่อผู้เขียน/วันที่"
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-            />
-            <button
-              className="search-icon-post"
-              onClick={() => setSearchText("")}
-            >
-              <i className={searchText ? "bx bx-x" : "bx bx-search"}></i>
-            </button>
-          </div>
-        </div>
-
-        <div className="post-table-container">
-          <table>
-          <thead>
-              <tr>
-                <th>รหัสโพสต์</th>
-                <th>เนื้อหา</th>
-                <th>วันที่สร้าง</th>
-                <th>ผู้เขียน</th>
-                <th>จำนวนความคิดเห็น</th>
-                <th>การดำเนินการ</th>
-              </tr>
-            </thead>
-            <tbody>
-              {errorMessage ? (
-                <tr>
-                  <td
-                    colSpan="6"
-                    style={{
-                      textAlign: "center",
-                      padding: "20px",
-                      color: "black",
-                    }}
-                  >
-                    {errorMessage}
-                  </td>
-                </tr>
-              ) : currentPosts.length > 0 ? (
-                <>
-                  {currentPosts.map((post) => (
-                <tr key={post.post_id}>
-                  <td>{post.post_id}</td>
-                  <td>{post.post_desc}</td>
-                  <td>{formatDate(post.created_at)}</td>
-                  <td>{post.username}</td>
-                  <td>{post.comment_count}</td>
-                  <td>
-                    <div className="post-button-container">
-                      <button className="show-button">
-                        <i className="bx bx-show"></i> ดู
-                      </button>
-                      <button className="delete-button" onClick={() => openDeletePopup(post)}>
-                        <i className="bx bx-trash"></i> ลบ
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-
-                  {/* 🔹 เติมแถวว่างให้ครบ 5 แถว */}
-                  {Array.from({
-                    length: subjectsPerPage - currentPosts.length,
-                  }).map((_, i) => (
-                    <tr
-                      key={`empty-${i}`}
-                      style={{ height: "70px", backgroundColor: "#fff" }}
-                    >
-                      <td colSpan="6"></td>
-                    </tr>
-                  ))}
-                </>
-              ) : (
-                <tr>
-                  <td
-                    colSpan="6"
-                    style={{
-                      textAlign: "center",
-                      padding: "20px",
-                      color: "gray",
-                    }}
-                  >
-                    ไม่มีข้อมูล
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-
-        <div className="pagination">
-          <button
-            onClick={() => paginate(currentPage - 1)}
-            disabled={currentPage === 1 || posts.length === 0}
-            className={
-              currentPage === 1 || posts.length === 0
-                ? "prev-next-button disabled"
-                : "prev-next-button"
-            }
-          >
-            <i className="bx bx-chevron-left"></i>
-          </button>
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button
-              key={i + 1}
-              onClick={() => paginate(i + 1)}
-              className={currentPage === i + 1 ? "active" : ""}
-            >
-              {i + 1}
-            </button>
-          ))}
-          <button
-            onClick={() => paginate(currentPage + 1)}
-            disabled={currentPage === totalPages || posts.length === 0}
-            className={
-              currentPage === totalPages || posts.length === 0
-                ? "prev-next-button disabled"
-                : "prev-next-button"
-            }
-          >
-            <i className="bx bx-chevron-right"></i>
-          </button>
-        </div>
-      </div>
-
       {showDeletePopup && (
-        <div className="delete-popup-overlay">
-          <div className="delete-popup">
-            <h3>คุณต้องการลบโพสต์นี้ใช่ไหม?</h3>
-            <p>ชื่อโพสต์: <strong>{selectedPost?.subject_thai}</strong></p>
-            <div className="popup-buttons">
-              <button className="cancel-popup-button" onClick={closeDeletePopup}>ยกเลิก</button>
-              <button className="confirm-button" onClick={handleDeletePost}>ยืนยัน</button>
+        <div className="deletePopupOverlay">
+          <div className="deletePopup">
+            <h3>คุณต้องการลบโพสต์นี้หรือไม่?</h3>
+            <p
+              style={{ marginTop: "10px" }}
+            >{`รหัสโพสต์: ${selectedPost?.post_id}`}</p>
+            <div className="deletePopupButtons">
+              <button onClick={closeDeletePopup} className="cancelButton">
+                ยกเลิก
+              </button>{" "}
+              <button onClick={handleDeletePost} className="confirmButton">
+                ลบ
+              </button>
             </div>
           </div>
         </div>
       )}
+      <div className="manage-data-page">
+        <div className="manage-data-container">
+          <div className="table-wrapper">
+            <div className="table-header">
+              {/* <h4 className="table-title">ตารางข้อมูลโพสต์</h4> */}
+              <div className="table-search">
+                <i className="bx bx-search"></i>
+                <input
+                  type="text"
+                  placeholder="ค้นหาด้วยชื่อผู้เขียน"
+                  value={searchText}
+                  onChange={handleSearch}
+                  className="search-input"
+                />
+              </div>
+            </div>
+            {loading ? (
+              <div className="no-data-message">กำลังโหลด...</div>
+            ) : (
+              <>
+                {error ? (
+                  <div className="no-data-message">{error}</div>
+                ) : (
+                  <DataTable
+                    columns={columns}
+                    data={filteredPosts}
+                    pagination
+                    highlightOnHover
+                    responsive
+                    striped
+                    defaultSortFieldId={1}
+                    noDataComponent={
+                      <div className="no-data-message">ไม่พบข้อมูล</div>
+                    }
+                    customStyles={{
+                      table: {
+                        style: {
+                          border: "1px solid #ccc", // เส้นขอบรอบตาราง
+                        },
+                      },
+                      headCells: {
+                        style: {
+                          backgroundColor: "white",
+                          color: "black",
+                          fontWeight: "bold",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          whiteSpace: "normal",
+                          wordWrap: "break-word",
+                          boxShadow: "0 6px 6px -5px #e1e5ee;",
+                          // border: "1px solid #ddd", // เส้นแบ่งระหว่างหัวคอลัมน์
+                        },
+                      },
+                      cells: {
+                        style: {
+                          // borderRight: "1px solid #ddd", // เส้นแบ่งระหว่างเซลล์
+                        },
+                      },
+                      rows: {
+                        stripedStyle: {
+                          backgroundColor: "#f4f6fb", // สีพื้นหลังสำหรับแถวสลับ
+                        },
+                      },
+                    }}
+                  />
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      </div>
     </>
   );
 }

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import Navbar from "../Navbar/Navbar";
 import styles from "./Community.module.css";
 import PostPopup from "./PostPopup";
-import { useUser } from "../User";
+import { useUser } from "../UserContext/User";
 import axios from "axios";
 import { useInfiniteQuery } from "react-query";
 import InfiniteScroll from "react-infinite-scroller";
@@ -10,7 +10,8 @@ import Report from "../Popup/Report";
 import { useNavigate } from "react-router-dom";
 import Comment from "../Community/Comment";
 import DeleteConfirmationPopup from "../Popup/DeleteConfirmationPopup";
-
+import { toast } from "react-toastify";
+import PopupLogin from "../Popup/PopupLogin";
 function Community() {
   const [showPostPopup, setShowPostPopup] = useState(false);
   const { user } = useUser();
@@ -19,14 +20,14 @@ function Community() {
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState(null);
   const [deleteType, setDeleteType] = useState(null);
-
+  const [showLogin, setShowLogin] = useState(false);
   const togglePopup = (postId) => {
     setActivePopupId(activePopupId === postId ? null : postId);
   };
-
+  const [search, setSearch] = useState("");
   const sortOptions = [
-    { value: "desc", label: "ใหม่สุด" },
-    { value: "asc", label: "เก่าสุด" },
+    { value: "desc", label: "ใหม่ล่าสุด" },
+    { value: "asc", label: "เก่าที่สุด" },
   ];
   const [sortOrder, setSortOrder] = useState("desc");
 
@@ -37,7 +38,9 @@ function Community() {
         limit: 5,
         sort: sortOrder,
       };
-
+      if (search) {
+        params.search = search;
+      }
       if (user && user.user_id) {
         params.user_id = user.user_id;
       }
@@ -57,7 +60,7 @@ function Community() {
   };
 
   const { data, isLoading, isError, hasNextPage, fetchNextPage, refetch } =
-    useInfiniteQuery(["posts", sortOrder, user?.user_id], fetchPosts, {
+    useInfiniteQuery(["posts", sortOrder, user?.user_id, search], fetchPosts, {
       getNextPageParam: (lastPage) => {
         return lastPage.hasMore ? lastPage.nextPage : undefined;
       },
@@ -79,17 +82,29 @@ function Community() {
 
   const [postId, setPostId] = useState(null);
   const handleReport = (post_id) => {
+    if (!user) {
+      setShowLogin(true);
+      return;
+    }
     setPostId(post_id);
     setReportPost(true);
   };
 
   const handlePostPopup = (post_id) => {
+    if (!user) {
+      setShowLogin(true);
+      return;
+    }
     setPostId(post_id);
     setShowPostPopup(true);
   };
 
   const navigate = useNavigate();
   const goToPost = (post_id) => {
+    if (!user) {
+      setShowLogin(true);
+      return;
+    }
     navigate(`/Post/${post_id}`);
   };
 
@@ -104,18 +119,36 @@ function Community() {
   };
 
   const postReaction = async (post_id, type) => {
-    if (!user || !user.user_id) {
+    if (!user) {
+      setShowLogin(true);
       return;
     }
     try {
-      await axios.post("http://localhost:3000/postReaction", {
-        post_id: post_id,
-        user_id: user.user_id,
-        type: type,
-      });
+      await axios.post(
+        "http://localhost:3000/postReaction",
+        {
+          post_id: post_id,
+          user_id: user.user_id,
+          type: type,
+        },
+        {
+          headers: {
+            authtoken: `Bearer ${user?.token}`,
+          },
+        }
+      );
       refetch();
     } catch (error) {
-      console.error("เกิดข้อผิดพลาด :", error);
+      // console.error("เกิดข้อผิดพลาด :", error);
+      toast.error("เกิดข้อผิดพลาด", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   };
 
@@ -196,7 +229,39 @@ function Community() {
 
     return `วัน${dayOfWeek}ที่ ${day} ${month} ${year} เวลา ${hours}.${minutes} น.`;
   };
-
+  const showSuccessToast = () => {
+    toast.success("เขียนโพสต์สำเร็จ", {
+      position: "top-center",
+      autoClose: 1000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+  const showDeleteSuccessToast = () => {
+    toast.success("ลบโพสต์สำเร็จ", {
+      position: "top-center",
+      autoClose: 1000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+  const showReportToast = () => {
+    toast.success("รายงานโพสต์สำเร็จ", {
+      position: "top-center",
+      autoClose: 1000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
   return (
     <>
       <Navbar />
@@ -209,6 +274,8 @@ function Community() {
                 setShowPostPopup(false);
                 refetch(); // รีเฟชข้อมูลหลังจากแก้ไข
               }}
+              refetch={refetch} // ส่ง refetch ไปยัง PostPopup
+              showSuccessToast={showSuccessToast} // ส่งฟังก์ชันแสดงแจ้งเตือน
             />
           )}
           {reportPost && (
@@ -216,42 +283,55 @@ function Community() {
               report_type={"post"}
               id={postId}
               onClose={() => setReportPost(false)}
+              showReportToast={showReportToast}
             />
           )}
           {showDeletePopup && (
             <DeleteConfirmationPopup
-              message="คุณต้องการลบข้อมูลนี้หรือไม่?"
-              onConfirm={() => setShowDeletePopup(false)}
+              message="คุณต้องการลบโพสต์นี้หรือไม่?"
+              onConfirm={() => {
+                setShowDeletePopup(false), showDeleteSuccessToast();
+              }}
               onCancel={handleCancelDelete}
               type={deleteType}
               id={selectedPostId}
+              refetch={refetch}
             />
           )}
+          {showLogin && <PopupLogin onClose={() => setShowLogin(false)} />}
           <div className={styles.headerContainer}>
-            <div className="term-year-filter">
-              <p>จัดเรียงตาม</p>
-              <select
-                id="yearSelect"
-                className="year-select"
-                value={sortOrder}
-                onChange={(e) => setSortOrder(e.target.value)}
-              >
-                {sortOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
+            <div className="search-subject">
+              <input
+                type="text"
+                placeholder="ค้นหาด้วยชื่อผู้เขียน, หรือเนื้อหา"
+                className="search-input"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+              <i className="bx bx-search"></i>
             </div>
             <div
               className={styles.headerButton}
-              onClick={() => setShowPostPopup(true)}
+              onClick={() => handlePostPopup(null)}
             >
               <i className="bx bx-pencil"></i>
               <p>เขียนโพสต์</p>
             </div>
           </div>
-
+          <div className="sort-container">
+            <select
+              id="sort"
+              className="sort-group"
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value)}
+            >
+              {sortOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
           {isLoading ? (
             <div className={styles.errorContainer}>
               <div className="text">กำลังโหลด.....</div>
@@ -327,7 +407,7 @@ function Community() {
                         </div>
                       )}
                     </div>
-                    <p className={styles.postDesc}>{post.post_desc}</p>
+                    <p className="content-desc">{post.post_desc}</p>
                     <div className={styles.postFooter}>
                       <div className={styles.reviewBtn}>
                         <div className={styles.likeBtn}>

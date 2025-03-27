@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import ClipLoader from "react-spinners/ClipLoader";
-
+import { ToastContainer, toast } from "react-toastify";
 function Register() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -41,11 +41,35 @@ function Register() {
       });
     } catch (error) {
       if (error.response && error.response.status === 400) {
-        alert("อีเมลถูกใช้ไปแล้ว");
+        toast.error("อีเมลถูกใช้ไปแล้ว", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       } else if (error.response && error.response.status === 401) {
-        alert("ชื่อผู้ใช้ถูกใช้ไปแล้ว");
+        toast.error("ชื่อผู้ใช้ถูกใช้ไปแล้ว", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       } else {
-        alert("เกิดข้อผิดพลาด");
+        toast.error("เกิดข้อผิดพลาด", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       }
     } finally {
       setLoading(false);
@@ -58,9 +82,7 @@ function Register() {
       <div className="register-page">
         <div className="register-container">
           <div className="register-header">
-            <h2 className="text">
-              ลงทะเบียน
-            </h2>
+            <h2 className="text">ลงทะเบียน</h2>
           </div>
           <div className="register-inputs">
             <div>

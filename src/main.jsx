@@ -1,8 +1,10 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { UserProvider } from "./components/User";
-import { QueryClient, QueryClientProvider } from "react-query"; // Import QueryClient and QueryClientProvider
+import { UserProvider } from "./components/UserContext/User.jsx";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { ToastContainer } from "react-toastify"; // นำเข้า ToastContainer
+import "react-toastify/dist/ReactToastify.css"; // นำเข้า CSS ของ ToastContainer
 
 import App from "./App.jsx";
 import Community from "./components/Community/Community.jsx";
@@ -16,9 +18,10 @@ import ResetPassword from "./components/ForgotPassword/ResetPassword.jsx";
 import RegisterVerify from "./components/Register/RegisterVerify.jsx";
 import Subjects from "./components/Subjects/Subjects.jsx";
 import SubjectDetails from "./components/Subjects/SubjectDetails.jsx";
+import StatCard from "./components-admin/DashBoard/StatCard.jsx";
 import ReviewPopup from "./components/Subjects/ReviewPopup.jsx";
 import Editprofile from "./components/Profile/EditProfile.jsx";
-import ProtectedRoute from "./components/ProtectedRoute";
+import ProtectedRoute from "./components/UserContext/ProtectedRoute.jsx";
 import Review from "./components/Subjects/Review.jsx";
 import Navuser from "./components/Navbar/Navuser.jsx";
 import PostPopup from "./components/Community/PostPopup.jsx";
@@ -26,8 +29,7 @@ import Report from "./components/Popup/Report.jsx";
 import Post from "./components/Community/Post.jsx";
 import Comment from "./components/Community/Comment.jsx";
 import DeleteConfirmationPopup from "./components/Popup/DeleteConfirmationPopup.jsx";
-// Create a new QueryClient instance
-const queryClient = new QueryClient();
+import PopupLogin from "./components/Popup/PopupLogin.jsx";
 //admin
 import ManageUser from "./components-admin/ManageUser/ManageUser.jsx";
 import ManageSubject from "./components-admin/ManageSubject/ManageSubject.jsx";
@@ -39,6 +41,15 @@ import ManageReview from "./components-admin/ManageReview/ManageReview.jsx";
 import ManageReportReview from "./components-admin/ManageReportReview/ManageReportReview.jsx";
 import ManageReportPost from "./components-admin/ManageReportPost/ManageReportPost.jsx";
 import ManageReportComment from "./components-admin/ManageReportComment/ManageReportComment.jsx";
+import Dashboard from "./components-admin/DashBoard/DashBoard.jsx";
+///
+import DeletePopup from "./components-admin/DeletePopup/DeletePopup.jsx";
+import PageTitle from "./components-admin/SideBar/PageTitle.jsx";
+import AdminProtectedRoute from "./components-admin/AdminProtectedRoute.jsx";
+import NavuserAdmin from "./components/Navbar/NavuserAdmin.jsx";
+// Create a new QueryClient instance
+const queryClient = new QueryClient();
+
 const router = createBrowserRouter([
   {
     path: "/DeleteConfirmationPopup",
@@ -105,6 +116,11 @@ const router = createBrowserRouter([
     element: <SubjectDetails />,
   },
   {
+    path: "/StatCard/",
+    element: <StatCard />,
+  },
+
+  {
     path: "/Post/:post_id",
     element: <Post />,
   },
@@ -120,7 +136,6 @@ const router = createBrowserRouter([
     path: "/Comment",
     element: <Comment />,
   },
-
   {
     path: "/Profile/:id",
     element: (
@@ -128,46 +143,122 @@ const router = createBrowserRouter([
         <Editprofile />
       </ProtectedRoute>
     ),
-  }, //admin
+  },
+  {
+    path: "/PopupLogin",
+    element: <PopupLogin />,
+  },
+
+  //admin
   {
     path: "/ManageUser",
-    element: <ManageUser />,
+    element: (
+      <AdminProtectedRoute>
+        <ManageUser />
+      </AdminProtectedRoute>
+    ),
   },
   {
     path: "/ManageSubject",
-    element: <ManageSubject />,
+    element: (
+      <AdminProtectedRoute>
+        <ManageSubject />
+      </AdminProtectedRoute>
+    ),
   },
   {
     path: "/ManagePost",
-    element: <ManagePost />,
+    element: (
+      <AdminProtectedRoute>
+        <ManagePost />
+      </AdminProtectedRoute>
+    ),
   },
   {
     path: "/EditProfileAdmin/:id",
-    element: <EditProfileAdmin />,
+    element: (
+      <AdminProtectedRoute>
+        {" "}
+        <EditProfileAdmin />,
+      </AdminProtectedRoute>
+    ),
   },
   {
     path: "/CreateSubject",
-    element: <CreateSubjectForm />,
+    element: (
+      <AdminProtectedRoute>
+        <CreateSubjectForm />
+      </AdminProtectedRoute>
+    ),
   },
   {
     path: "/EditSubjectAdmin/:subject_id",
-    element: <EditSubjectAdmin />,
+    element: (
+      <AdminProtectedRoute>
+        <EditSubjectAdmin />
+      </AdminProtectedRoute>
+    ),
   },
   {
     path: "/ManageReview",
-    element: <ManageReview />,
+    element: (
+      <AdminProtectedRoute>
+        <ManageReview />
+      </AdminProtectedRoute>
+    ),
   },
   {
     path: "/ManageReportReview",
-    element: <ManageReportReview />,
+    element: (
+      <AdminProtectedRoute>
+        <ManageReportReview />
+      </AdminProtectedRoute>
+    ),
   },
   {
     path: "/ManageReportPost",
-    element: <ManageReportPost />,
+    element: (
+      <AdminProtectedRoute>
+        <ManageReportPost />
+      </AdminProtectedRoute>
+    ),
   },
   {
     path: "/ManageReportComment",
-    element: <ManageReportComment />,
+    element: (
+      <AdminProtectedRoute>
+        <ManageReportComment />
+      </AdminProtectedRoute>
+    ),
+  },
+  {
+    path: "/Dashboard",
+    element: (
+      <AdminProtectedRoute>
+        <Dashboard />
+      </AdminProtectedRoute>
+    ),
+  },
+  ///
+  {
+    path: "/DeletePopup",
+    element: (
+      <AdminProtectedRoute>
+        <DeletePopup />
+      </AdminProtectedRoute>
+    ),
+  },
+  {
+    path: "/PageTitle",
+    element: (
+      <AdminProtectedRoute>
+        <PageTitle />
+      </AdminProtectedRoute>
+    ),
+  },
+  {
+    path: "/NavuserAdmin",
+    element: <NavuserAdmin />,
   },
 ]);
 
@@ -176,6 +267,7 @@ createRoot(document.getElementById("root")).render(
     <QueryClientProvider client={queryClient}>
       <UserProvider>
         <RouterProvider router={router} />
+        <ToastContainer /> {/* เพิ่ม ToastContainer ที่นี่ */}
       </UserProvider>
     </QueryClientProvider>
   </StrictMode>

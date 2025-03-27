@@ -5,6 +5,9 @@ import ClipLoader from "react-spinners/ClipLoader";
 import "./EditProfileAdmin.css";
 import SideBar from "../SideBar/SideBar";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 function EditProfileAdmin() {
   const { id } = useParams();
   const [file, setFile] = useState(null);
@@ -18,11 +21,6 @@ function EditProfileAdmin() {
   const handleGoBack = () => {
     navigate(-1);
   };
-  // ✅ State ใหม่สำหรับ Popup แจ้งเตือน
-  const [popupMessage, setPopupMessage] = useState("");
-  const [popupIcon, setPopupIcon] = useState("");
-  const [popupColor, setPopupColor] = useState("");
-  const [isPopupVisible, setIsPopupVisible] = useState(false);
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -38,7 +36,7 @@ function EditProfileAdmin() {
       setUsername(response.data.user.username);
     } catch (err) {
       console.error("Error fetching data:", err);
-      showPopup("ไม่สามารถดึงข้อมูลได้", "bx bx-x", "red");
+      showToast("ไม่สามารถดึงข้อมูลได้", "error");
     }
   };
 
@@ -60,6 +58,30 @@ function EditProfileAdmin() {
 
   const cancelButton = () => {
     window.location.reload();
+  };
+
+  const showToast = (message, type) => {
+    if (type === "success") {
+      toast.success(message, {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } else if (type === "error") {
+      toast.error(message, {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
   };
 
   const handleSubmit = async () => {
@@ -84,20 +106,15 @@ function EditProfileAdmin() {
             },
           }
         );
-        showPopup("อัปเดตโปรไฟล์สำเร็จ!", "bx bx-check", "green");
+        showToast("อัปเดตโปรไฟล์สำเร็จ", "success");
 
-        // ✅ รีเฟรชหน้าเว็บหลังจากแสดง popup 3 วินาที
         setTimeout(() => {
           window.location.reload();
         }, 3000);
       } catch (err) {
         const errorMessage =
           err.response?.data?.message || "เกิดข้อผิดพลาด กรุณาลองอีกครั้ง";
-        showPopup(
-          `ไม่สามารถอัปเดตโปรไฟล์ได้: ${errorMessage}`,
-          "bx bx-x",
-          "red"
-        );
+        showToast(`ไม่สามารถอัปเดตโปรไฟล์ได้: ${errorMessage}`, "error");
       }
 
       setIsSubmitting(false);
@@ -105,25 +122,13 @@ function EditProfileAdmin() {
     }, 3000);
   };
 
-  // ✅ ฟังก์ชันแสดง Popup แจ้งเตือน
-  const showPopup = (message, icon, color) => {
-    setPopupMessage(message);
-    setPopupIcon(icon);
-    setPopupColor(color);
-    setIsPopupVisible(true);
-
-    setTimeout(() => {
-      setIsPopupVisible(false);
-    }, 3000);
-  };
-
-  // ✅ ตรวจสอบว่ามีการเปลี่ยนแปลงข้อมูลหรือไม่
-  const isButtonDisabled = username === user.username && !file || username === "";
+  const isButtonDisabled =
+    (username === user.username && !file) || username === "";
 
   return (
     <>
-        <SideBar />
-      {/* ✅ Loader Popup */}
+      <SideBar />
+      {/* Loader Overlay */}
       {isLoading && (
         <div className="loader-overlay">
           <div className="loader">
@@ -133,15 +138,8 @@ function EditProfileAdmin() {
         </div>
       )}
 
-      {/* ✅ Popup แจ้งเตือน */}
-      {isPopupVisible && (
-        <div className="popup-message">
-          <i className={popupIcon} style={{ color: popupColor }}></i>
-          <p>{popupMessage}</p>
-        </div>
-      )}
       <div className="header-container">
-      <i className="bx bx-chevron-left back-icon" onClick={handleGoBack}></i>
+        <i className="bx bx-chevron-left back-icon" onClick={handleGoBack}></i>
         <h1>เเก้ไขโปรไฟล์</h1>
       </div>
       <div className="editprofile-card">
@@ -176,26 +174,22 @@ function EditProfileAdmin() {
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder={user.username || "กรอกชื่อผู้ใช้ใหม่..."}
               />
-              <i className="bx bx-edit"></i>
             </div>
           </div>
           <div className="button-container">
-            <div className="cancel-button">
-              <button type="button" onClick={cancelButton}>
-                <i className="bx bxs-x-circle"></i>ยกเลิก
-              </button>
-            </div>
-            <div className="edit-button">
-              <button
-                type="button"
-                onClick={handleSubmit}
-                disabled={isButtonDisabled}
-                style={{ backgroundColor: isButtonDisabled ? "gray" : "" }}
-              >
-                <i className="bx bx-edit"></i>
-                เเก้ไข
-              </button>
-            </div>
+            <button className="cancel-button" onClick={cancelButton}>
+              <i className="bx bxs-x-circle"></i>
+              <p>ยกเลิก</p>
+            </button>
+            <button
+              className="edit-profile-button"
+              onClick={handleSubmit}
+              disabled={isButtonDisabled}
+              style={{ backgroundColor: isButtonDisabled ? "gray" : "" }}
+            >
+              <i className="bx bx-edit"></i>
+              <p>เเก้ไข</p>
+            </button>
           </div>
         </div>
       </div>

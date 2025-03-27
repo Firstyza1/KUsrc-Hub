@@ -8,6 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import ClipLoader from "react-spinners/ClipLoader";
+import { toast } from "react-toastify";
 
 function EmailVerify() {
   const location = useLocation();
@@ -35,11 +36,35 @@ function EmailVerify() {
       navigate("/ResetPassword", { state: { email: email } });
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        alert("รหัส OTP ไม่ถูกต้อง");
+        toast.error("รหัส OTP ไม่ถูกต้อง", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       } else if (error.response && error.response.status === 400) {
-        alert("รหัส OTP หมดอายุ");
+        toast.error("รหัส OTP หมดอายุ", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       } else {
-        alert("เกิดข้อผิดพลาด");
+        toast.error("เกิดข้อผิดพลาด", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       }
     } finally {
       setLoading(false);
@@ -51,13 +76,13 @@ function EmailVerify() {
       <Navbar />
       <div className="login-page">
         <div className="login-container">
-          <div className="login-header" onClick={() => navigate(-1)}>
-            <i className="bx bx-chevron-left"></i>
+          <div className="login-header">
+            <i className="bx bx-chevron-left" onClick={() => navigate(-1)}></i>
             <h2 className="text">ยืนยันอีเมล</h2>
           </div>
 
           <div className="email-text">
-            <p>เราได้ส่งรหัส OTP ไปที่อีเมล</p> <p>{email}</p>
+            <span>เราได้ส่งรหัส OTP ไปที่อีเมล</span> <span>{email}</span>
           </div>
           <div className="login-inputs">
             <div className="otp-input">

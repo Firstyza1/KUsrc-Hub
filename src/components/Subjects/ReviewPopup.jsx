@@ -4,13 +4,21 @@ import axios from "axios";
 import { ReviewdFormSchema } from "../YupValidation/Validation";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useUser } from "../User";
-
-function ReviewPopup({ subject_id, onClose, review_id }) {
+import { useUser } from "../UserContext/User";
+import { toast } from "react-toastify";
+function ReviewPopup({
+  subject_id,
+  onClose,
+  review_id,
+  refetch,
+  showSuccessToast,
+}) {
   const [fileName, setFileName] = useState("");
   const [file, setFile] = useState(null);
   const [fileError, setFileError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [charCount, setCharCount] = useState(0); // สร้าง state สำหรับนับตัวอักษร
+  const maxCharLimit = 500; // กำหนดขีดจำกัดตัวอักษร
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -91,7 +99,16 @@ function ReviewPopup({ subject_id, onClose, review_id }) {
           setValue("year", reviewData.academic_year);
         }
       } catch (error) {
-        console.error("เกิดข้อผิดพลาด :", error);
+        toast.error("เกิดข้อผิดพลาด", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+        // console.error("เกิดข้อผิดพลาด :", error);
       }
     };
     fetchReview();
@@ -122,13 +139,24 @@ function ReviewPopup({ subject_id, onClose, review_id }) {
       await axios.post("http://localhost:3000/createReview", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
+          authtoken: `Bearer ${user?.token}`,
         },
       });
       onClose();
-      window.location.reload();
+      refetch();
+      showSuccessToast();
+      // window.location.reload();
     } catch (error) {
-      console.error("Error occurred:", error.response || error);
-      alert("เกิดข้อผิดพลาด");
+      // console.error("Error occurred:", error.response || error);
+      toast.error("เกิดข้อผิดพลาด", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     } finally {
       setLoading(false);
     }
@@ -166,7 +194,19 @@ function ReviewPopup({ subject_id, onClose, review_id }) {
             <textarea
               {...register("review_desc")}
               placeholder="เขียนรีวิวของคุณที่นี่..."
+              maxLength={maxCharLimit} // จำกัดจำนวนตัวอักษร
+              onChange={(e) => {
+                if (e.target.value.length > maxCharLimit) {
+                  e.target.value = e.target.value.substring(0, maxCharLimit);
+                }
+                setCharCount(e.target.value.length);
+              }}
             />
+            <div className="char-counter">
+              <p>
+                {charCount}/{maxCharLimit}
+              </p>
+            </div>
             {errors.review_desc && (
               <div className="text-error">{errors.review_desc.message}</div>
             )}
@@ -239,7 +279,7 @@ function ReviewPopup({ subject_id, onClose, review_id }) {
           {errors[`grade`] && (
             <div className="text-error">{errors[`grade`]?.message}</div>
           )}
-          
+
           <div className="semester-input">
             <h4>
               ภาคเรียน<span style={{ color: "red" }}> *</span>

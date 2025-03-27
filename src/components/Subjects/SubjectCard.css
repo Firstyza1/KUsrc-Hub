@@ -40,21 +40,22 @@
 
 .header-button {
   display: flex;
-  padding: 12px;
+  padding: 9px;
+  height: 40px;
   border: 1px solid #ccc;
-  border-radius: 10px;
+  border-radius: 5px;
   gap: 8px;
   align-items: center;
   cursor: pointer;
   background-color: white;
 }
-.header-button:hover{
+.header-button:hover {
   background-color: #f6f8f9;
   /* color: #ffffff; */
 }
 
 .subject-detail-item {
-  margin-top: 20px;
+  margin-top: 10px;
   display: grid;
   grid-template-columns: 1fr 1fr; /* คอลัมน์ขนาดเท่ากัน */
   gap: 20px;
@@ -79,17 +80,20 @@
 .header-text {
   font-size: 23px;
   font-weight: bold;
-  margin-top: 20px;
+  /* margin-top: 20px; */
 }
 
 .subject-score-container {
   display: flex;
   align-items: center;
   margin: 15px 0px;
-  padding: 15px;
   /* border: 1px solid #ccc;
   border-radius: 10px;
   box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.2); */
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
 }
 
 .subject-score-header {

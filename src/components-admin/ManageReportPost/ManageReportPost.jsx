@@ -1,28 +1,22 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import DataTable from "react-data-table-component";
 import SideBar from "../SideBar/SideBar";
 import { useNavigate } from "react-router-dom";
-import "./ManageReportPost.css";
-
+import { useUser } from "../../components/UserContext/User";
+import { toast } from "react-toastify";
 function ManageReportPost() {
   const [reportedPosts, setReportedPosts] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
+  const [filteredPosts, setFilteredPosts] = useState([]);
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [selectedReport, setSelectedReport] = useState(null);
   const [actionType, setActionType] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-
-  useEffect(() => {
-    document.body.classList.add("no-padding");
-    return () => {
-      document.body.classList.remove("no-padding");
-    };
-  }, []);
-
-  const postsPerPage = 5;
+  const { user } = useUser();
   const navigate = useNavigate();
-
+  const [error, setError] = useState(null);
+  // ดึงข้อมูลรายงานโพสต์จาก API
   useEffect(() => {
     fetchReportedPosts();
   }, []);
@@ -33,251 +27,309 @@ function ManageReportPost() {
         "http://localhost:3000/getAllReportedPost"
       );
       if (response.data.reported_post.length === 0) {
-        setErrorMessage("ไม่มีข้อมูลคำร้องโพสต์");
+        setError("ไม่มีข้อมูล");
       } else {
         setReportedPosts(response.data.reported_post);
-        setErrorMessage("");
+        setFilteredPosts(response.data.reported_post);
       }
     } catch (error) {
-      if (error.response && error.response.status === 404) {
-        setErrorMessage("ไม่มีข้อมูลคำร้องโพสต์");
+      if (error.response.status) {
+        {
+          setError(`เกิดข้อผิดพลาด: ${error.response.status}`);
+        }
       } else {
-        setErrorMessage("เกิดข้อผิดพลาดในการโหลดข้อมูล");
+        setError("เกิดข้อผิดพลาดในการเชื่อมต่อ");
       }
-      console.error("Error fetching reported posts:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return `${date.getDate()}/${date.getMonth() + 1}/${
-      date.getFullYear() + 543
-    }`;
-  };
-
+  // เปิด popup ยืนยันการดำเนินการ
   const openDeletePopup = (report, type) => {
     setSelectedReport(report);
     setActionType(type);
     setShowDeletePopup(true);
   };
 
+  // ปิด popup
   const closeDeletePopup = () => {
     setShowDeletePopup(false);
     setSelectedReport(null);
     setActionType("");
   };
 
+  // ดำเนินการอนุมัติหรือไม่อนุมัติ
   const handleConfirmAction = async () => {
     if (!selectedReport) return;
 
     try {
       if (actionType === "approve") {
         await axios.delete(
-          `http://localhost:3000/deletePost/${selectedReport.post_id}`
+          `http://localhost:3000/deletePost/${selectedReport.post_id}`,
+          {
+            headers: {
+              authtoken: `Bearer ${user?.token}`,
+            },
+          }
         );
         setReportedPosts((prev) =>
           prev.filter((report) => report.post_id !== selectedReport.post_id)
         );
+        setFilteredPosts((prev) =>
+          prev.filter((report) => report.post_id !== selectedReport.post_id)
+        );
+        toast.success("ลบโพสต์สำเร็จ", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       } else if (actionType === "reject") {
         await axios.delete(
-          `http://localhost:3000/deleteReportedPost/${selectedReport.report_id}`
+          `http://localhost:3000/deleteReportedPost/${selectedReport.report_id}`,
+          {
+            headers: {
+              authtoken: `Bearer ${user?.token}`,
+            },
+          }
         );
         setReportedPosts((prev) =>
           prev.filter((report) => report.report_id !== selectedReport.report_id)
         );
+        setFilteredPosts((prev) =>
+          prev.filter((report) => report.report_id !== selectedReport.report_id)
+        );
+        toast.success("ลบรายงานโพสต์สำเร็จ", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       }
       closeDeletePopup();
     } catch (error) {
-      console.error("Error processing request:", error);
+      toast.error("เกิดข้อผิดพลาด", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   };
 
-  const indexOfLastPost = currentPage * postsPerPage;
-  const indexOfFirstPost = indexOfLastPost - postsPerPage;
-  const currentPosts = reportedPosts.slice(
-    indexOfFirstPost,
-    indexOfLastPost
-  );
-  const totalPages = Math.ceil(reportedPosts.length / postsPerPage);
+  // การค้นหา
+  const handleSearch = (e) => {
+    const searchValue = e.target.value.toLowerCase();
+    setSearchText(searchValue);
 
-  const paginate = (pageNumber) => {
-    if (pageNumber >= 1 && pageNumber <= totalPages) {
-      setCurrentPage(pageNumber);
-    }
+    const filteredData = reportedPosts.filter((report) => {
+      return (
+        report.report_id.toString().includes(searchValue) ||
+        report.username.toLowerCase().includes(searchValue)
+      );
+    });
+    setFilteredPosts(filteredData);
   };
+
+  // กำหนดคอลัมน์ของ DataTable
+  const columns = [
+    {
+      name: "ลำดับ",
+      selector: (row, index) => index + 1,
+      width: "65px",
+      sortable: false,
+      conditionalCellStyles: [
+        {
+          when: (row) => true,
+          style: {
+            display: "flex",
+            justifyContent: "center",
+          },
+        },
+      ],
+    },
+    {
+      name: "รหัสคำร้อง",
+      selector: (row) => row.report_id,
+      sortable: true,
+      width: "120px",
+      conditionalCellStyles: [
+        {
+          when: (row) => true,
+          style: {
+            display: "flex",
+            justifyContent: "center",
+          },
+        },
+      ],
+    },
+    {
+      name: "เนื้อหาโพสต์",
+      selector: (row) => row.post_desc,
+      sortable: true,
+      width: "460px",
+    },
+    {
+      name: "เหตุผลที่แจ้ง",
+      selector: (row) => row.report_desc,
+      sortable: true,
+    },
+    {
+      name: "ผู้แจ้ง",
+      selector: (row) => row.username,
+      sortable: true,
+      width: "170px",
+    },
+    {
+      name: "วันที่สร้าง",
+      selector: (row) =>
+        new Date(row.created_at).toLocaleDateString("th-TH", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        }),
+      sortable: true,
+      width: "130px",
+      conditionalCellStyles: [
+        {
+          when: (row) => true,
+          style: {
+            display: "flex",
+            justifyContent: "center",
+          },
+        },
+      ],
+    },
+    {
+      name: "การดำเนินการ",
+      width: "110px",
+      cell: (row) => (
+        <div className="action-button">
+          {/* <i
+            className="bx bx-show"
+            onClick={() => navigate(`/Post/${row.post_id}`)}
+          ></i> */}
+          <i
+            className="bx bx-x"
+            onClick={() => openDeletePopup(row, "reject")}
+          ></i>
+          <i
+            className="bx bx-check"
+            onClick={() => openDeletePopup(row, "approve")}
+          ></i>
+        </div>
+      ),
+      ignoreRowClick: true,
+      // allowOverflow: true,
+      // button: true,
+    },
+  ];
 
   return (
     <>
       <SideBar />
-      <div className="manage-report-post-page">
-        <div className="manage-report-post-header">
-          <p>จัดการคำร้องโพสต์</p>
-          <div className="admin-profile"></div>
-        </div>
-
-        <div className="search-report-post-container">
-          <div className="input-search-report-post">
-            <input
-              type="text"
-              placeholder="ค้นหาด้วยชื่อผู้แจ้ง"
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-            />
-            <button
-              className="search-icon-post"
-              onClick={() => setSearchText("")}
-            >
-              <i className={searchText ? "bx bx-x" : "bx bx-search"}></i>
-            </button>
-          </div>
-        </div>
-
-        <div className="report-post-table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>รหัสคำร้อง</th>
-                <th>เนื้อหาคอมเมนต์</th>
-                <th>รายละเอียด</th>
-                <th>ผู้แจ้ง</th>
-                <th>วันที่</th>
-                <th>การดำเนินการ</th>
-              </tr>
-            </thead>
-            <tbody>
-              {errorMessage ? (
-                <tr>
-                  <td
-                    colSpan="6"
-                    style={{
-                      textAlign: "center",
-                      padding: "20px",
-                      color: "black",
-                    }}
-                  >
-                    {errorMessage}
-                  </td>
-                </tr>
-              ) : currentPosts.length > 0 ? (
-                <>
-                  {currentPosts.map((report) => (
-                    <tr key={report.report_id}>
-                      <td>{report.report_id}</td>
-                      <td>{report.post_desc}</td>
-                      <td>{report.report_desc}</td>
-                      <td>{report.username}</td>
-                      <td>{formatDate(report.created_at)}</td>
-                      <td>
-                        <div className="report-post-button-container">
-                          <button className="show-button">
-                            <i className="bx bx-show"></i> ดู
-                          </button>
-                          <button
-                            className="delete-button"
-                            onClick={() => openDeletePopup(report, "reject")}
-                          >
-                            ไม่อนุมัติ
-                          </button>
-                          <button
-                            className="accept-button"
-                            onClick={() => openDeletePopup(report, "approve")}
-                          >
-                            อนุมัติ
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-
-                  {/* 🔹 เติมแถวว่างให้ครบ 5 แถว */}
-                  {Array.from({
-                    length: postsPerPage - currentPosts.length,
-                  }).map((_, i) => (
-                    <tr
-                      key={`empty-${i}`}
-                      style={{ height: "70px", backgroundColor: "#fff" }}
-                    >
-                      <td colSpan="6"></td>
-                    </tr>
-                  ))}
-                </>
-              ) : (
-                <tr>
-                  <td
-                    colSpan="6"
-                    style={{
-                      textAlign: "center",
-                      padding: "20px",
-                      color: "gray",
-                    }}
-                  >
-                    ไม่มีข้อมูล
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-
-        <div className="pagination">
-          <button
-            onClick={() => paginate(currentPage - 1)}
-            disabled={currentPage === 1 || reportedPosts.length === 0}
-            className={
-              currentPage === 1 || reportedPosts.length === 0
-                ? "prev-next-button disabled"
-                : "prev-next-button"
-            }
-          >
-            <i className="bx bx-chevron-left"></i>
-          </button>
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button
-              key={i + 1}
-              onClick={() => paginate(i + 1)}
-              className={currentPage === i + 1 ? "active" : ""}
-            >
-              {i + 1}
-            </button>
-          ))}
-          <button
-            onClick={() => paginate(currentPage + 1)}
-            disabled={currentPage === totalPages || reportedPosts.length === 0}
-            className={
-              currentPage === totalPages || reportedPosts.length === 0
-                ? "prev-next-button disabled"
-                : "prev-next-button"
-            }
-          >
-            <i className="bx bx-chevron-right"></i>
-          </button>
-        </div>
-      </div>
-
       {showDeletePopup && (
-        <div className="delete-popup-overlay">
-          <div className="delete-popup">
+        <div className="deletePopupOverlay">
+          <div className="deletePopup">
             <h3>
-              คุณต้องการ {actionType === "approve" ? "อนุมัติ" : "ไม่อนุมัติ"}{" "}
+              คุณต้องการ {actionType === "approve" ? "อนุมัติ" : "ไม่อนุมัติ"}
               ลบโพสต์นี้ใช่ไหม?
             </h3>
-            <p>
-              เนื้อหา: <strong>{selectedReport?.comment_desc}</strong>
+            <p style={{ marginTop: "10px" }}>
+              รหัสคำร้อง: {selectedReport?.report_id}
             </p>
-            <div className="popup-buttons">
-              <button
-                className="cancel-popup-button"
-                onClick={closeDeletePopup}
-              >
+            <div className="deletePopupButtons">
+              <button onClick={closeDeletePopup} className="cancelButton">
                 ยกเลิก
-              </button>
-              <button className="approve-button" onClick={handleConfirmAction}>
+              </button>{" "}
+              <button onClick={handleConfirmAction} className="confirmButton">
                 ยืนยัน
               </button>
             </div>
           </div>
         </div>
       )}
+      <div className="manage-data-page">
+        <div className="manage-data-container">
+          <div className="table-wrapper">
+            <div className="table-header">
+              <div className="table-search">
+                <i className="bx bx-search"></i>
+                <input
+                  type="text"
+                  placeholder="ค้นหาด้วยรหัสคำร้อง, หรือชื่อผู้แจ้ง"
+                  value={searchText}
+                  onChange={handleSearch}
+                  className="search-input"
+                />
+              </div>
+            </div>
+            {loading ? (
+              <div className="no-data-message">กำลังโหลด...</div>
+            ) : (
+              <>
+                {error ? (
+                  <div className="no-data-message">{error}</div>
+                ) : (
+                  <DataTable
+                    columns={columns}
+                    data={filteredPosts}
+                    pagination
+                    highlightOnHover
+                    responsive
+                    striped
+                    defaultSortFieldId={1}
+                    noDataComponent={
+                      <div className="no-data-message">ไม่พบข้อมูล</div>
+                    }
+                    customStyles={{
+                      table: {
+                        style: {
+                          border: "1px solid #ccc", // เส้นขอบรอบตาราง
+                        },
+                      },
+                      headCells: {
+                        style: {
+                          backgroundColor: "white",
+                          color: "black",
+                          fontWeight: "bold",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          whiteSpace: "normal",
+                          wordWrap: "break-word",
+                          boxShadow: "0 6px 6px -5px #e1e5ee;",
+                          // border: "1px solid #ddd", // เส้นแบ่งระหว่างหัวคอลัมน์
+                        },
+                      },
+                      cells: {
+                        style: {
+                          // borderRight: "1px solid #ddd", // เส้นแบ่งระหว่างเซลล์
+                        },
+                      },
+                      rows: {
+                        stripedStyle: {
+                          backgroundColor: "#f4f6fb", // สีพื้นหลังสำหรับแถวสลับ
+                        },
+                      },
+                    }}
+                  />
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      </div>
     </>
   );
 }

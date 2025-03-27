@@ -1,0 +1,50 @@
+.PopupLogin-container {
+  background-color: white;
+  border-radius: 5px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 370px;
+  height: auto;
+  max-height: 90vh;
+  overflow: hidden;
+  animation: fadeIn 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: auto;
+}
+.PopupLogin-container h2 {
+  margin: 25px;
+}
+.PopupLogin-btn {
+  margin: 25px;
+}
+
+.PopupLogin-btn {
+  display: flex;
+  gap: 20px;
+}
+
+.PopupLogin-btn button {
+  width: 90px;
+  height: 40px;
+  cursor: pointer;
+  border-radius: 4px;
+  border: none;
+  font-size: 14px;
+}
+.PopupLogin-cancle {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.PopupLogin-cancle:hover {
+  background-color: #d9d9d9;
+}
+.PopupLogin-submit {
+  background-color: #02bc77;
+  color: #ffffff;
+}
+.PopupLogin-submit:hover {
+    background-color: #05ab6e;
+  }

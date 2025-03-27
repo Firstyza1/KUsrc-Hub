@@ -1,14 +1,16 @@
 import React from "react";
 import "./Navbar.css";
-import { Link, useLocation } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { useState } from "react";
 import logo from "../../assets/images/logo.png";
 import Navuser from "./Navuser";
+import { useUser } from "../UserContext/User";
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const closeMenu = () => setIsMenuOpen(false);
   const location = useLocation();
+  const { user } = useUser();
   return (
     <header className="header">
       <div className="navbar-container">
@@ -18,21 +20,30 @@ const Navbar = () => {
           </div>
           <nav className={isMenuOpen ? "navbar active" : "navbar"}>
             <div className="navbar-link" onClick={closeMenu}>
-              <Link
+              <NavLink
                 to="/Subjects"
                 className={location.pathname === "/Subjects" ? "active" : ""}
               >
                 รีวิวรายวิชา
-              </Link>
-              <Link
+              </NavLink>
+              <NavLink
                 to="/Community"
                 className={location.pathname === "/Community" ? "active" : ""}
               >
                 ชุมชน
-              </Link>
-              <Link to="/About">เกี่ยวกับเรา</Link>
-              {/* <Link to="/Register">ลงทะเบียน</Link>
-              <Link to="/Login">เข้าสู่ระบบ</Link> */}
+              </NavLink>
+              {/* {user?.role === "admin" && (
+                <NavLink
+                  to="/Dashboard"
+                  className={location.pathname === "/Dashboard" ? "active" : ""}
+                >
+                  จัดการข้อมูล
+                </NavLink>
+              )} */}
+
+              {/* <NavLink to="/About">เกี่ยวกับเรา</NavLink> */}
+              {/* <NavLink to="/Register">ลงทะเบียน</NavLink>
+              <NavLink to="/Login">เข้าสู่ระบบ</NavLink> */}
             </div>
           </nav>
         </div>
@@ -43,20 +54,20 @@ const Navbar = () => {
       {/* <nav className={isMenuOpen ? "navbar active" : "navbar"}>
         {isMenuOpen ? (
           <>
-            <div className="navbar-link" onClick={closeMenu}>
-              <Link to="/Subjects">รีวิวรายวิชา</Link>
-              <Link to="/Community">ชุมชน</Link>
-              <Link to="/About">เกี่ยวกับเรา</Link>
-              <Link to="/Register">ลงทะเบียน</Link>
-              <Link to="/Login">เข้าสู่ระบบ</Link>
+            <div className="navbar-NavLink" onClick={closeMenu}>
+              <NavLink to="/Subjects">รีวิวรายวิชา</NavLink>
+              <NavLink to="/Community">ชุมชน</NavLink>
+              <NavLink to="/About">เกี่ยวกับเรา</NavLink>
+              <NavLink to="/Register">ลงทะเบียน</NavLink>
+              <NavLink to="/Login">เข้าสู่ระบบ</NavLink>
             </div>
           </>
         ) : (
           <>
-            <div className="navbar-link" onClick={closeMenu}>
-              <Link to="/Subjects">รีวิวรายวิชา</Link>
-              <Link to="/Community">ชุมชน</Link>
-              <Link to="/About">เกี่ยวกับเรา</Link>
+            <div className="navbar-NavLink" onClick={closeMenu}>
+              <NavLink to="/Subjects">รีวิวรายวิชา</NavLink>
+              <NavLink to="/Community">ชุมชน</NavLink>
+              <NavLink to="/About">เกี่ยวกับเรา</NavLink>
             </div>
             <Navuser />
           </>

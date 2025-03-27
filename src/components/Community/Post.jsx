@@ -5,11 +5,12 @@ import styleCom from "./Community.module.css";
 import styles from "./Post.module.css";
 import axios from "axios";
 import Comment from "./Comment";
-import { useUser } from "../User";
+import { useUser } from "../UserContext/User";
 import Report from "../Popup/Report";
 import DeleteConfirmationPopup from "../Popup/DeleteConfirmationPopup";
 import PostPopup from "./PostPopup";
-
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 const Post = () => {
   const { post_id } = useParams();
   const [post, setPost] = useState([]);
@@ -21,6 +22,7 @@ const Post = () => {
   const [showEditPopup, setShowEditPopup] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState(null);
   const [deleteType, setDeleteType] = useState(null); // "post" หรือ "comment"
+  const navigate = useNavigate();
 
   const togglePopup = (postId) => {
     setActivePopupId(activePopupId === postId ? null : postId);
@@ -61,7 +63,7 @@ const Post = () => {
       } else {
         setError("เกิดข้อผิดพลาดในการเชื่อมต่อ");
       }
-      console.log("เกิดข้อผิดพลาด:", error);
+      // console.log("เกิดข้อผิดพลาด:", error);
     }
   };
 
@@ -96,14 +98,31 @@ const Post = () => {
 
   const postReaction = async (post_id, type) => {
     try {
-      await axios.post("http://localhost:3000/postReaction", {
-        post_id: post_id,
-        user_id: user.user_id,
-        type: type,
-      });
+      await axios.post(
+        "http://localhost:3000/postReaction",
+        {
+          post_id: post_id,
+          user_id: user.user_id,
+          type: type,
+        },
+        {
+          headers: {
+            authtoken: `Bearer ${user?.token}`,
+          },
+        }
+      );
       fetchPost();
     } catch (error) {
-      console.error("เกิดข้อผิดพลาด :", error);
+      // console.error("เกิดข้อผิดพลาด :", error);
+      toast.error("เกิดข้อผิดพลาด", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   };
 
@@ -194,6 +213,41 @@ const Post = () => {
 
     return `วัน${dayOfWeek}ที่ ${day} ${month} ${year} เวลา ${hours}.${minutes} น.`;
   };
+
+  const showSuccessToast = () => {
+    toast.success("เขียนโพสต์สำเร็จ", {
+      position: "top-center",
+      autoClose: 1000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+  const showDeleteSuccessToast = () => {
+    toast.success("ลบโพสต์สำเร็จ", {
+      position: "top-center",
+      autoClose: 1000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+  const showReportToast = () => {
+    toast.success("รายงานโพสต์สำเร็จ", {
+      position: "top-center",
+      autoClose: 1000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+  };
+
   return (
     <>
       <Navbar />
@@ -204,12 +258,17 @@ const Post = () => {
               report_type="post"
               id={selectedPostId}
               onClose={() => setReportPost(false)}
+              showReportToast={showReportToast}
             />
           )}
           {showDeletePopup && (
             <DeleteConfirmationPopup
-              message="คุณต้องการลบข้อมูลนี้หรือไม่?"
-              onConfirm={() => setShowDeletePopup(false)}
+              message="คุณต้องการลบโพสต์นี้หรือไม่?"
+              onConfirm={() => {
+                setShowDeletePopup(false);
+                showDeleteSuccessToast();
+                navigate("/community");
+              }}
               onCancel={handleCancelDelete}
               type={deleteType}
               id={selectedPostId}
@@ -219,10 +278,12 @@ const Post = () => {
             <PostPopup
               post_id={selectedPostId}
               onClose={handleEditPopupClose}
+              // refetch={null}
+              showSuccessToast={showSuccessToast} // ส่งฟังก์ชันแสดงแจ้งเตือน
             />
           )}
           <div className={styleCom.headerContainer}>
-            <div className="header-button">
+            <div className="header-button" onClick={() => navigate(-1)}>
               <i className="bx bx-caret-left"></i>
               <p>กลับ</p>
             </div>
@@ -287,7 +348,7 @@ const Post = () => {
                   </div>
                 )}
               </div>
-              <div className={styleCom.postDesc}>{post.post_desc}</div>
+              <div className="content-desc">{post.post_desc}</div>
               <div className={styleCom.postFooter}>
                 <div className={styleCom.reviewBtn}>
                   <div className={styleCom.likeBtn}>

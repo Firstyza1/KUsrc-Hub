@@ -4,12 +4,12 @@ import Subject from "./components/Subjects/Subjects";
 import "./App.css";
 
 function App() {
-  const location = useLocation();
+  // const location = useLocation();
 
-  useEffect(() => {
-    document.body.className =
-      location.pathname === "/Community" ? "no-padding" : "";
-  }, [location]);
+  // useEffect(() => {
+  //   document.body.className =
+  //     location.pathname === "/Community" ? "no-padding" : "";
+  // }, [location]);
 
   return (
     <>

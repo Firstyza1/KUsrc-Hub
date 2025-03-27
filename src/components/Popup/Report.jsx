@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "./Report.css";
 import axios from "axios";
-import { useUser } from "../User";
+import { useUser } from "../UserContext/User";
 
-function Report({ onClose, id, report_type }) {
+function Report({ onClose, id, report_type, showReportToast }) {
   const { user } = useUser();
   const [selectedReport, setSelectedReport] = useState(null);
 
@@ -39,15 +39,31 @@ function Report({ onClose, id, report_type }) {
     }
 
     try {
-      await axios.post(`http://localhost:3000/${endpoint}`, {
-        user_id: user.user_id,
-        report_desc: selectedReport,
-      });
-      alert("รายงานถูกส่งเรียบร้อยแล้ว");
+      await axios.post(
+        `http://localhost:3000/${endpoint}`,
+        {
+          user_id: user.user_id,
+          report_desc: selectedReport,
+        },
+        {
+          headers: {
+            authtoken: `Bearer ${user?.token}`,
+          },
+        }
+      );
+      showReportToast();
       onClose();
     } catch (error) {
       console.error("Error submitting report:", error);
-      alert(`เกิดข้อผิดพลาดรายงาน${report_type}`);
+      toast.error("เกิดข้อผิดพลาด", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   };
 

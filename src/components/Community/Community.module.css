@@ -8,24 +8,30 @@
 .communityContainer {
   max-width: 1150px;
   width: 100%;
-  margin: 20px 0px;
 }
 .headerContainer {
   display: flex;
-  flex-direction: row;
-  align-items: flex-end;
-  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  position: sticky;
+  z-index: 2;
+  top: 71px;
+  background-color: white;
+  padding-top: 20px;
+  padding-bottom: 10px;
 }
 
 .headerButton {
   display: flex;
-  padding: 12px;
+  padding: 9px;
+  height: 40px;
   border: 1px solid #ccc;
-  border-radius: 10px;
+  border-radius: 5px;
   gap: 8px;
   align-items: center;
   cursor: pointer;
   background-color: white;
+  white-space: nowrap;
 }
 
 .headerButton:hover {
@@ -59,13 +65,14 @@
 }
 .postContainer {
   display: flex;
-  margin-top: 15px;
-  padding: 20px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  padding: 15px;
   border: 1px solid #ccc;
-  border-radius: 10px;
+  border-radius: 5px;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 12px;
   box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
   background: white;
   /* cursor: pointer; */
@@ -97,6 +104,9 @@
   align-items: flex-start;
   position: relative;
   width: 100%;
+  /* padding-bottom: 15px; */
+  background-color: #ffffff;
+  /* border-bottom: 1px solid #ecf0f1; */
 }
 
 .postFooter {

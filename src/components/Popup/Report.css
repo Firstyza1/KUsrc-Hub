@@ -13,7 +13,7 @@
 
 .report-container {
   background-color: white;
-  border-radius: 12px;
+  border-radius: 5px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   width: 90%;
   max-width: 500px;
@@ -40,7 +40,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px;
+  /* padding: 5px 16px; */
+  padding: 10px 15px;
   background-color: #f8f9fa;
   border-bottom: 1px solid #e9ecef;
 }

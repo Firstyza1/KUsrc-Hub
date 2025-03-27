@@ -45,7 +45,7 @@ input[type="password"]::-webkit-credentials-auto-fill-button {
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(1px);
+  /* backdrop-filter: blur(1px); */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -73,9 +73,8 @@ button {
   align-items: center;
   gap: 5px;
 }
-.dateTime i{
+.dateTime i {
   font-size: 15px;
-
 }
 
 /* ลบส่วนนี้หากไม่ต้องการแสดง Tooltip ด้วย CSS */
@@ -93,3 +92,32 @@ button {
   white-space: nowrap;
   z-index: 10;
 } */
+
+.content-desc {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  padding: 0px 5px;
+}
+.select-filter {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.custom-select .react-select__multi-value__label {
+  display: none;
+}
+
+.sort-container {
+  display: flex;
+  align-items: center;
+  align-content: center;
+  gap: 5px;
+  border: none;
+}
+.sort-container select {
+  border: none;
+  border-radius: 20px;
+  padding: 4px;
+  outline: none;
+}

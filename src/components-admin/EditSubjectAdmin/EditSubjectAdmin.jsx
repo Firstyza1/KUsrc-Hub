@@ -2,20 +2,17 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import SideBar from "../SideBar/SideBar";
-import ClipLoader from "react-spinners/ClipLoader"; // เพิ่ม ClipLoader
+import ClipLoader from "react-spinners/ClipLoader";
+import { toast } from "react-toastify";
 import "./EditSubjectAdmin.css";
-
+import { useUser } from "../../components/UserContext/User";
 function EditSubjectAdmin() {
   const { subject_id } = useParams();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false); // ใช้สถานะ loading
+  const [loading, setLoading] = useState(false);
   const [subjectData, setSubjectData] = useState({});
   const [initialData, setInitialData] = useState({});
-  const [popupMessage, setPopupMessage] = useState("");
-  const [popupIcon, setPopupIcon] = useState("");
-  const [popupColor, setPopupColor] = useState("");
-  const [isPopupVisible, setIsPopupVisible] = useState(false);
-
+  const { user } = useUser();
   const categories = [
     { id: 1, name: "กลุ่มสาระอยู่ดีมีสุข", markId: "health" },
     { id: 2, name: "กลุ่มสาระศาสตร์แห่งผู้ประกอบการ", markId: "entrepreneur" },
@@ -27,9 +24,13 @@ function EditSubjectAdmin() {
   useEffect(() => {
     const fetchSubjectData = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/getSubjectByID/${subject_id}`);
-        const subject = response.data.subject;
-        const category = categories.find((cat) => cat.name === subject.category_name);
+        const response = await axios.get(
+          `http://localhost:3000/Subjects/${subject_id}`
+        );
+        const subject = response.data;
+        const category = categories.find(
+          (cat) => cat.name === subject.category_thai
+        );
         const formattedData = {
           ...subject,
           category_id: category ? category.id : null,
@@ -39,7 +40,15 @@ function EditSubjectAdmin() {
         setSubjectData(formattedData);
         setInitialData(formattedData);
       } catch (error) {
-        showPopup("เกิดข้อผิดพลาดในการดึงข้อมูล", "bx bx-x", "red");
+        toast.error("เกิดข้อผิดพลาดในการดึงข้อมูล", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       }
     };
     fetchSubjectData();
@@ -55,34 +64,48 @@ function EditSubjectAdmin() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true); // เปิดสถานะ loading เมื่อกดปุ่มบันทึก
+    setLoading(true);
 
-    // หน่วงเวลา 3 วินาที
-    setTimeout(async () => {
-      try {
-        await axios.put(`http://localhost:3000/updateSubject/${subject_id}`, {
+    try {
+      await axios.put(
+        `http://localhost:3000/updateSubject/${subject_id}`,
+        {
           ...subjectData,
           subject_id: subjectData.new_subject_id,
-        });
-        showPopup("แก้ไขรายวิชาสำเร็จ!", "bx bx-check", "green");
-        // setTimeout(() => navigate("/ManageSubject"), 3000);
-        setTimeout(() => {
-          window.location.reload();
-        }, 3000);
-      } catch (error) {
-        showPopup("เกิดข้อผิดพลาดในการแก้ไขรายวิชา", "bx bx-x", "red");
-      } finally {
-        setLoading(false); // ปิดสถานะ loading เมื่อเสร็จสิ้นการอัปเดต
-      }
-    }, 3000); // Delay 3 วินาที
-  };
+        },
+        {
+          headers: {
+            authtoken: `Bearer ${user?.token}`,
+          },
+        }
+      );
 
-  const showPopup = (message, icon, color) => {
-    setPopupMessage(message);
-    setPopupIcon(icon);
-    setPopupColor(color);
-    setIsPopupVisible(true);
-    setTimeout(() => setIsPopupVisible(false), 3000);
+      toast.success("แก้ไขรายวิชาสำเร็จ", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    } catch (error) {
+      toast.error("เกิดข้อผิดพลาดในการแก้ไขรายวิชา", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const isChanged = JSON.stringify(subjectData) !== JSON.stringify(initialData);
@@ -90,14 +113,8 @@ function EditSubjectAdmin() {
   return (
     <>
       <SideBar />
-      {isPopupVisible && (
-        <div className="popup-message">
-          <i className={popupIcon} style={{ color: popupColor }}></i>
-          <p>{popupMessage}</p>
-        </div>
-      )}
 
-      {/* ✅ Loader Popup */}
+      {/* Loader Overlay */}
       {loading && (
         <div className="loader-overlay">
           <div className="loader">
@@ -110,39 +127,74 @@ function EditSubjectAdmin() {
       <div className="edit-subject-page">
         <div className="edit-subject-container">
           <div className="edit-subject-header">
-            <i className="bx bx-chevron-left back-icon" onClick={() => navigate(-1)}></i>
-            <div className="text">แก้ไขข้อมูลรายวิชา<div className="underline"></div></div>
+            <i
+              className="bx bx-chevron-left back-icon"
+              onClick={() => navigate(-1)}
+            ></i>
+            <div className="text">
+              แก้ไขข้อมูลรายวิชา<div className="underline"></div>
+            </div>
           </div>
           <form onSubmit={handleSubmit}>
             <div className="edit-subject-inputs">
               <div className="edit-subject-input">
                 <label>รหัสวิชา</label>
-                <input type="text" name="new_subject_id" value={subjectData.new_subject_id || ""} onChange={handleChange} />
+                <input
+                  type="text"
+                  name="new_subject_id"
+                  value={subjectData.new_subject_id || ""}
+                  onChange={handleChange}
+                />
               </div>
               <div className="edit-subject-input">
                 <label>ชื่อวิชา (ไทย)</label>
-                <input type="text" name="subject_thai" value={subjectData.subject_thai || ""} onChange={handleChange} />
+                <input
+                  type="text"
+                  name="subject_thai"
+                  value={subjectData.subject_thai || ""}
+                  onChange={handleChange}
+                />
               </div>
               <div className="edit-subject-input">
                 <label>ชื่อวิชา (อังกฤษ)</label>
-                <input type="text" name="subject_eng" value={subjectData.subject_eng || ""} onChange={handleChange} />
+                <input
+                  type="text"
+                  name="subject_eng"
+                  value={subjectData.subject_eng || ""}
+                  onChange={handleChange}
+                />
               </div>
               <div className="edit-subject-input">
                 <label>หน่วยกิต</label>
-                <input type="text" name="credit" value={subjectData.credit || ""} onChange={handleChange} />
+                <input
+                  type="text"
+                  name="credit"
+                  value={subjectData.credit || ""}
+                  onChange={handleChange}
+                />
               </div>
               <div className="create-subject-inputs-2">
                 <label>หมวดหมู่ศึกษาทั่วไป</label>
                 {categories.map((category) => (
                   <div className="radio-item" key={category.id}>
-                    <input type="radio" name="category_id" value={category.id} checked={subjectData.category_id === category.id} onChange={handleChange} />
+                    <input
+                      type="radio"
+                      name="category_id"
+                      value={category.id}
+                      checked={subjectData.category_id === category.id}
+                      onChange={handleChange}
+                    />
                     <mark id={category.markId}>{category.name}</mark>
                   </div>
                 ))}
               </div>
             </div>
             <div className="edit-subject-submit">
-              <button type="submit" className="btn-submit" disabled={!isChanged || loading}>
+              <button
+                type="submit"
+                className="btn-submit"
+                disabled={!isChanged || loading}
+              >
                 {loading ? "กำลังบันทึก..." : "บันทึกการแก้ไข"}
               </button>
             </div>

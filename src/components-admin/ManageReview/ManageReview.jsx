@@ -1,35 +1,22 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import DataTable from "react-data-table-component";
 import SideBar from "../SideBar/SideBar";
 import { useNavigate } from "react-router-dom";
-import "./ManageReview.css";
-
+import { toast } from "react-toastify";
 function ManageReview() {
   const [reviews, setReviews] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [searchText, setSearchText] = useState("");
+  const [filteredReviews, setFilteredReviews] = useState([]);
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [selectedReview, setSelectedReview] = useState(null);
-  
-  const [errorMessage, setErrorMessage] = useState("");
-  const formatDate = (isoString) => {
-    if (!isoString) return "-";
-    const date = new Date(isoString);
-    const day = date.getDate();
-    const month = date.getMonth() + 1;
-    const year = date.getFullYear() + 543;
-    return `${day}/${month}/${year}`;
-  };
-  useEffect(() => {
-    document.body.classList.add("no-padding");
-    return () => {
-      document.body.classList.remove("no-padding");
-    };
-  }, []);
-
-  const reviewsPerPage = 5;
   const navigate = useNavigate();
 
+  // ฟังก์ชันจัดรูปแบบวันที่
+
+  // ดึงข้อมูลรีวิวจาก API
   useEffect(() => {
     fetchReviews();
   }, []);
@@ -37,23 +24,41 @@ function ManageReview() {
   const fetchReviews = async () => {
     try {
       const response = await axios.get("http://localhost:3000/getAllReview");
-      if (response.data.reviews.length === 0) {
-        setErrorMessage("ไม่มีข้อมูลรีวิว");
+      if (response.data.reviewslength === 0) {
+        setErrorMessage("ไม่มีข้อมูล");
       } else {
         setReviews(response.data.reviews);
-        setErrorMessage("");
+        setFilteredReviews(response.data.reviews);
       }
     } catch (error) {
-      if (error.response && error.response.status === 404) {
-        setErrorMessage("ไม่มีข้อมูลรีวิวรายวิชา");
+      if (error.response.status) {
+        {
+          setError(`เกิดข้อผิดพลาด: ${error.response.status}`);
+        }
       } else {
-        setErrorMessage("เกิดข้อผิดพลาดในการโหลดข้อมูล");
+        setError("เกิดข้อผิดพลาดในการเชื่อมต่อ");
       }
-      console.error("Error fetching reviews:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
- 
+  // การค้นหา
+  const handleSearch = (e) => {
+    const searchValue = e.target.value.toLowerCase();
+    setSearchText(searchValue);
+
+    const filteredData = reviews.filter((review) => {
+      return (
+        review.review_id.toString().includes(searchValue) ||
+        review.username.toLowerCase().includes(searchValue) ||
+        review.subject_id.toString().includes(searchValue)
+      );
+    });
+    setFilteredReviews(filteredData);
+  };
+
+  // การลบรีวิว
   const openDeletePopup = (review) => {
     setSelectedReview(review);
     setShowDeletePopup(true);
@@ -67,191 +72,253 @@ function ManageReview() {
   const handleDeleteReview = async () => {
     if (!selectedReview) return;
     try {
-      await axios.delete(`http://localhost:3000/deleteReview/${selectedReview.review_id}`);
-      const updatedReviews = reviews.filter(review => review.review_id !== selectedReview.review_id);
+      await axios.delete(
+        `http://localhost:3000/deleteReview/${selectedReview.review_id}`
+      );
+      const updatedReviews = reviews.filter(
+        (review) => review.review_id !== selectedReview.review_id
+      );
       setReviews(updatedReviews);
-
-      if (updatedReviews.slice(indexOfFirstReview, indexOfLastReview).length === 0 && currentPage > 1) {
-        setCurrentPage((prev) => prev - 1);
-      }
-
+      setFilteredReviews(updatedReviews);
       closeDeletePopup();
+      toast.success("ลบข้อมูลสำเร็จ", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     } catch (error) {
+      toast.error("เกิดข้อผิดพลาด", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
       console.error("Error deleting review:", error);
     }
   };
 
-  const indexOfLastReview = currentPage * reviewsPerPage;
-  const indexOfFirstReview = indexOfLastReview - reviewsPerPage;
-  const currentReviews = reviews.slice(
-    indexOfFirstReview,
-    indexOfLastReview
-  );
-  const totalPages = Math.ceil(reviews.length / reviewsPerPage);
+  // กำหนดคอลัมน์ของ DataTable
+  const columns = [
+    {
+      name: "ลำดับ",
+      selector: (row, index) => index + 1,
+      width: "65px",
+      sortable: false,
+      conditionalCellStyles: [
+        {
+          when: (row) => true,
+          style: {
+            display: "flex",
+            justifyContent: "center",
+          },
+        },
+      ],
+    },
+    {
+      name: "รหัสรีวิว",
+      selector: (row) => row.review_id,
+      sortable: true,
+      // width: "100px",
+      conditionalCellStyles: [
+        {
+          when: (row) => true,
+          style: {
+            display: "flex",
+            justifyContent: "center",
+          },
+        },
+      ],
+    },
+    {
+      name: "รหัสวิชา",
+      selector: (row) => row.subject_id,
+      sortable: true,
+      // width: "100px",
+      conditionalCellStyles: [
+        {
+          when: (row) => true,
+          style: {
+            display: "flex",
+            justifyContent: "center",
+          },
+        },
+      ],
+    },
+    {
+      name: "เนื้อหา",
+      selector: (row) => row.review_desc,
+      sortable: true,
+      width: "460px",
+    },
 
-  const paginate = (pageNumber) => {
-    if (pageNumber >= 1 && pageNumber <= totalPages) {
-      setCurrentPage(pageNumber);
-    }
-  };
+    {
+      name: "ไฟล์ PDF",
+      cell: (row) =>
+        row.pdf_path ? (
+          <a href={row.pdf_path} target="_blank" rel="noopener noreferrer">
+            <i
+              className="bx bxs-file-pdf"
+              style={{ fontSize: "27px", color: "red", cursor: "pointer" }}
+            ></i>
+          </a>
+        ) : (
+          "-"
+        ),
+      width: "100px",
+      conditionalCellStyles: [
+        {
+          when: (row) => true,
+          style: {
+            display: "flex",
+            justifyContent: "center",
+          },
+        },
+      ],
+    },
+    {
+      name: "ผู้เขียน",
+      selector: (row) => row.username,
+      sortable: true,
+      width: "160px",
+    },
+    {
+      name: "วันที่สร้าง",
+      selector: (row) =>
+        new Date(row.created_at).toLocaleDateString("th-TH", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+        }),
+      sortable: true,
+      width: "130px",
+      conditionalCellStyles: [
+        {
+          when: (row) => true,
+          style: {
+            display: "flex",
+            justifyContent: "center",
+          },
+        },
+      ],
+    },
+    {
+      name: "การดำเนินการ",
+      width: "110px",
+      cell: (row) => (
+        <div className="action-button">
+          <i
+            className="bx bx-show"
+            onClick={() => navigate(`/Subjects/${row.subject_id}`)}
+          ></i>
+          <i className="bx bx-trash" onClick={() => openDeletePopup(row)}></i>
+        </div>
+      ),
+      ignoreRowClick: true,
+      // allowOverflow: true,
+      // button: true,
+    },
+  ];
 
   return (
     <>
       <SideBar />
-      <div className="manage-review-page">
-        <div className="manage-review-header">
-          <p>จัดการรีวิว</p>
-          <div className="admin-profile"></div>
-        </div>
-
-        <div className="search-review-container">
-          <div className="input-search-review">
-            <input
-              type="text"
-              placeholder="ค้นหาด้วยชื่อผู้เขียน/วันที่"
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-            />
-            <button
-              className="search-icon-review"
-              onClick={() => setSearchText("")}
-            >
-              <i className={searchText ? "bx bx-x" : "bx bx-search"}></i>
-            </button>
-          </div>
-        </div>
-
-        <div className="review-table-container">
-          <table>
-          <thead>
-              <tr>
-                <th>รหัสรีวิว</th>
-                <th>รหัสรายวิชา</th>
-                <th>เนื้อหา</th>
-                <th>วันที่</th>
-                <th>ผู้เขียน</th>
-                <th>ไฟล์ PDF</th>
-                <th>การดำเนินการ</th>
-              </tr>
-            </thead>
-            <tbody>
-              {errorMessage ? (
-                <tr>
-                  <td
-                    colSpan="7"
-                    style={{
-                      textAlign: "center",
-                      padding: "100px",
-                      color: "black",
-                    }}
-                  >
-                    {errorMessage}
-                  </td>
-                </tr>
-              ) : currentReviews.length > 0 ? (
-                <>
-                  {currentReviews.map((review) => (
-                <tr key={review.review_id}>
-                  <td>{review.review_id}</td>
-                  <td>{review.subject_id}</td>
-                  <td>{review.review_desc}</td>
-                  <td>{formatDate(review.created_at)}</td>
-                  <td>{review.username}</td>
-                  <td>
-                    {review.pdf_path && (
-                      <a href={review.pdf_path} target="_blank" rel="noopener noreferrer">เปิดไฟล์</a>
-                    )}
-                  </td>
-                  <td>
-                  <div className="subject-button-container">
-                      <button className="show-button">
-                        <i className="bx bx-show"></i> ดู
-                      </button>
-                      <button className="delete-button" onClick={() => openDeletePopup(review)}>
-                        <i className="bx bx-trash"></i> ลบ
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-
-                  {/* 🔹 เติมแถวว่างให้ครบ 5 แถว */}
-                  {Array.from({
-                    length: reviewsPerPage - currentReviews.length,
-                  }).map((_, i) => (
-                    <tr
-                      key={`empty-${i}`}
-                      style={{ height: "70px", backgroundColor: "#fff" }}
-                    >
-                      <td colSpan="6"></td>
-                    </tr>
-                  ))}
-                </>
-              ) : (
-                <tr>
-                  <td
-                    colSpan="6"
-                    style={{
-                      textAlign: "center",
-                      padding: "20px",
-                      color: "gray",
-                    }}
-                  >
-                    ไม่มีข้อมูล
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-
-        <div className="pagination">
-          <button
-            onClick={() => paginate(currentPage - 1)}
-            disabled={currentPage === 1 || reviews.length === 0}
-            className={
-              currentPage === 1 || reviews.length === 0
-                ? "prev-next-button disabled"
-                : "prev-next-button"
-            }
-          >
-            <i className="bx bx-chevron-left"></i>
-          </button>
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button
-              key={i + 1}
-              onClick={() => paginate(i + 1)}
-              className={currentPage === i + 1 ? "active" : ""}
-            >
-              {i + 1}
-            </button>
-          ))}
-          <button
-            onClick={() => paginate(currentPage + 1)}
-            disabled={currentPage === totalPages || reviews.length === 0}
-            className={
-              currentPage === totalPages || reviews.length === 0
-                ? "prev-next-button disabled"
-                : "prev-next-button"
-            }
-          >
-            <i className="bx bx-chevron-right"></i>
-          </button>
-        </div>
-      </div>
-
       {showDeletePopup && (
-        <div className="delete-popup-overlay">
-          <div className="delete-popup">
-            <h3>คุณต้องการลบรีวิวนี้ใช่ไหม?</h3>
-            <p>เนื้อหา: <strong>{selectedReview?.review_desc}</strong></p>
-            <div className="popup-buttons">
-              <button className="cancel-popup-button" onClick={closeDeletePopup}>ยกเลิก</button>
-              <button className="confirm-button" onClick={handleDeleteReview}>ยืนยัน</button>
+        <div className="deletePopupOverlay">
+          <div className="deletePopup">
+            <h3>คุณต้องการลบรีวิวนี้หรือไม่?</h3>
+            <p
+              style={{ marginTop: "10px" }}
+            >{`รหัสรีวิว: ${selectedReview?.review_id}`}</p>
+            <div className="deletePopupButtons">
+              <button onClick={closeDeletePopup} className="cancelButton">
+                ยกเลิก
+              </button>{" "}
+              <button onClick={handleDeleteReview} className="confirmButton">
+                ลบ
+              </button>
             </div>
           </div>
         </div>
       )}
+      <div className="manage-data-page">
+        <div className="manage-data-container">
+          <div className="table-wrapper">
+            <div className="table-header">
+              <div className="table-search">
+                <i className="bx bx-search"></i>
+                <input
+                  type="text"
+                  placeholder="ค้นหาด้วย รหัสรีวิว, รหัสวิชา, หรือชื่อผู้เขียน"
+                  value={searchText}
+                  onChange={handleSearch}
+                  className="search-input"
+                />
+              </div>
+            </div>
+
+            {loading ? (
+              <div className="no-data-message">กำลังโหลด...</div>
+            ) : (
+              <>
+                {error ? (
+                  <div className="no-data-message">{error}</div>
+                ) : (
+                  <DataTable
+                    columns={columns}
+                    data={filteredReviews}
+                    pagination
+                    highlightOnHover
+                    responsive
+                    striped
+                    defaultSortFieldId={1}
+                    noDataComponent={
+                      <div className="no-data-message">ไม่พบข้อมูล</div>
+                    }
+                    customStyles={{
+                      table: {
+                        style: {
+                          border: "1px solid #ccc", // เส้นขอบรอบตาราง
+                        },
+                      },
+                      headCells: {
+                        style: {
+                          backgroundColor: "white",
+                          color: "black",
+                          fontWeight: "bold",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          whiteSpace: "normal",
+                          wordWrap: "break-word",
+                          boxShadow: "0 6px 6px -5px #e1e5ee;",
+                          // border: "1px solid #ddd", // เส้นแบ่งระหว่างหัวคอลัมน์
+                        },
+                      },
+                      cells: {
+                        style: {
+                          // borderRight: "1px solid #ddd", // เส้นแบ่งระหว่างเซลล์
+                        },
+                      },
+                      rows: {
+                        stripedStyle: {
+                          backgroundColor: "#f4f6fb", // สีพื้นหลังสำหรับแถวสลับ
+                        },
+                      },
+                    }}
+                  />
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      </div>
     </>
   );
 }

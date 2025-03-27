@@ -7,10 +7,13 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import ClipLoader from "react-spinners/ClipLoader";
 import SideBar from "../SideBar/SideBar";
+import { useUser } from "../../components/UserContext/User";
+import { toast } from "react-toastify";
 function CreateSubjectForm() {
   const [loading, setLoading] = useState(false);
   const url = "http://localhost:3000/requestSubject";
   const navigate = useNavigate();
+  const { user } = useUser();
   const handleGoBack = () => {
     navigate(-1);
   };
@@ -26,31 +29,81 @@ function CreateSubjectForm() {
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      const response = await axios.post(url, {
-        subject_id: data.subjectID,
-        subject_thai: data.subjectThai,
-        subject_eng: data.subjectEnglish,
-        credit: data.credit,
-        category_id: data.selectedSubject,
+      const response = await axios.post(
+        url,
+        {
+          subject_id: data.subjectID,
+          subject_thai: data.subjectThai,
+          subject_eng: data.subjectEnglish,
+          credit: data.credit,
+          category_id: data.selectedSubject,
+        },
+        {
+          headers: {
+            authtoken: `Bearer ${user?.token}`,
+          },
+        }
+      );
+      toast.success("เพิ่มรายวิชาสำเร็จ", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
       });
-      alert("สร้างรายวิชาสำเร็จ!");
-      console.log("Response:", response.data);
-      window.location.reload();
+      // window.location.reload();
     } catch (error) {
-      console.error("Error occurred:", error);
-      if (error.response) {
-        console.log("Response Error Data:", error.response.data);
-        alert(
-          `เกิดข้อผิดพลาด: ${
-            error.response.data.message || "ไม่สามารถส่งคำร้องได้"
-          }`
-        );
-      } else if (error.request) {
-        console.log("Request Error:", error.request);
-        alert("ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้ กรุณาลองใหม่อีกครั้ง");
+      if (
+        error.response &&
+        error.response.data.message === "subject_id is madatory"
+      ) {
+        toast.error("รหัสรายวิชานี้มีอยู่แล้ว", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      } else if (
+        error.response &&
+        error.response.data.message === "subject_thai is madatory"
+      ) {
+        toast.error("ชื่อรายวิชาภาษาไทยนี้มีอยู่แล้ว", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      } else if (
+        error.response &&
+        error.response.data.message === "subject_eng is madatory"
+      ) {
+        toast.error("ชื่อรายวิชาภาษาอังกฤษนี้มีอยู่แล้ว", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       } else {
-        console.log("General Error:", error.message);
-        alert(`เกิดข้อผิดพลาด: ${error.message}`);
+        toast.error("เกิดข้อผิดพลาด", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       }
     } finally {
       setLoading(false);
@@ -63,7 +116,10 @@ function CreateSubjectForm() {
       <div className="create-subject-page">
         <div className="create-subject-container">
           <div className="create-subject-header">
-          <i className="bx bx-chevron-left back-icon" onClick={handleGoBack}></i>
+            <i
+              className="bx bx-chevron-left back-icon"
+              onClick={handleGoBack}
+            ></i>
             <div className="text">
               แบบฟอร์มเพิ่มรายวิชาลงในระบบ
               <div className="underline"></div>

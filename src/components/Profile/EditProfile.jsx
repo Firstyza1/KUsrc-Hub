@@ -3,21 +3,18 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import ClipLoader from "react-spinners/ClipLoader";
 import Navbar from "../Navbar/Navbar";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./EditProfile.css";
 
 function Editprofile() {
   const { id } = useParams();
   const [file, setFile] = useState(null);
-  const [user, setUser] = useState({ username: "", email: "" });
+  const [user, setUser, loading] = useState({ username: "", email: "" });
   const [preview, setPreview] = useState("");
   const [username, setUsername] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
-  const [popupMessage, setPopupMessage] = useState("");
-  const [popupIcon, setPopupIcon] = useState("");
-  const [popupColor, setPopupColor] = useState("");
-  const [isPopupVisible, setIsPopupVisible] = useState(false);
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -25,6 +22,9 @@ function Editprofile() {
   };
 
   const fetchAPI = async () => {
+    if (!loading) {
+      if (!user) return;
+    }
     try {
       const response = await axios.get(
         `http://localhost:3000/userProfile/${id}`
@@ -33,7 +33,7 @@ function Editprofile() {
       setUsername(response.data.user.username);
     } catch (err) {
       console.error("Error fetching data:", err);
-      showPopup("ไม่สามารถดึงข้อมูลได้", "bx bx-x", "red");
+      showToast("ไม่สามารถดึงข้อมูลได้", "error");
     }
   };
 
@@ -43,11 +43,6 @@ function Editprofile() {
     } else if (user.user_profile) {
       setPreview(user.user_profile);
     }
-    // else {
-    //   setPreview(
-    //     "https://i.pinimg.com/1200x/2c/47/d5/2c47d5dd5b532f83bb55c4cd6f5bd1ef.jpg"
-    //   );
-    // }
   }, [file, user.user_profile]);
 
   useEffect(() => {
@@ -56,6 +51,30 @@ function Editprofile() {
 
   const cancelButton = () => {
     window.location.reload();
+  };
+
+  const showToast = (message, type) => {
+    if (type === "success") {
+      toast.success(message, {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } else if (type === "error") {
+      toast.error(message, {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
   };
 
   const handleSubmit = async () => {
@@ -80,20 +99,15 @@ function Editprofile() {
             },
           }
         );
-        showPopup("อัปเดตโปรไฟล์สำเร็จ!", "bx bx-check", "green");
+        showToast("อัปเดตโปรไฟล์สำเร็จ", "success");
 
-        // ✅ รีเฟรชหน้าเว็บหลังจากแสดง popup 3 วินาที
-        setTimeout(() => {
-          window.location.reload();
-        }, 3000);
+        // setTimeout(() => {
+        //   window.location.reload();
+        // }, 3000);
       } catch (err) {
         const errorMessage =
           err.response?.data?.message || "เกิดข้อผิดพลาด กรุณาลองอีกครั้ง";
-        showPopup(
-          `ไม่สามารถอัปเดตโปรไฟล์ได้: ${errorMessage}`,
-          "bx bx-x",
-          "red"
-        );
+        showToast(`ไม่สามารถอัปเดตโปรไฟล์ได้: ${errorMessage}`, "error");
       }
 
       setIsSubmitting(false);
@@ -101,19 +115,6 @@ function Editprofile() {
     }, 3000);
   };
 
-  // ✅ ฟังก์ชันแสดง Popup แจ้งเตือน
-  const showPopup = (message, icon, color) => {
-    setPopupMessage(message);
-    setPopupIcon(icon);
-    setPopupColor(color);
-    setIsPopupVisible(true);
-
-    setTimeout(() => {
-      setIsPopupVisible(false);
-    }, 3000);
-  };
-
-  // ✅ ตรวจสอบว่ามีการเปลี่ยนแปลงข้อมูลหรือไม่
   const isButtonDisabled =
     (username === user.username && !file) || username === "";
 
@@ -121,20 +122,12 @@ function Editprofile() {
     <>
       <Navbar />
 
-      {/* ✅ Loader Popup */}
       {isLoading && (
         <div className="loader-overlay">
           <div className="loader">
             <ClipLoader color="#02BC77" size={50} />
             <p>กำลังอัปเดตข้อมูล...</p>
           </div>
-        </div>
-      )}
-
-      {isPopupVisible && (
-        <div className="popup-message">
-          <i className={popupIcon} style={{ color: popupColor }}></i>
-          <p>{popupMessage}</p>
         </div>
       )}
 
@@ -173,26 +166,23 @@ function Editprofile() {
                 onChange={(e) => setUsername(e.target.value)}
                 placeholder={user.username || "กรอกชื่อผู้ใช้ใหม่..."}
               />
-              <i className="bx bx-edit"></i>
+              {/* <i className="bx bx-edit"></i> */}
             </div>
           </div>
           <div className="button-container">
-            <div className="cancel-button">
-              <button type="button" onClick={cancelButton}>
-                <i className="bx bxs-x-circle"></i>ยกเลิก
-              </button>
-            </div>
-            <div className="edit-button">
-              <button
-                type="button"
-                onClick={handleSubmit}
-                disabled={isButtonDisabled}
-                style={{ backgroundColor: isButtonDisabled ? "gray" : "" }}
-              >
-                <i className="bx bx-edit"></i>
-                เเก้ไข
-              </button>
-            </div>
+            <button className="cancel-button" onClick={cancelButton}>
+              <i className="bx bxs-x-circle"></i>
+              <p>ยกเลิก</p>
+            </button>
+            <button
+              className="edit-profile-button"
+              onClick={handleSubmit}
+              disabled={isButtonDisabled}
+              style={{ backgroundColor: isButtonDisabled ? "gray" : "" }}
+            >
+              <i className="bx bx-edit"></i>
+              <p>เเก้ไข</p>
+            </button>
           </div>
         </div>
       </div>

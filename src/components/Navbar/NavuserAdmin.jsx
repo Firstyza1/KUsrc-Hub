@@ -3,7 +3,7 @@ import "./Navbar.css";
 import { Link } from "react-router-dom";
 import { useUser } from "../UserContext/User";
 import { useNavigate } from "react-router-dom";
-const Navuser = () => {
+const NavuserAdmin = () => {
   const { user, loading, logoutUser } = useUser();
   const [activePopup, setActivePopup] = useState(false);
   const closeMenu = () => setActivePopup(false);
@@ -83,7 +83,11 @@ const Navuser = () => {
                     onClick={() => setActivePopup(!activePopup)}
                   ></i>
                 </div>
-                <div className={`user-nav-container ${user?.role === "admin" ? "admin" : ""}`}>
+                <div
+                  className={`user-nav-container ${
+                    user?.role === "admin" ? "admin" : ""
+                  }`}
+                >
                   <div className="user-nav-info">
                     <img
                       className="user-profile-info"
@@ -98,11 +102,11 @@ const Navuser = () => {
                     {user?.role === "admin" && (
                       <li
                         className="user-menu-item"
-                        onClick={() => navigate(`/Dashboard`)}
+                        onClick={() => navigate(`/Subjects`)}
                       >
-                        <i className="bx bx-data"></i>
+                        <i className="bx bx-home"></i>
 
-                        <p>จัดการข้อมูล</p>
+                        <p>หน้าเว็บไซต์หลัก</p>
                       </li>
                     )}
                     <li
@@ -140,4 +144,4 @@ const Navuser = () => {
   );
 };
 
-export default Navuser;
+export default NavuserAdmin;

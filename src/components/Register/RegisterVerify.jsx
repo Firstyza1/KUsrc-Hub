@@ -8,6 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import ClipLoader from "react-spinners/ClipLoader";
+import { toast } from "react-toastify";
 
 function RegisterVerify() {
   const location = useLocation();
@@ -33,15 +34,47 @@ function RegisterVerify() {
         password: password,
         otp: data.otp,
       });
-      alert("สมัครสมาชิกสำเร็จ");
+      toast.success("สมัครสมาชิกสำเร็จ", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
       navigate("/login");
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        alert("รหัส OTP ไม่ถูกต้อง");
+        toast.error("รหัส OTP ไม่ถูกต้อง", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       } else if (error.response && error.response.status === 400) {
-        alert("รหัส OTP หมดอายุ");
+        toast.error("รหัส OTP หมดอายุ", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       } else {
-        alert("เกิดข้อผิดพลาด");
+        toast.error("เกิดข้อผิดพลาด", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       }
     } finally {
       setLoading(false);
@@ -53,15 +86,13 @@ function RegisterVerify() {
       <Navbar />
       <div className="login-page">
         <div className="register-container">
-          <div className="icon" onClick={() => navigate(-1)}>
-            <i className="bx bx-chevron-left"></i>
+          <div className="login-header">
+            <i className="bx bx-chevron-left" onClick={() => navigate(-1)}></i>
+            <h2 className="text">ยืนยันอีเมล</h2>
           </div>
-          <div className="register-header">
-            <h2 className="text">
-              ยืนยันอีเมล<div className="underline"></div>
-            </h2>
+          <div className="email-text">
+            <span>เราได้ส่งรหัส OTP ไปที่อีเมล</span> <span>{email}</span>
           </div>
-          <div className="email-text">เราได้ส่งรหัส OTP ไปที่อีเมล {email}</div>
           <div className="register-inputs">
             <div className="otp-input">
               <div className="register-input">
