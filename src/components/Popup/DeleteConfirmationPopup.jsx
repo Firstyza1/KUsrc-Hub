@@ -1,0 +1,75 @@
+import React, { useEffect } from "react";
+import axios from "axios";
+import "./DeleteConfirmationPopup.css";
+import { useUser } from "../UserContext/User";
+const DeleteConfirmationPopup = ({
+  message,
+  onConfirm,
+  onCancel,
+  type,
+  id,
+  refetch,
+  showDeleteSuccessToast,
+}) => {
+  useEffect(() => {
+    document.body.classList.add("modal-open");
+    return () => {
+      document.body.classList.remove("modal-open");
+    };
+  }, []);
+  const { user } = useUser();
+  const handleDelete = async () => {
+    try {
+      let endpoint;
+      if (type === "post") {
+        endpoint = `deletePost/${id}`;
+      } else if (type === "comment") {
+        endpoint = `deleteComment/${id}`;
+      } else if (type === "review") {
+        endpoint = `deleteReview/${id}`;
+      } else {
+        alert("ประเภทไม่ถูกต้อง");
+        return;
+      }
+
+      await axios.delete(`http://localhost:3000/${endpoint}`, {
+        headers: {
+          authtoken: `Bearer ${user?.token}`,
+        },
+      });
+      // alert("ลบข้อมูลเรียบร้อยแล้ว");
+      onConfirm();
+      if (refetch) refetch();
+      if (showDeleteSuccessToast) showDeleteSuccessToast();
+    } catch (error) {
+      console.error("เกิดข้อผิดพลาดในการลบข้อมูล:", error);
+      toast.error("เกิดข้อผิดพลาด", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+  };
+
+  return (
+    <div className="deletePopupOverlay">
+      <div className="deletePopup">
+        <h3>{message}</h3>
+        <div className="deletePopupButtons">
+          <button onClick={onCancel} className="cancelButton">
+            ยกเลิก
+          </button>
+          <button onClick={handleDelete} className="confirmButton">
+            ลบ
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default DeleteConfirmationPopup;

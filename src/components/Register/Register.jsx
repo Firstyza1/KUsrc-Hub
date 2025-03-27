@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import ClipLoader from "react-spinners/ClipLoader";
-
+import { ToastContainer, toast } from "react-toastify";
 function Register() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -32,7 +32,6 @@ function Register() {
         username: data.username,
         password: data.confirmPassword,
       });
-
       navigate("/RegisterVerify", {
         state: {
           email: data.email,
@@ -42,11 +41,35 @@ function Register() {
       });
     } catch (error) {
       if (error.response && error.response.status === 400) {
-        alert("อีเมลถูกใช้ไปแล้ว");
+        toast.error("อีเมลถูกใช้ไปแล้ว", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       } else if (error.response && error.response.status === 401) {
-        alert("ชื่อผู้ใช้ถูกใช้ไปแล้ว");
+        toast.error("ชื่อผู้ใช้ถูกใช้ไปแล้ว", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       } else {
-        alert("เกิดข้อผิดพลาด");
+        toast.error("เกิดข้อผิดพลาด", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       }
     } finally {
       setLoading(false);
@@ -59,14 +82,12 @@ function Register() {
       <div className="register-page">
         <div className="register-container">
           <div className="register-header">
-            <div className="text">
-              ลงทะเบียน<div className="underline"></div>
-            </div>
+            <h2 className="text">ลงทะเบียน</h2>
           </div>
           <div className="register-inputs">
             <div>
               <div className="register-input">
-                <i class="bx bxs-envelope"></i>
+                <i className="bx bxs-envelope"></i>
                 <input
                   type="text"
                   placeholder="อีเมล"
@@ -80,7 +101,7 @@ function Register() {
             </div>
             <div>
               <div className="register-input">
-                <i class="bx bxs-user-circle"></i>
+                <i className="bx bxs-user-circle"></i>
                 <input
                   type="text"
                   placeholder="ชื่อผู้ใช้"
@@ -93,7 +114,7 @@ function Register() {
             </div>
             <div>
               <div className="register-input">
-                <i class="bx bxs-lock-alt"></i>
+                <i className="bx bxs-lock-alt"></i>
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder="รหัสผ่าน"
@@ -111,7 +132,7 @@ function Register() {
             </div>
             <div>
               <div className="register-input">
-                <i class="bx bxs-lock-alt"></i>
+                <i className="bx bxs-lock-alt"></i>
                 <input
                   type={showConPassword ? "text" : "password"}
                   placeholder="ยืนยันรหัสผ่าน"
@@ -133,7 +154,7 @@ function Register() {
           <div className="Button-register">
             <Link to="/login">มีบัญชีอยู่แล้ว</Link>
           </div>
-          <div className="submit-containter">
+          <div className="submit-container">
             <button
               className="submit"
               onClick={handleSubmit(onSubmit)}
@@ -142,7 +163,7 @@ function Register() {
               {loading ? (
                 <ClipLoader color={"#ffffff"} size={18} />
               ) : (
-                "ลงทะเบียน"
+                <h4>ลงทะเบียน</h4>
               )}
             </button>
           </div>

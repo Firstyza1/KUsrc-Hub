@@ -1,0 +1,194 @@
+/* SubjectTable.css */
+.table-header {
+  /* background-color: #4caf50; 
+  color: white; 
+  font-size: 16px; 
+  font-weight: bold;  */
+  padding: 5px 0px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.table-search {
+  display: flex;
+  align-items: center;
+  max-width: 450px;
+  width: 100%;
+  /* background-color: #e8f0fe; */
+  border-radius: 5px;
+  padding: 5px 10px;
+  /* min-width: 100px; */
+  border: 1px solid #c9c9c9;
+  height: 40px;
+  border-radius: 5px;
+}
+
+/* สไตล์สำหรับข้อความ "ไม่พบข้อมูล" */
+.no-data-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 130px;
+  width: 100%;
+  font-size: 16px;
+  color: #888;
+  border: 1px solid #ddd;
+  /* border-radius: 5px; */
+}
+/* สไตล์สำหรับ container ของตาราง */
+.manage-data-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* margin: 0px 20px; */
+  /* background-color: #4caf50; */
+  margin-left: 60px;
+}
+
+.manage-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}
+.user-menu-admin {
+  padding: 4px 12px;
+  border: 2px solid #c9c9c9;
+  border-radius: 12px;
+}
+/* สไตล์สำหรับตาราง */
+.table-wrapper {
+  width: 100%;
+  /* border: 2px solid #c9c9c9; */
+  /* border-radius: 5px; */
+  overflow: hidden;
+  padding: 5px;
+  /* max-height: 500px; */
+  /* display: flex;
+  justify-content: space-between;
+  flex-direction: column; */
+  margin-bottom: 10px;
+  /* border: 1px solid #ccc; */
+  /* box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1); */
+  background: white;
+}
+
+/* สไตล์สำหรับหัวข้อตาราง */
+/* .table-title {
+  text-align: center;
+} */
+
+/* สไตล์สำหรับคอลัมน์ Subject Thai และ Subject English */
+
+.table-cell {
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+/* สไตล์สำหรับปุ่ม Edit */
+.edit-button {
+  margin-right: 10px;
+  padding: 5px 10px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* สไตล์สำหรับปุ่ม Delete */
+.delete-button {
+  padding: 5px 10px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.manage-data-container {
+  max-width: 1400px;
+  width: 100%;
+  margin: 10px 0px;
+  /* background-color: #4caf50; */
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  height: 100%;
+}
+
+.action-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+/* .edit-btn,
+.delete-btn,
+.bx-plus,
+.bx-show,
+.bx-check,
+.bx-x {
+  padding: 10px;
+} */
+
+.action-button i {
+  font-size: 20px;
+  padding: 5px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+}
+.action-button i p {
+  font-size: 15px;
+}
+
+.action-button .bx-pencil {
+  background-color: #f9e070;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.action-button .bx-trash {
+  background-color: #f44336;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.action-button .bx-plus {
+  background-color: #49cb65;
+  color: #ffffff;
+  cursor: pointer;
+}
+.action-button .bx-x {
+  background-color: #f44336;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.action-button .bx-check {
+  background-color: #49cb65;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.action-button .bx-show {
+  background-color: #70c4f9;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.table-search input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #797979;
+  font-size: 15px;
+  margin-left: 5px;
+  height: 100%;
+  width: 100%;
+}

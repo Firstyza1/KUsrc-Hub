@@ -1,6 +1,6 @@
 .request-header .text {
   color: #02bc77;
-  font-size: clamp(20px, 2.5vw, 25px);
+  font-size: clamp(25px, 2.5vw, 30px);
   font-weight: 700;
 }
 
@@ -59,6 +59,7 @@
   flex-direction: column;
   gap: 5px;
 }
+
 .request-input input {
   height: 35px;
   width: 30vw;
@@ -104,7 +105,7 @@
     width: 65vw;
   }
   .request-header .text {
-    font-size: 20px;
+    font-size: 25px;
   }
 }
 
@@ -161,4 +162,26 @@ mark {
 .request-error {
   font-size: 13px;
   color: red;
+}
+
+@media screen and (max-width: 480px) {
+  .request-header h4 {
+    font-size: 1.2rem;
+    line-height: 1.3;
+  }
+
+  .request-input input {
+    font-size: 0.85rem;
+    padding: 8px;
+    height: 30px;
+  }
+
+  .request-submit .btn-submit {
+    font-size: 0.8rem;
+    width: 100px;
+  }
+
+  .request-header .underline {
+    height: 0.07em;
+  }
 }

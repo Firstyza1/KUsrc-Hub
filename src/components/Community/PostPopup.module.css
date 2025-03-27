@@ -1,0 +1,98 @@
+/* .PostPopupPage {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  z-index: 10;
+} */
+
+.PostPopupContainer {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  width: 700px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+  max-height: 60vh;
+}
+
+.postContent {
+  margin: 10px 20px;
+  overflow-y: auto;
+}
+
+.postText textarea {
+  width: 100%;
+  height: 120px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-top: 10px;
+  resize: vertical;
+  outline: none;
+  /* margin-bottom: 20px; */
+}
+.postText textarea:focus {
+  border-color: #005636;
+}
+.postText{
+  display: flex;
+  flex-direction: column;
+}
+.charCounter{
+  display: flex;
+  justify-content: flex-end;
+  color: #333;
+  font-size: 15px;
+  margin-right: 3px;
+}
+.postSubmitContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
+}
+
+.postSubmit {
+  background-color: #02bc77;
+  border-radius: 20px;
+  padding: 10px 20px;
+  color: #ffffff !important;
+  cursor: pointer;
+  width: 20%;
+  padding: 10px 20px;
+  /* margin-top: 20px; */
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* padding-left: 20px; */
+  padding: 10px 15px;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+.bx-x {
+  cursor: pointer;
+}
+
+.header i {
+  font-size: 24px;
+  cursor: pointer;
+  color: #6c757d;
+  transition: color 0.2s;
+}
+.header i:hover {
+  color: #333;
+}
+.header h3 {
+  color: #333;
+}

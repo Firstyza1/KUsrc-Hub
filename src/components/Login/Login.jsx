@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import Navbar from "../Navbar/Navbar";
 import axios from "axios";
 import "./Login.css";
@@ -7,13 +7,13 @@ import { loginSchema } from "../YupValidation/Validation";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
-import { useUser } from "../User";
+import { useUser } from "../UserContext/User";
 import ClipLoader from "react-spinners/ClipLoader";
-
+import { toast } from "react-toastify";
 function Login() {
-  const [loading, setLoading] = useState(false);
+  const [loadingLogin, setloadingLogin] = useState(false);
   const navigate = useNavigate();
-  const { loginUser } = useUser();
+  const { user, loginUser, loading } = useUser();
   const [showPassword, setShowPassword] = useState(false);
 
   const {
@@ -26,7 +26,7 @@ function Login() {
   });
 
   const onSubmit = async (data) => {
-    setLoading(true);
+    setloadingLogin(true);
     try {
       const response = await axios.post("http://localhost:3000/login", {
         email: data.email,
@@ -35,29 +35,66 @@ function Login() {
 
       if (response.data.token) {
         loginUser(response.data.user, response.data.token);
-        console.log(response.data.user);
-        navigate("/");
       }
     } catch (error) {
       if (error.response?.status === 404 || error.response?.status === 401) {
-        alert("อีเมลหรือรหัสผ่านไม่ถูกต้อง");
+        toast.error("อีเมลหรือรหัสผ่านไม่ถูกต้อง", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       } else {
-        alert("เกิดข้อผิดพลาด");
+        toast.error("เกิดข้อผิดพลาด", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       }
     } finally {
-      setLoading(false);
+      setloadingLogin(false);
     }
+  };
+
+  useEffect(() => {
+    if (!loading && user) {
+      if (user?.role === "admin") {
+        navigate("/Dashboard");
+        showLoginSuccess();
+      } else if (user?.role === "user") {
+        navigate("/Subjects");
+        showLoginSuccess();
+      }
+    }
+  }, [user, loading, navigate]);
+
+  const showLoginSuccess = () => {
+    toast.success("เข้าสู่ระบบสำเร็จ", {
+      position: "top-center",
+      autoClose: 1000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
   };
 
   return (
     <>
       <Navbar />
+
       <div className="login-page">
         <div className="login-container">
           <div className="login-header">
-            <div className="text">
-              เข้าสู่ระบบ<div className="underline"></div>
-            </div>
+            <h2 className="text">เข้าสู่ระบบ</h2>
           </div>
           <div className="login-inputs">
             <div>
@@ -101,12 +138,12 @@ function Login() {
             <button
               className="submit"
               onClick={handleSubmit(onSubmit)}
-              disabled={loading}
+              disabled={loadingLogin}
             >
-              {loading ? (
+              {loadingLogin ? (
                 <ClipLoader color={"#ffffff"} size={18} />
               ) : (
-                "เข้าสู่ระบบ"
+                <h4>ข้าสู่ระบบ</h4>
               )}
             </button>
           </div>

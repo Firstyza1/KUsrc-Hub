@@ -4,7 +4,7 @@ import Navbar from "../Navbar/Navbar";
 import { requestFormSchema } from "../YupValidation/Validation";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useUser } from "../User";
+import { useUser } from "../UserContext/User";
 import axios from "axios";
 import ClipLoader from "react-spinners/ClipLoader";
 
@@ -34,7 +34,7 @@ function RequestForm() {
         credit: data.credit,
         category_id: data.selectedSubject,
       });
-      alert("ส่งคำร้องสำเร็จ!");
+      alert("ส่งคำร้องสำเร็จ");
       console.log("Response:", response.data);
       reset();
     } catch (error) {
@@ -65,7 +65,7 @@ function RequestForm() {
         <div className="request-container">
           <div className="request-header">
             <div className="text">
-              แบบฟอร์มเพิ่มรายวิชาลงในระบบ
+              <h4>แบบฟอร์มเพิ่มรายวิชาลงในระบบ</h4>
               <div className="underline"></div>
             </div>
           </div>

@@ -1,0 +1,11 @@
+.back-icon {
+    font-size: 40px;
+    cursor: pointer;
+    color: #333;
+    position: absolute;
+    left: 420px;
+  }
+  
+  .back-icon:hover {
+    color: #555;
+  }

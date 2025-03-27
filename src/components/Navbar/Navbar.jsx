@@ -1,75 +1,85 @@
 import React from "react";
 import "./Navbar.css";
-import { Link } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { useState } from "react";
-import { useUser } from "../User";
-
+import logo from "../../assets/images/logo.png";
+import Navuser from "./Navuser";
+import { useUser } from "../UserContext/User";
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const closeMenu = () => setIsMenuOpen(false);
-  const { user, loading, logoutUser } = useUser();
-
+  const location = useLocation();
+  const { user } = useUser();
   return (
     <header className="header">
-      <div className="logo-container">
-        <img
-          className="logo-image"
-          src="src/assets/images/logo.png"
-          alt="Logo"
-        />
+      <div className="navbar-container">
+        <div className="navbar-header">
+          <div className="logo-container">
+            <img className="logo-image" src={logo} alt="Logo" />
+          </div>
+          <nav className={isMenuOpen ? "navbar active" : "navbar"}>
+            <div className="navbar-link" onClick={closeMenu}>
+              <NavLink
+                to="/Subjects"
+                className={location.pathname === "/Subjects" ? "active" : ""}
+              >
+                รีวิวรายวิชา
+              </NavLink>
+              <NavLink
+                to="/Community"
+                className={location.pathname === "/Community" ? "active" : ""}
+              >
+                ชุมชน
+              </NavLink>
+              {/* {user?.role === "admin" && (
+                <NavLink
+                  to="/Dashboard"
+                  className={location.pathname === "/Dashboard" ? "active" : ""}
+                >
+                  จัดการข้อมูล
+                </NavLink>
+              )} */}
+
+              {/* <NavLink to="/About">เกี่ยวกับเรา</NavLink> */}
+              {/* <NavLink to="/Register">ลงทะเบียน</NavLink>
+              <NavLink to="/Login">เข้าสู่ระบบ</NavLink> */}
+            </div>
+          </nav>
+        </div>
+        <div className="user-menu-navber">
+          <Navuser />
+        </div>
       </div>
-      <nav className={isMenuOpen ? "navbar active" : "navbar"}>
+      {/* <nav className={isMenuOpen ? "navbar active" : "navbar"}>
         {isMenuOpen ? (
           <>
-            <div className="navbar-link" onClick={closeMenu}>
-              <Link to="/">รีวิวรายวิชา</Link>
-              <Link to="/Community">ชุมชน</Link>
-              <Link to="/About">เกี่ยวกับเรา</Link>
-              <Link to="/Register">ลงทะเบียน</Link>
-              <Link to="/Login">เข้าสู่ระบบ</Link>
+            <div className="navbar-NavLink" onClick={closeMenu}>
+              <NavLink to="/Subjects">รีวิวรายวิชา</NavLink>
+              <NavLink to="/Community">ชุมชน</NavLink>
+              <NavLink to="/About">เกี่ยวกับเรา</NavLink>
+              <NavLink to="/Register">ลงทะเบียน</NavLink>
+              <NavLink to="/Login">เข้าสู่ระบบ</NavLink>
             </div>
           </>
         ) : (
           <>
-            <div className="navbar-link" onClick={closeMenu}>
-              <Link to="/">รีวิวรายวิชา</Link>
-              <Link to="/Community">ชุมชน</Link>
-              <Link to="/About">เกี่ยวกับเรา</Link>
+            <div className="navbar-NavLink" onClick={closeMenu}>
+              <NavLink to="/Subjects">รีวิวรายวิชา</NavLink>
+              <NavLink to="/Community">ชุมชน</NavLink>
+              <NavLink to="/About">เกี่ยวกับเรา</NavLink>
             </div>
-
-            <div className="navbar-button" onClick={closeMenu}>
-              {loading ? (
-                // กำลังโหลด
-                <div className="loading-placeholder">กำลังโหลด...</div>
-              ) : user ? (
-                <>
-                  <a className="notification" href="#">
-                    <i className="bx bxs-bell"></i>
-                  </a>
-                  <span>{user.username}</span>
-                  <i className="bx bx-log-out" onClick={logoutUser}></i>
-                </>
-              ) : (
-                <>
-                  <Link className="register-button" to="/Register">
-                    ลงทะเบียน
-                  </Link>
-                  <Link className="login-button" to="/Login">
-                    เข้าสู่ระบบ
-                  </Link>
-                </>
-              )}
-            </div>
+            <Navuser />
           </>
         )}
-      </nav>
+      </nav> */}
       <div className="navMoblie">
-        <div className="notification-btn" href="#">
-          <i className="bx bxs-bell"></i>
-        </div>
         <div className="navMenu" onClick={toggleMenu}>
-          {isMenuOpen ? <i className="bx bx-x"></i> : <i className="bx bx-menu"></i>}
+          {isMenuOpen ? (
+            <i className="bx bx-x"></i>
+          ) : (
+            <i className="bx bx-menu"></i>
+          )}
         </div>
       </div>
     </header>

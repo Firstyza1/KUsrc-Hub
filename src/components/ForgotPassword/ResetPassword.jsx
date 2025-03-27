@@ -8,6 +8,7 @@ import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { PasswordFormSchema } from "../YupValidation/Validation";
 import ClipLoader from "react-spinners/ClipLoader";
+import { toast } from "react-toastify";
 
 function ResetPassword() {
   const navigate = useNavigate();
@@ -34,10 +35,29 @@ function ResetPassword() {
         email: email,
         newPassword: data.confirmPassword,
       });
+      toast.success("เปลี่ยนรหัสผ่านสำเร็จ", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
       // localStorage.removeItem("email");
-      navigate("/login");
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
     } catch (error) {
-      alert("เกิดข้อผิดพลาด");
+      toast.error("เกิดข้อผิดพลาด", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     } finally {
       setLoading(false);
     }
@@ -48,16 +68,16 @@ function ResetPassword() {
       <Navbar />
       <div className="login-page">
         <div className="login-container">
-          <div className="icon" onClick={() => navigate(-1)}>
-            <i className="bx bx-chevron-left"></i>
-          </div>
           <div className="login-header">
-            <div className="text">
-              เปลี่ยนรหัสผ่าน<div className="underline"></div>
-            </div>
+            <i className="bx bx-chevron-left" onClick={() => navigate(-1)}></i>
+            <h2 className="text">เปลี่ยนรหัสผ่าน</h2>
           </div>
+          {/* <div className="login-header">
+            <h2 className="text">เปลี่ยนรหัสผ่าน</h2>
+          </div> */}
           <div className="email-text">
-            กรุณาใส่รหัสผ่านใหม่สำหรับอีเมล {email}
+            <span>กรุณาใส่รหัสผ่านใหม่สำหรับอีเมล</span>
+            <span>{email}</span>
           </div>
           <div className="login-inputs">
             <div className="password-input">
@@ -105,7 +125,11 @@ function ResetPassword() {
               onClick={handleSubmit(onSubmit)}
               disabled={loading}
             >
-              {loading ? <ClipLoader color={"#ffffff"} size={18} /> : "ยืนยัน"}
+              {loading ? (
+                <ClipLoader color={"#ffffff"} size={18} />
+              ) : (
+                <h4>ยืนยัน</h4>
+              )}
             </button>
           </div>
         </div>

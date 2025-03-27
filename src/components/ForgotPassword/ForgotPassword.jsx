@@ -7,6 +7,7 @@ import { ResetPasswordFormSchema } from "../YupValidation/Validation";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import ClipLoader from "react-spinners/ClipLoader";
+import { toast } from "react-toastify";
 
 function ForgotPassword() {
   const navigate = useNavigate();
@@ -33,9 +34,25 @@ function ForgotPassword() {
       navigate("/EmailVerify", { state: { email: data.email } });
     } catch (error) {
       if (error.response && error.response.status === 404) {
-        alert("อีเมลไม่ถูกต้อง");
+        toast.error("อีเมลไม่ถูกต้อง", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       } else {
-        alert("เกิดข้อผิดพลาด");
+        toast.error("เกิดข้อผิดพลาด", {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       }
     } finally {
       setLoading(false);
@@ -47,14 +64,11 @@ function ForgotPassword() {
       <Navbar />
       <div className="login-page">
         <div className="login-container">
-          <div className="icon" onClick={() => navigate(-1)}>
-            <i className="bx bx-chevron-left"></i>
-          </div>
           <div className="login-header">
-            <div className="text">
-              ลืมรหัสผ่าน<div className="underline"></div>
-            </div>
+            <i className="bx bx-chevron-left" onClick={() => navigate(-1)}></i>
+            <h2 className="text">ลืมรหัสผ่าน</h2>
           </div>
+
           <div className="login-inputs">
             <div className="email-input">
               <div className="login-input">
@@ -77,7 +91,11 @@ function ForgotPassword() {
               onClick={handleSubmit(onSubmit)}
               disabled={loading}
             >
-              {loading ? <ClipLoader color={"#ffffff"} size={18} /> : "ยืนยัน"}
+              {loading ? (
+                <ClipLoader color={"#ffffff"} size={18} />
+              ) : (
+                <h4>ยืนยัน</h4>
+              )}
             </button>
           </div>
         </div>

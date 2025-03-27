@@ -1,0 +1,272 @@
+body.modal-open {
+  overflow: hidden;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* padding-left: 20px; */
+  padding: 10px 15px;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+  border-top-left-radius: 12px; /* มุมบนซ้าย */
+  border-top-right-radius: 12px; /* มุมบนขวา */
+}
+.review-header i {
+  font-size: 24px;
+  cursor: pointer;
+  color: #6c757d;
+  transition: color 0.2s;
+}
+.review-header i:hover {
+  color: #333;
+}
+.review-header h3 {
+  color: #333;
+}
+
+.review-popup-container {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  width: 750px;
+
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+  max-height: 85vh;
+  animation: slideIn 0.3s ease-out;
+}
+.review-content-container {
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.bx-x {
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.review-popup-container textarea {
+  width: 100%;
+  height: 120px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  resize: vertical;
+  outline: none;
+  margin-top: 10px;
+}
+.review-popup-container textarea:focus {
+  border-color: #005636;
+}
+.char-counter {
+  display: flex;
+  justify-content: flex-end;
+  color: #333;
+  font-size: 15px;
+  margin-right: 3px;
+}
+.score-label,
+.grade-label {
+  display: flex;
+  padding: 5px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 20px;
+  text-align: center;
+  transition: 0.2s;
+}
+.grade-label {
+  display: flex;
+  justify-content: center;
+  width: 40px;
+}
+.score-label:hover,
+.grade-label:hover {
+  background-color: #e3f2fd;
+  border-color: #2196f3;
+}
+
+.score-label:hover i,
+.grade-label:hover i {
+  color: #2196f3;
+}
+
+.score-label.selected,
+.grade-label.selected {
+  background-color: #e3f2fd;
+  border-color: #2196f3;
+}
+
+.score-label.selected i,
+.grade-label.selected {
+  color: #2196f3;
+}
+
+.score-group input[type="radio"],
+.grade-group input[type="radio"] {
+  display: none;
+}
+
+.score-group,
+.grade-group {
+  display: flex;
+  gap: 10px;
+  margin-left: 10px;
+}
+.grade-container {
+  flex-wrap: wrap;
+  gap: 15px;
+  /* background: #f8f9fa;
+  padding: 16px;
+  border-radius: 8px; */
+}
+.score-type {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.score-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 25px;
+  background: #f8f9fa;
+  padding: 16px;
+  border-radius: 5px;
+}
+
+.score-header {
+  display: flex;
+  justify-content: space-between;
+}
+.score-lv {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  max-width: 260px;
+  width: 100%;
+}
+
+.grade-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 25px;
+}
+
+.submit-review-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  /* margin-bottom: 20px; */
+}
+.submit-review {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #02bc77;
+  border-radius: 20px;
+  padding: 10px 20px;
+  color: #ffffff !important;
+  cursor: pointer;
+  width: 20%;
+}
+
+.bx-smile,
+.bx-happy-beaming,
+.bx-meh-alt,
+.bx-tired,
+.bx-dizzy {
+  font-size: 30px;
+}
+
+.academic-year-input,
+.semester-input,
+.file-pdf-input {
+  display: flex;
+  gap: 20px;
+  margin-top: 24px;
+  align-items: center;
+}
+
+/* .semester-year {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex-wrap: wrap;
+  background: #f8f9fa;
+  padding: 16px;
+  border-radius: 8px;
+} */
+
+.academic-year-input input {
+  border-radius: 5px;
+}
+
+.semester-group {
+  display: flex;
+  gap: 15px;
+}
+
+.semester-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.semester-label input[type="radio"] {
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+}
+.academic-year-input input {
+  padding: 5px 10px;
+  width: 100px;
+}
+
+.file-upload-label {
+  background-color: #02bc77;
+  color: white;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 5px;
+  text-align: center;
+  display: inline-block;
+  font-size: 14px;
+  border: 2px solid #ffffff;
+}
+
+.file-upload-label:hover {
+  background-color: #ffffff;
+  color: #02bc77;
+  border: 2px solid #02bc77;
+}
+
+.file-upload-input {
+  display: none;
+}
+
+.year-select {
+  padding: 5px 6px;
+  border-radius: 5px;
+}
+.year-label {
+  font-weight: bold;
+  font-size: 16px;
+}
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

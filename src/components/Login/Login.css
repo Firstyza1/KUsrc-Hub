@@ -25,28 +25,32 @@
   /* width: 500px; */
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
   border-top: 0.1px solid rgba(0, 0, 0, 0.1);
+  max-height: 100vh;
+  overflow-y: auto;
 }
 
 .login-header {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  /* flex-direction: column; */
   align-items: center;
   width: 100%;
   margin-top: 30px;
   gap: 9px;
-}
-
-.login-header .text {
   color: #02bc77;
-  font-size: 25px;
-  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 8px;
 }
 
-.login-header .underline {
-  height: 0.1em;
-  width: 100%;
-  background-color: #02bc77;
-  border-radius: 9px;
+.login-header i {
+  position: absolute;
+  left: 5px;
+  font-size: 27px;
+  cursor: pointer;
+  color: #6f6f6f;
+  cursor: pointer;
 }
 
 .login-inputs {
@@ -69,6 +73,7 @@
   border-radius: 5px;
   width: 100%;
   padding: 5px 10px;
+  min-width: 100px;
 }
 
 .login-input:hover {
@@ -98,7 +103,7 @@
   align-items: center;
   background-color: #02bc77;
   border-radius: 20px;
-  padding: 10px 20px;
+  padding: 8px 20px;
   color: #ffffff !important;
   cursor: pointer;
   width: 100%;
@@ -120,6 +125,7 @@
   color: #02bc77;
   cursor: pointer;
   margin: 10px 77px;
+  flex-wrap: wrap;
 }
 .Button-login a {
   color: #02bc77;
@@ -148,7 +154,7 @@
   text-align: center;
 }
 
-button {
+.button {
   margin-top: 10px;
   padding: 10px 20px;
   background-color: #f44336;
