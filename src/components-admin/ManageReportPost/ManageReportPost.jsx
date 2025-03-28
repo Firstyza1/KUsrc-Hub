@@ -230,8 +230,6 @@ function ManageReportPost() {
         </div>
       ),
       ignoreRowClick: true,
-      // allowOverflow: true,
-      // button: true,
     },
   ];
 

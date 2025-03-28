@@ -24,7 +24,7 @@ function ManageReview() {
   const fetchReviews = async () => {
     try {
       const response = await axios.get("http://localhost:3000/getAllReview");
-      if (response.data.reviewslength === 0) {
+      if (response.data.reviews.length === 0) {
         setErrorMessage("ไม่มีข้อมูล");
       } else {
         setReviews(response.data.reviews);
@@ -221,8 +221,6 @@ function ManageReview() {
         </div>
       ),
       ignoreRowClick: true,
-      // allowOverflow: true,
-      // button: true,
     },
   ];
 

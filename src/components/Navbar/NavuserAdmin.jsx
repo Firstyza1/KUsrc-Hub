@@ -105,13 +105,14 @@ const NavuserAdmin = () => {
                         onClick={() => navigate(`/Subjects`)}
                       >
                         <i className="bx bx-home"></i>
-
                         <p>หน้าเว็บไซต์หลัก</p>
                       </li>
                     )}
                     <li
                       className="user-menu-item"
-                      onClick={() => navigate(`/Profile/${user.user_id}`)}
+                      onClick={() =>
+                        navigate(`/EditProfileAdmin/${user.user_id}`)
+                      }
                     >
                       <i className="bx bx-user-circle"></i>
 
