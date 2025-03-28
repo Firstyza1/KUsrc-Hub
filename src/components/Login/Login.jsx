@@ -143,7 +143,7 @@ function Login() {
               {loadingLogin ? (
                 <ClipLoader color={"#ffffff"} size={18} />
               ) : (
-                <h4>ข้าสู่ระบบ</h4>
+                <h4>เข้าสู่ระบบ</h4>
               )}
             </button>
           </div>

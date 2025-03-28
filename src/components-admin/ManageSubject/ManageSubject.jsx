@@ -197,8 +197,6 @@ const ManageSubject = () => {
         </div>
       ),
       ignoreRowClick: true,
-      // allowOverflow: true,
-      // button: true,
     },
   ];
 

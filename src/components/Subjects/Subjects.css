@@ -169,21 +169,21 @@
 
 /* Style for the category filters by color */
 .category-group label:nth-child(1) input {
-  accent-color: #27ae60;
+  accent-color: #90da9f;
 }
 
 .category-group label:nth-child(2) input {
-  accent-color: #e74c3c;
+  accent-color: #7c9bff;
 }
 
 .category-group label:nth-child(3) input {
-  accent-color: #3498db;
+  accent-color: #80d4ff;
 }
 .category-group label:nth-child(4) input {
-  accent-color: #9b59b6;
+  accent-color: #ffbf80;
 }
 .category-group label:nth-child(5) input {
-  accent-color: #f39c12;
+  accent-color: #ff8080;
 }
 
 .subject-info-container {

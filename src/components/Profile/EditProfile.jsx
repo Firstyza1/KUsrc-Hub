@@ -6,30 +6,30 @@ import Navbar from "../Navbar/Navbar";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./EditProfile.css";
-
-function Editprofile() {
+import { useUser } from "../UserContext/User";
+import { User } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+function EditProfile() {
   const { id } = useParams();
   const [file, setFile] = useState(null);
-  const [user, setUser, loading] = useState({ username: "", email: "" });
+  const [userData, setUserData] = useState({ username: "", email: "" });
   const [preview, setPreview] = useState("");
   const [username, setUsername] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
+  const { user, setUser } = useUser();
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
     setFile(selectedFile);
   };
+  const navigate = useNavigate();
 
   const fetchAPI = async () => {
-    if (!loading) {
-      if (!user) return;
-    }
     try {
       const response = await axios.get(
         `http://localhost:3000/userProfile/${id}`
       );
-      setUser(response.data.user);
+      setUserData(response.data.user);
       setUsername(response.data.user.username);
     } catch (err) {
       console.error("Error fetching data:", err);
@@ -40,17 +40,19 @@ function Editprofile() {
   useEffect(() => {
     if (file) {
       setPreview(URL.createObjectURL(file));
-    } else if (user.user_profile) {
-      setPreview(user.user_profile);
+    } else if (userData.user_profile) {
+      setPreview(userData.user_profile);
     }
-  }, [file, user.user_profile]);
+  }, [file, userData.user_profile]);
 
   useEffect(() => {
     fetchAPI();
   }, []);
 
   const cancelButton = () => {
-    window.location.reload();
+    fetchAPI();
+    setPreview(userData.user_profile);
+    setFile(null);
   };
 
   const showToast = (message, type) => {
@@ -90,7 +92,7 @@ function Editprofile() {
       }
 
       try {
-        await axios.put(
+        const response = await axios.put(
           `http://localhost:3000/updateUserProfile/${id}`,
           formData,
           {
@@ -99,11 +101,26 @@ function Editprofile() {
             },
           }
         );
-        showToast("อัปเดตโปรไฟล์สำเร็จ", "success");
+        const updateUser = response.data.user;
 
-        // setTimeout(() => {
-        //   window.location.reload();
-        // }, 3000);
+        const updatedUser = {
+          ...user,
+          username: updateUser.username,
+          user_profile: updateUser.user_profile,
+        };
+
+        setUserData((prev) => ({
+          ...prev,
+          username: updateUser.username,
+          user_profile: updateUser.user_profile,
+        }));
+
+        if (file) {
+          setFile(null);
+        }
+        setUser(updatedUser);
+        localStorage.setItem("user", JSON.stringify(updatedUser));
+        showToast("อัปเดตโปรไฟล์สำเร็จ", "success");
       } catch (err) {
         const errorMessage =
           err.response?.data?.message || "เกิดข้อผิดพลาด กรุณาลองอีกครั้ง";
@@ -116,12 +133,11 @@ function Editprofile() {
   };
 
   const isButtonDisabled =
-    (username === user.username && !file) || username === "";
+    (username === userData.username && !file) || username === "";
 
   return (
     <>
       <Navbar />
-
       {isLoading && (
         <div className="loader-overlay">
           <div className="loader">
@@ -132,6 +148,10 @@ function Editprofile() {
       )}
 
       <div className="header-container">
+        <i
+          className="bx bx-chevron-left back-icon"
+          onClick={() => navigate(-1)}
+        ></i>
         <h1>เเก้ไขโปรไฟล์</h1>
       </div>
       <div className="editprofile-card">
@@ -153,7 +173,7 @@ function Editprofile() {
             <input
               type="text"
               maxLength="40"
-              placeholder={user.email}
+              placeholder={userData.email}
               disabled
             />
           </div>
@@ -164,7 +184,7 @@ function Editprofile() {
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                placeholder={user.username || "กรอกชื่อผู้ใช้ใหม่..."}
+                placeholder={userData.username || "กรอกชื่อผู้ใช้ใหม่..."}
               />
               {/* <i className="bx bx-edit"></i> */}
             </div>
@@ -190,4 +210,4 @@ function Editprofile() {
   );
 }
 
-export default Editprofile;
+export default EditProfile;

@@ -3,6 +3,7 @@ import "./Sidebar.css";
 import { NavLink, useLocation } from "react-router-dom";
 import logo from "../../assets/images/logoAdmin.png";
 import PageTitle from "./PageTitle";
+import {Flag} from "lucide-react";
 function SideBar() {
   const [isOpen, setIsOpen] = useState(false); // State ควบคุม Sidebar
   const location = useLocation(); // ใช้ useLocation เพื่อดึง path ปัจจุบัน
@@ -21,11 +22,11 @@ function SideBar() {
       case "/ManageReview":
         return "จัดการรีวิว";
       case "/ManageReportReview":
-        return "จัดการรายงานแจ้งลบรีวิว";
+        return "จัดการรายงานรีวิว";
       case "/ManageReportPost":
-        return "จัดการรายงานแจ้งลบโพสต์";
+        return "จัดการรายงานโพสต์";
       case "/ManageReportComment":
-        return "จัดการรายงานแจ้งลบความคิดเห็น";
+        return "จัดการรายงานความคิดเห็น";
       default:
         return "";
     }
@@ -88,26 +89,26 @@ function SideBar() {
             to="/ManageReview"
             className={({ isActive }) => (isActive ? "active-link" : "")}
           >
-            <i className="bx bx-message"></i> <span>จัดการรีวิว</span>
+            <i className='bx bx-comment-dots'></i> <span>จัดการรีวิว</span>
           </NavLink>
           <NavLink
             to="/ManageReportReview"
             className={({ isActive }) => (isActive ? "active-link" : "")}
           >
-            <i className="bx bx-task-x"></i> <span>จัดการรายงานแจ้งลบรีวิว</span>
+            <i className="bx bx-error"></i> <span>จัดการรายงานรีวิว</span>
           </NavLink>
           <NavLink
             to="/ManageReportPost"
             className={({ isActive }) => (isActive ? "active-link" : "")}
           >
-            <i className="bx bx-task-x"></i> <span>จัดการรายงานแจ้งลบโพสต์</span>
+            <i className='bx bx-flag'></i> <span>จัดการรายงานโพสต์</span>
           </NavLink>
           <NavLink
             to="/ManageReportComment"
             className={({ isActive }) => (isActive ? "active-link" : "")}
           >
-            <i className="bx bx-task-x"></i>{" "}
-            <span>จัดการรายงานแจ้งลบความคิดเห็น</span>
+            <i className='bx bx-comment-error'></i>{" "}
+            <span>จัดการรายงานความคิดเห็น</span>
           </NavLink>
         </div>
       </div>

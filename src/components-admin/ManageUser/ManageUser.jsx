@@ -24,7 +24,7 @@ function ManageUser() {
     try {
       const response = await axios.get("http://localhost:3000/getUser");
 
-      if (response.data.users === 0) {
+      if (response.data.users.length === 0) {
         setError("ไม่มีข้อมูล");
       } else {
         setUsers(response.data.users);
@@ -220,8 +220,7 @@ function ManageUser() {
         </div>
       ),
       ignoreRowClick: true,
-      // allowOverflow: true,
-      // button: true,
+
     },
   ];
 

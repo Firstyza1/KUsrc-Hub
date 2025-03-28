@@ -235,8 +235,6 @@ function ManageReportReview() {
         </div>
       ),
       ignoreRowClick: true,
-      // allowOverflow: true,
-      // button: true,
     },
   ];
 

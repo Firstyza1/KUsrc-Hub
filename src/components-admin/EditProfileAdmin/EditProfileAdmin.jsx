@@ -57,15 +57,17 @@ function EditProfileAdmin() {
   }, []);
 
   const cancelButton = () => {
-    window.location.reload();
+    fetchAPI();
+    setPreview(user.user_profile);
+    setFile(null);
   };
 
   const showToast = (message, type) => {
     if (type === "success") {
       toast.success(message, {
         position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
+        autoClose: 1000,
+        hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
@@ -74,8 +76,8 @@ function EditProfileAdmin() {
     } else if (type === "error") {
       toast.error(message, {
         position: "top-center",
-        autoClose: 3000,
-        hideProgressBar: false,
+        autoClose: 1000,
+        hideProgressBar: true,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
@@ -97,7 +99,7 @@ function EditProfileAdmin() {
       }
 
       try {
-        await axios.put(
+        const response = await axios.put(
           `http://localhost:3000/updateUserProfile/${id}`,
           formData,
           {
@@ -106,11 +108,18 @@ function EditProfileAdmin() {
             },
           }
         );
+        const updateUser = response.data.user;
         showToast("อัปเดตโปรไฟล์สำเร็จ", "success");
 
-        setTimeout(() => {
-          window.location.reload();
-        }, 3000);
+        setUser((prev) => ({
+          ...prev,
+          username: updateUser.username,
+          user_profile: updateUser.user_profile,
+        }));
+
+        if (file) {
+          setFile(null);
+        }
       } catch (err) {
         const errorMessage =
           err.response?.data?.message || "เกิดข้อผิดพลาด กรุณาลองอีกครั้ง";

@@ -31,7 +31,6 @@ body.modal-open {
   flex-direction: column;
   background-color: white;
   width: 750px;
-
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   border-radius: 5px;
   max-height: 85vh;
