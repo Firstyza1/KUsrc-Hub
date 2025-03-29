@@ -268,8 +268,19 @@ function ReviewPopup({
                     className={`grade-label ${
                       selectedValue === label ? "selected" : ""
                     }`}
+                    onClick={(e) => {
+                      if (selectedValue === label) {
+                        e.preventDefault();
+                        setValue(`grade`, null); // ตั้งค่าเป็น null เมื่อคลิกที่ตัวเลือกเดิม
+                      }
+                    }}
                   >
-                    <input type="radio" value={label} {...register(`grade`)} />
+                    <input
+                      type="radio"
+                      value={label}
+                      {...register(`grade`)}
+                      checked={selectedValue === label}
+                    />
                     {label}
                   </label>
                 );
