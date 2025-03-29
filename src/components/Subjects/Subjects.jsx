@@ -151,7 +151,7 @@ function Subjects() {
             <div className="search-subject">
               <input
                 type="text"
-                placeholder="ค้นหาด้วยรหัสวิชา / ชื่อวิชา"
+                placeholder="ค้นหาด้วยรหัสวิชา, ชื่อวิชาภาษาไทย, หรือภาษาอังกฤษ"
                 className="search-input"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
