@@ -10,7 +10,7 @@ function ReviewPopup({
   subject_id,
   onClose,
   review_id,
-  refetch,
+  onSuccess,
   showSuccessToast,
 }) {
   const [fileName, setFileName] = useState("");
@@ -143,7 +143,7 @@ function ReviewPopup({
         },
       });
       onClose();
-      refetch();
+      onSuccess();
       showSuccessToast();
       // window.location.reload();
     } catch (error) {
