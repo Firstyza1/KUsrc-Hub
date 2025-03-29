@@ -152,7 +152,7 @@ function Register() {
             </div>
           </div>
           <div className="Button-register">
-            <Link to="/login">มีบัญชีอยู่แล้ว</Link>
+            <div onClick={() => navigate("/login")}>มีบัญชีอยู่แล้ว</div>
           </div>
           <div className="submit-container">
             <button

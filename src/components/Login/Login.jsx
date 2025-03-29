@@ -131,8 +131,10 @@ function Login() {
             </div>
           </div>
           <div className="Button-login">
-            <Link to="/register">มีบัญชีไหม ?</Link>
-            <Link to="/ForgotPassword">ลืมรหัสผ่านใช่หรือไม่ ?</Link>
+            <div onClick={() => navigate("/register")}>มีบัญชีไหม ?</div>
+            <div onClick={() => navigate("/ForgotPassword")}>
+              ลืมรหัสผ่านใช่หรือไม่ ?
+            </div>
           </div>
           <div className="submit-container">
             <button
