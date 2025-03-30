@@ -1,56 +1,91 @@
 import { React, useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import axios from "axios";
 import ClipLoader from "react-spinners/ClipLoader";
 import Navbar from "../Navbar/Navbar";
+import SideBar from "../../components-admin/SideBar/SideBar";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./EditProfile.css";
 import { useUser } from "../UserContext/User";
-import { User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { usernameFormSchema } from "../YupValidation/Validation";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+
 function EditProfile() {
+  const location = useLocation();
+  const { type } = location.state || {};
+  const { myProfile } = location.state || {};
   const { id } = useParams();
   const [file, setFile] = useState(null);
-  const [userData, setUserData] = useState({ username: "", email: "" });
+  const [userData, setUserData] = useState({
+    username: "",
+    user_profile: "",
+  });
   const [preview, setPreview] = useState("");
-  const [username, setUsername] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { user, setUser } = useUser();
-  const handleFileChange = (event) => {
-    const selectedFile = event.target.files[0];
-    setFile(selectedFile);
-  };
   const navigate = useNavigate();
+
+  const {
+    handleSubmit,
+    formState: { errors },
+    register,
+    watch,
+    reset,
+  } = useForm({
+    resolver: yupResolver(usernameFormSchema),
+    defaultValues: {
+      username: "",
+      email: "",
+    },
+    reValidateMode: "onSubmit",
+  });
 
   const fetchAPI = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/userProfile/${id}`
+        `http://localhost:3000/userProfile/${id}`,
+        {
+          headers: {
+            authtoken: `Bearer ${user?.token}`,
+          },
+        }
       );
-      setUserData(response.data.user);
-      setUsername(response.data.user.username);
+      const fetchedUser = response.data.user;
+      setUserData(fetchedUser);
+      setPreview(fetchedUser.user_profile);
+      reset({ username: fetchedUser.username, email: fetchedUser.email });
     } catch (err) {
-      console.error("Error fetching data:", err);
       showToast("ไม่สามารถดึงข้อมูลได้", "error");
     }
   };
 
   useEffect(() => {
-    if (file) {
-      setPreview(URL.createObjectURL(file));
-    } else if (userData.user_profile) {
-      setPreview(userData.user_profile);
+    if (user && id != user?.user_id && user?.role != "admin") {
+      navigate(`/Profile/${user?.user_id}`, { replace: true });
     }
-  }, [file, userData.user_profile]);
+  }, [user?.user_id, id, navigate]);
 
   useEffect(() => {
     fetchAPI();
-  }, []);
+  }, [id]);
+
+  useEffect(() => {
+    if (file) {
+      setPreview(URL.createObjectURL(file));
+    }
+  }, [file]);
+
+  const handleFileChange = (event) => {
+    const selectedFile = event.target.files[0];
+    setFile(selectedFile);
+  };
 
   const cancelButton = () => {
-    fetchAPI();
+    reset({ username: userData.username });
     setPreview(userData.user_profile);
     setFile(null);
   };
@@ -79,65 +114,60 @@ function EditProfile() {
     }
   };
 
-  const handleSubmit = async () => {
+  const handleEditProfile = async (formData) => {
     if (isSubmitting) return;
     setIsSubmitting(true);
     setIsLoading(true);
 
-    setTimeout(async () => {
-      const formData = new FormData();
-      formData.append("username", username);
+    try {
+      const data = new FormData();
+      data.append("username", formData.username);
       if (file) {
-        formData.append("file", file);
+        data.append("file", file);
       }
 
-      try {
-        const response = await axios.put(
-          `http://localhost:3000/updateUserProfile/${id}`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-        const updateUser = response.data.user;
-
+      const response = await axios.put(
+        `http://localhost:3000/updateUserProfile/${id}`,
+        data,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            authtoken: `Bearer ${user?.token}`,
+          },
+        }
+      );
+      const updatedUserData = response.data.user;
+      if (myProfile || user.user_id === userData.user_id) {
         const updatedUser = {
           ...user,
-          username: updateUser.username,
-          user_profile: updateUser.user_profile,
+          username: updatedUserData.username,
+          user_profile: updatedUserData.user_profile,
         };
-
-        setUserData((prev) => ({
-          ...prev,
-          username: updateUser.username,
-          user_profile: updateUser.user_profile,
-        }));
-
-        if (file) {
-          setFile(null);
-        }
         setUser(updatedUser);
         localStorage.setItem("user", JSON.stringify(updatedUser));
-        showToast("อัปเดตโปรไฟล์สำเร็จ", "success");
-      } catch (err) {
-        const errorMessage =
-          err.response?.data?.message || "เกิดข้อผิดพลาด กรุณาลองอีกครั้ง";
-        showToast(`ไม่สามารถอัปเดตโปรไฟล์ได้: ${errorMessage}`, "error");
       }
-
+      setFile(null);
+      setUserData(updatedUserData);
+      showToast("อัปเดตโปรไฟล์สำเร็จ", "success");
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || "เกิดข้อผิดพลาด";
+      showToast(`${errorMessage}`, "error");
+    } finally {
       setIsSubmitting(false);
       setIsLoading(false);
-    }, 3000);
+    }
   };
 
+  const formValues = watch();
   const isButtonDisabled =
-    (username === userData.username && !file) || username === "";
+    (formValues.username === userData.username && !file) ||
+    !formValues.username ||
+    formValues.username.trim() === "";
 
   return (
     <>
-      <Navbar />
+      {type === "admin" ? <SideBar /> : <Navbar />}
+
       {isLoading && (
         <div className="loader-overlay">
           <div className="loader">
@@ -147,14 +177,14 @@ function EditProfile() {
         </div>
       )}
 
-      <div className="header-container">
-        <i
-          className="bx bx-chevron-left back-icon"
-          onClick={() => navigate(-1)}
-        ></i>
-        <h1>เเก้ไขโปรไฟล์</h1>
-      </div>
       <div className="editprofile-card">
+        <div className="editprofile-header">
+          <i
+            className="bx bx-chevron-left back-icon"
+            onClick={() => navigate(-1)}
+          ></i>
+          <h1>เเก้ไขโปรไฟล์</h1>
+        </div>
         <div className="editprofile-container">
           <div className="img-profile">
             <img src={preview} alt="Profile" />
@@ -170,24 +200,21 @@ function EditProfile() {
           </label>
           <div className="form-group">
             <label>อีเมล</label>
-            <input
-              type="text"
-              maxLength="40"
-              placeholder={userData.email}
-              disabled
-            />
+            <input type="text" maxLength="40" {...register("email")} disabled />
           </div>
           <div className="form-group">
             <label>ชื่อผู้ใช้</label>
             <div className="input-container">
               <input
                 type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                {...register("username")}
                 placeholder={userData.username || "กรอกชื่อผู้ใช้ใหม่..."}
+                maxLength={15}
               />
-              {/* <i className="bx bx-edit"></i> */}
             </div>
+            {errors.username && (
+              <div className="text-error">{errors.username.message}</div>
+            )}
           </div>
           <div className="button-container">
             <button className="cancel-button" onClick={cancelButton}>
@@ -196,7 +223,7 @@ function EditProfile() {
             </button>
             <button
               className="edit-profile-button"
-              onClick={handleSubmit}
+              onClick={handleSubmit(handleEditProfile)}
               disabled={isButtonDisabled}
               style={{ backgroundColor: isButtonDisabled ? "gray" : "" }}
             >

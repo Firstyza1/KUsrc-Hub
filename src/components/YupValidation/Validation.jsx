@@ -32,7 +32,10 @@ export const RegisterFormSchema = yup.object({
   username: yup
     .string()
     .required("* กรุณากรอกชื่อผู้ใช้")
-    .matches(/^[a-zA-Z_]+$/, "* ชื่อผู้ใช้ต้องเป็นภาษาอังกฤษ")
+    .matches(
+      /^[a-zA-Z][a-zA-Z0-9_]*$/,
+      "* ชื่อผู้ใช้ต้องขึ้นต้นด้วยภาษาอังกฤษเท่านั้น"
+    )
     .min(5, "* ชื่อผู้ใช้ต้องมีอย่างน้อย 5 ตัวอักษร")
     .max(15, "* ชื่อผู้ใช้ต้องไม่เกิน 15 ตัวอักษร"),
   password: yup
@@ -159,4 +162,22 @@ export const CommentForm = {
 
 export const CommentFormSchema = yup.object().shape({
   comment_desc: yup.string().required("* กรุณากรอกความคิดเห็น"),
+});
+
+export const usernameForm = {
+  username: "",
+  email: "",
+};
+
+export const usernameFormSchema = yup.object().shape({
+  username: yup
+    .string()
+    .required("* กรุณากรอกชื่อผู้ใช้")
+    .matches(
+      /^[a-zA-Z][a-zA-Z0-9_]*$/,
+      "* ชื่อผู้ใช้ต้องขึ้นต้นด้วยภาษาอังกฤษเท่านั้น"
+    )
+    .min(5, "* ชื่อผู้ใช้ต้องมีอย่างน้อย 5 ตัวอักษร")
+    .max(15, "* ชื่อผู้ใช้ต้องไม่เกิน 15 ตัวอักษร"),
+  email: yup.string(),
 });

@@ -19,14 +19,27 @@
 
 /* ส่วนหัว */
 .edit-subject-header {
-  text-align: center;
+  display: flex;
+  align-items: center;
   margin-bottom: 20px;
+}
+
+.edit-subject-header i {
+  /* margin-left: auto; */
+  /* position: relative; */
+  cursor: pointer;
+  color: #333;
+  font-size: 25px;
+  cursor: pointer;
 }
 
 .edit-subject-header .text {
   color: #02bc77;
-  font-size: clamp(20px, 2.5vw, 25px);
+  /* font-size: clamp(20px, 2.5vw, 25px); */
+  font-size: 25px;
   font-weight: 700;
+  flex-grow: 1;
+  text-align: center;
 }
 
 .edit-subject .underline {

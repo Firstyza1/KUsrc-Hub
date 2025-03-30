@@ -13,6 +13,7 @@ import SubjectCard from "./SubjectCard";
 import { useNavigate } from "react-router-dom";
 import PopupLogin from "../Popup/PopupLogin";
 function Review({ subject_id }) {
+  const [subjectRefresh, setSubjectRefresh] = useState(false);
   const [showPopupReview, setShowPopupReview] = useState(false);
   const [reportReview, setReportReview] = useState(false);
   const [activePopupId, setActivePopupId] = useState(null);
@@ -273,6 +274,12 @@ function Review({ subject_id }) {
       progress: undefined,
     });
   };
+
+  const handleReviewSuccess = () => {
+    refetch();
+    setSubjectRefresh((prev) => !prev);
+  };
+
   return (
     <>
       {showDeletePopup && (
@@ -280,11 +287,12 @@ function Review({ subject_id }) {
           message="คุณต้องการลบรีวิวนี้หรือไม่?"
           onConfirm={() => {
             setShowDeletePopup(false), showDeleteSuccessToast();
+            handleReviewSuccess();
           }}
           onCancel={handleCancelDelete}
           type={deleteType}
           id={selectedReviewId}
-          refetch={refetch}
+          // refetch={refetch}
         />
       )}
       {showLogin && <PopupLogin onClose={() => setShowLogin(false)} />}
@@ -306,7 +314,7 @@ function Review({ subject_id }) {
               <span>เขียนรีวิว</span>
             </div>
           </div>
-          <SubjectCard subject_id={subject_id} />
+          <SubjectCard subject_id={subject_id} refresh={subjectRefresh} />
           <div className="review-menu">
             <div className="review-btn-containter">
               <p
@@ -535,7 +543,8 @@ function Review({ subject_id }) {
               review_id={reviewId}
               onClose={() => setShowPopupReview(false)}
               showSuccessToast={showSuccessToast}
-              refetch={refetch}
+              // refetch={refetch}
+              onSuccess={handleReviewSuccess}
             />
           )}
         </div>

@@ -10,7 +10,7 @@ function ReviewPopup({
   subject_id,
   onClose,
   review_id,
-  refetch,
+  onSuccess,
   showSuccessToast,
 }) {
   const [fileName, setFileName] = useState("");
@@ -69,6 +69,11 @@ function ReviewPopup({
     resolver: yupResolver(ReviewdFormSchema),
     reValidateMode: "onSubmit",
   });
+
+  const reviewDesc = watch("review_desc", "");
+  useEffect(() => {
+    setCharCount(reviewDesc?.length || 0);
+  }, [reviewDesc]);
 
   useEffect(() => {
     document.body.classList.add("modal-open");
@@ -143,7 +148,7 @@ function ReviewPopup({
         },
       });
       onClose();
-      refetch();
+      onSuccess();
       showSuccessToast();
       // window.location.reload();
     } catch (error) {
@@ -268,8 +273,19 @@ function ReviewPopup({
                     className={`grade-label ${
                       selectedValue === label ? "selected" : ""
                     }`}
+                    onClick={(e) => {
+                      if (selectedValue === label) {
+                        e.preventDefault();
+                        setValue(`grade`, null); // ตั้งค่าเป็น null เมื่อคลิกที่ตัวเลือกเดิม
+                      }
+                    }}
                   >
-                    <input type="radio" value={label} {...register(`grade`)} />
+                    <input
+                      type="radio"
+                      value={label}
+                      {...register(`grade`)}
+                      checked={selectedValue === label}
+                    />
                     {label}
                   </label>
                 );
@@ -309,7 +325,7 @@ function ReviewPopup({
               id="yearSelect"
               className="year-select"
               {...register("year")}
-              value={selectedYear}
+              // value={selectedYear}
               onChange={(e) => setSelectedYear(e.target.value)}
             >
               <option value="">-- กรุณาเลือกปี --</option>

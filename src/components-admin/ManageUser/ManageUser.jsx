@@ -214,13 +214,16 @@ function ManageUser() {
         <div className="action-button">
           <i
             className="bx bx-pencil"
-            onClick={() => navigate(`/EditProfileAdmin/${row.user_id}`)}
+            onClick={() =>
+              navigate(`/Profile/${row.user_id}`, {
+                state: { type: "admin" },
+              })
+            }
           ></i>
           <i className="bx bx-trash" onClick={() => openDeletePopup(row)}></i>
         </div>
       ),
       ignoreRowClick: true,
-
     },
   ];
 

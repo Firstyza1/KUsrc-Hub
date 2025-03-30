@@ -115,13 +115,23 @@ function CreateSubjectForm() {
       <SideBar />
       <div className="create-subject-page">
         <div className="create-subject-container">
-          <div className="create-subject-header">
+          {/* <div className="create-subject-header">
             <i
               className="bx bx-chevron-left back-icon"
               onClick={handleGoBack}
             ></i>
             <div className="text">
               แบบฟอร์มเพิ่มรายวิชาลงในระบบ
+              <div className="underline"></div>
+            </div>
+          </div> */}
+          <div className="edit-subject-header">
+            <i
+              className="bx bx-chevron-left back-icon"
+              onClick={() => navigate(-1)}
+            ></i>
+            <div className="text">
+              แบบฟอร์มเพิ่มรายวิชา
               <div className="underline"></div>
             </div>
           </div>

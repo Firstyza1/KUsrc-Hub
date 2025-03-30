@@ -6,7 +6,7 @@ import "./SubjectCard.css";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 
-function SubjectCard({ subject_id }) {
+function SubjectCard({ subject_id, refresh }) {
   // const { subject_id } = useParams();
   const [subject, setSubject] = useState(null);
   const [error, setError] = useState(null);
@@ -35,7 +35,7 @@ function SubjectCard({ subject_id }) {
     if (subject_id) {
       fetchSubject();
     }
-  }, [subject_id]);
+  }, [subject_id, refresh]);
 
   if (error) {
     return (
