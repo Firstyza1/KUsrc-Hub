@@ -111,7 +111,10 @@ const NavuserAdmin = () => {
                     <li
                       className="user-menu-item"
                       onClick={() =>
-                        navigate(`/EditProfileAdmin/${user.user_id}`)
+                        navigate(`/Profile/${user.user_id}`, {
+                          replace: true, // ใช้แทนที่ entry ปัจจุบันใน history stack
+                          state: { type: "admin", myProfile: "true" },
+                        })
                       }
                     >
                       <i className="bx bx-user-circle"></i>

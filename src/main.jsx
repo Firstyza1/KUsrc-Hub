@@ -34,7 +34,6 @@ import PopupLogin from "./components/Popup/PopupLogin.jsx";
 import ManageUser from "./components-admin/ManageUser/ManageUser.jsx";
 import ManageSubject from "./components-admin/ManageSubject/ManageSubject.jsx";
 import ManagePost from "./components-admin/ManagePost/ManagePost.jsx";
-import EditProfileAdmin from "./components-admin/EditProfileAdmin/EditProfileAdmin.jsx";
 import CreateSubjectForm from "./components-admin/CreateSubjectAdmin/CreateSubjectAdmin.jsx";
 import EditSubjectAdmin from "./components-admin/EditSubjectAdmin/EditSubjectAdmin.jsx";
 import ManageReview from "./components-admin/ManageReview/ManageReview.jsx";
@@ -171,15 +170,6 @@ const router = createBrowserRouter([
     element: (
       <AdminProtectedRoute>
         <ManagePost />
-      </AdminProtectedRoute>
-    ),
-  },
-  {
-    path: "/EditProfileAdmin/:id",
-    element: (
-      <AdminProtectedRoute>
-        {" "}
-        <EditProfileAdmin />,
       </AdminProtectedRoute>
     ),
   },

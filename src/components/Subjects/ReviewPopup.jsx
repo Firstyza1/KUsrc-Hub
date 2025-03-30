@@ -70,6 +70,11 @@ function ReviewPopup({
     reValidateMode: "onSubmit",
   });
 
+  const reviewDesc = watch("review_desc", "");
+  useEffect(() => {
+    setCharCount(reviewDesc?.length || 0);
+  }, [reviewDesc]);
+
   useEffect(() => {
     document.body.classList.add("modal-open");
     return () => {
@@ -320,7 +325,7 @@ function ReviewPopup({
               id="yearSelect"
               className="year-select"
               {...register("year")}
-              value={selectedYear}
+              // value={selectedYear}
               onChange={(e) => setSelectedYear(e.target.value)}
             >
               <option value="">-- กรุณาเลือกปี --</option>

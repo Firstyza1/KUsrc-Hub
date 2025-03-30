@@ -140,7 +140,7 @@ function Subjects() {
     const currentDate = new Date(); // วันที่ปัจจุบัน
     const timeDifference = currentDate - postDate; // ความแตกต่างในมิลลิวินาที
     const daysDifference = timeDifference / (1000 * 60 * 60 * 24); // แปลงเป็นวัน
-    return daysDifference <= 15; // ตรวจสอบว่าไม่เกิน 15 วัน
+    return daysDifference <= 30; // ตรวจสอบว่าไม่เกิน 30 วัน
   };
   return (
     <>

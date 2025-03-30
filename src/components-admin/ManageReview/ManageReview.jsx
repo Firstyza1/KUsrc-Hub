@@ -4,6 +4,7 @@ import DataTable from "react-data-table-component";
 import SideBar from "../SideBar/SideBar";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { useUser } from "../../components/UserContext/User";
 function ManageReview() {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,7 +14,7 @@ function ManageReview() {
   const [showDeletePopup, setShowDeletePopup] = useState(false);
   const [selectedReview, setSelectedReview] = useState(null);
   const navigate = useNavigate();
-
+  const { user } = useUser();
   // ฟังก์ชันจัดรูปแบบวันที่
 
   // ดึงข้อมูลรีวิวจาก API
@@ -73,7 +74,12 @@ function ManageReview() {
     if (!selectedReview) return;
     try {
       await axios.delete(
-        `http://localhost:3000/deleteReview/${selectedReview.review_id}`
+        `http://localhost:3000/deleteReview/${selectedReview.review_id}`,
+        {
+          headers: {
+            authtoken: `Bearer ${user?.token}`,
+          },
+        }
       );
       const updatedReviews = reviews.filter(
         (review) => review.review_id !== selectedReview.review_id

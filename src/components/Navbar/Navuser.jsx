@@ -83,7 +83,11 @@ const Navuser = () => {
                     onClick={() => setActivePopup(!activePopup)}
                   ></i>
                 </div>
-                <div className={`user-nav-container ${user?.role === "admin" ? "admin" : ""}`}>
+                <div
+                  className={`user-nav-container ${
+                    user?.role === "admin" ? "admin" : ""
+                  }`}
+                >
                   <div className="user-nav-info">
                     <img
                       className="user-profile-info"
@@ -107,7 +111,13 @@ const Navuser = () => {
                     )}
                     <li
                       className="user-menu-item"
-                      onClick={() => navigate(`/Profile/${user.user_id}`)}
+                      onClick={() =>
+                        navigate(`/Profile/${user.user_id}`, {
+                          replace: true,
+                          state: { type: "user", myProfile: "true" },
+                        })
+                      }
+                      // onClick={() => navigate(`/Profile/${user.user_id}`)}
                     >
                       <i className="bx bx-user-circle"></i>
 

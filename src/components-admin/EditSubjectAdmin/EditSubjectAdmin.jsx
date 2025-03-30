@@ -132,7 +132,8 @@ function EditSubjectAdmin() {
               onClick={() => navigate(-1)}
             ></i>
             <div className="text">
-              แก้ไขข้อมูลรายวิชา<div className="underline"></div>
+              แบบฟอร์มแก้ไขข้อมูลรายวิชา
+              <div className="underline"></div>
             </div>
           </div>
           <form onSubmit={handleSubmit}>
