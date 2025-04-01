@@ -8,10 +8,16 @@ const ProtectedRoute = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
   if (loading) {
-    // แสดง loading state ถ้ากำลังเช็คสถานะผู้ใช้
-    return <div>Loading...</div>;
+    return (
+      <>
+        <div className="loader-overlay">
+          <div className="loader">
+            <i class="bx bx-loader-circle bx-spin bx-rotate-90"></i>
+          </div>
+        </div>
+      </>
+    );
   }
-
   if (!user) {
     toast.error("กรุณาเข้าสู่ระบบก่อนเข้าถึงหน้านี้", {
       position: "top-center",

@@ -162,6 +162,14 @@ function SubjectForm() {
 
   return (
     <>
+      {" "}
+      {loading && (
+        <div className="loader-overlay">
+          <div className="loader">
+            <i class="bx bx-loader-circle bx-spin bx-rotate-90"></i>
+          </div>
+        </div>
+      )}
       <SideBar />
       <div className="create-subject-page">
         <div className="create-subject-container">
@@ -270,7 +278,7 @@ function SubjectForm() {
               onClick={handleSubmit(handleSubject)}
               disabled={loading}
             >
-              {loading ? <ClipLoader color={"#ffffff"} size={14} /> : "บันทึก"}
+              <h4>ยืนยัน</h4>
             </button>
           </div>
         </div>

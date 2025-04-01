@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useUser } from "../../components/UserContext/User";
 function ManageReview() {
+  const [circleLoading, setCircleLoading] = useState(false);
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -72,6 +73,7 @@ function ManageReview() {
 
   const handleDeleteReview = async () => {
     if (!selectedReview) return;
+    setCircleLoading(true);
     try {
       await axios.delete(
         `http://localhost:3000/deleteReview/${selectedReview.review_id}`,
@@ -107,10 +109,11 @@ function ManageReview() {
         progress: undefined,
       });
       console.error("Error deleting review:", error);
+    } finally {
+      setCircleLoading(false);
     }
   };
 
-  // กำหนดคอลัมน์ของ DataTable
   const columns = [
     {
       name: "ลำดับ",
@@ -233,6 +236,13 @@ function ManageReview() {
   return (
     <>
       <SideBar />
+      {circleLoading && (
+        <div className="loader-overlay">
+          <div className="loader">
+            <i class="bx bx-loader-circle bx-spin bx-rotate-90"></i>
+          </div>
+        </div>
+      )}
       {showDeletePopup && (
         <div className="deletePopupOverlay">
           <div className="deletePopup">

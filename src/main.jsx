@@ -120,7 +120,11 @@ const router = createBrowserRouter([
 
   {
     path: "/Post/:post_id",
-    element: <Post />,
+    element: (
+      <ProtectedRoute>
+        <Post />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/Review",

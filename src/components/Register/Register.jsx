@@ -79,6 +79,13 @@ function Register() {
   return (
     <>
       <Navbar />
+      {loading && (
+        <div className="loader-overlay">
+          <div className="loader">
+            <i class="bx bx-loader-circle bx-spin bx-rotate-90"></i>
+          </div>
+        </div>
+      )}
       <div className="register-page">
         <div className="register-container">
           <div className="register-header">
@@ -160,11 +167,7 @@ function Register() {
               onClick={handleSubmit(onSubmit)}
               disabled={loading}
             >
-              {loading ? (
-                <ClipLoader color={"#ffffff"} size={18} />
-              ) : (
-                <h4>ลงทะเบียน</h4>
-              )}
+              <h4>ลงทะเบียน</h4>
             </button>
           </div>
         </div>
