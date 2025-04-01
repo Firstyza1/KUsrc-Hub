@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useUser } from "../../components/UserContext/User";
 function ManageReportReview() {
+  const [circleLoading, setCircleLoading] = useState(false);
   const [reportedReviews, setReportedReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState("");
@@ -63,7 +64,7 @@ function ManageReportReview() {
   // ดำเนินการอนุมัติหรือไม่อนุมัติ
   const handleConfirmAction = async () => {
     if (!selectedReport) return;
-
+    setCircleLoading(true);
     try {
       if (actionType === "approve") {
         await axios.delete(
@@ -126,6 +127,8 @@ function ManageReportReview() {
         draggable: true,
         progress: undefined,
       });
+    } finally {
+      setCircleLoading(false);
     }
   };
 
@@ -241,6 +244,13 @@ function ManageReportReview() {
   return (
     <>
       <SideBar />
+      {circleLoading && (
+        <div className="loader-overlay">
+          <div className="loader">
+            <i class="bx bx-loader-circle bx-spin bx-rotate-90"></i>
+          </div>
+        </div>
+      )}
       {showDeletePopup && (
         <div className="deletePopupOverlay">
           <div className="deletePopup">

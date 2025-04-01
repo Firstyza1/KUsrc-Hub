@@ -6,7 +6,7 @@ import { useUser } from "../UserContext/User";
 function Report({ onClose, id, report_type, showReportToast }) {
   const { user } = useUser();
   const [selectedReport, setSelectedReport] = useState(null);
-
+  const [isLoading, setIsLoading] = useState(false);
   // ประเภทการรายงาน
   const reportTypes = [
     "เนื้อหาเกี่ยวกับเรื่องเพศ",
@@ -26,6 +26,7 @@ function Report({ onClose, id, report_type, showReportToast }) {
   const reportSubmit = async () => {
     if (!selectedReport) return;
 
+    setIsLoading(true);
     const endpointMap = {
       review: `reportReview/${id}`,
       post: `reportPost/${id}`,
@@ -64,40 +65,51 @@ function Report({ onClose, id, report_type, showReportToast }) {
         draggable: true,
         progress: undefined,
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="popup-page">
-      <div className="report-container">
-        <div className="report-header">
-          <h3>รายงาน</h3>
-          <i className="bx bx-x" onClick={onClose}></i>
+    <>
+      {isLoading && (
+        <div className="loader-overlay">
+          <div className="loader">
+            <i class="bx bx-loader-circle bx-spin bx-rotate-90"></i>
+          </div>
         </div>
-        <div className="report-content">
-          {reportTypes.map((report, index) => (
-            <label key={index} className="report-label">
-              <input
-                type="radio"
-                name="reportType"
-                value={report}
-                onChange={(e) => setSelectedReport(e.target.value)}
-              />
-              <p>{report}</p>
-            </label>
-          ))}
-        </div>
-        <div className="submit-report-container">
-          <button
-            className="submit-report"
-            disabled={!selectedReport}
-            onClick={reportSubmit}
-          >
-            <h4>รายงาน</h4>
-          </button>
+      )}
+      <div className="popup-page">
+        <div className="report-container">
+          <div className="report-header">
+            <h3>รายงาน</h3>
+            <i className="bx bx-x" onClick={onClose}></i>
+          </div>
+          <div className="report-content">
+            {reportTypes.map((report, index) => (
+              <label key={index} className="report-label">
+                <input
+                  type="radio"
+                  name="reportType"
+                  value={report}
+                  onChange={(e) => setSelectedReport(e.target.value)}
+                />
+                <p>{report}</p>
+              </label>
+            ))}
+          </div>
+          <div className="submit-report-container">
+            <button
+              className="submit-report"
+              disabled={!selectedReport}
+              onClick={reportSubmit}
+            >
+              <h4>รายงาน</h4>
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

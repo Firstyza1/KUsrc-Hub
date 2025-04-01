@@ -25,7 +25,7 @@ const Comment = ({ post_id }) => {
   const [charCount, setCharCount] = useState(0);
   const [editCharCount, setEditCharCount] = useState(0);
   const maxCharLimit = 300;
-
+  const [circleLoading, setCircleLoading] = useState(false);
   const sortOptions = [
     { value: "desc", label: "ใหม่ล่าสุด" },
     { value: "asc", label: "เก่าที่สุด" },
@@ -147,6 +147,7 @@ const Comment = ({ post_id }) => {
   };
 
   const createComment = async (data) => {
+    setCircleLoading(true);
     try {
       await axios.post(
         "http://localhost:3000/createComment",
@@ -168,10 +169,13 @@ const Comment = ({ post_id }) => {
       showSuccessToast();
     } catch (error) {
       console.error("เกิดข้อผิดพลาด :", error);
+    } finally {
+      setCircleLoading(false);
     }
   };
 
   const editCommentSubmit = async (data) => {
+    setCircleLoading(true);
     try {
       await axios.post(
         "http://localhost:3000/createComment",
@@ -193,6 +197,8 @@ const Comment = ({ post_id }) => {
       showSuccessToast();
     } catch (error) {
       console.error("เกิดข้อผิดพลาด :", error);
+    } finally {
+      setCircleLoading(false);
     }
   };
 
@@ -340,6 +346,13 @@ const Comment = ({ post_id }) => {
 
   return (
     <>
+      {circleLoading && (
+        <div className="loader-overlay">
+          <div className="loader">
+            <i class="bx bx-loader-circle bx-spin bx-rotate-90"></i>
+          </div>
+        </div>
+      )}
       {reportComment && (
         <Report
           report_type={"comment"}

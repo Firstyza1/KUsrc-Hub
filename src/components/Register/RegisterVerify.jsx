@@ -34,7 +34,7 @@ function RegisterVerify() {
         password: password,
         otp: data.otp,
       });
-      toast.success("สมัครสมาชิกสำเร็จ", {
+      toast.success("ลงทะเบียนสำเร็จ", {
         position: "top-center",
         autoClose: 1000,
         hideProgressBar: true,
@@ -84,6 +84,14 @@ function RegisterVerify() {
   return (
     <>
       <Navbar />
+
+      {loading && (
+        <div className="loader-overlay">
+          <div className="loader">
+            <i class="bx bx-loader-circle bx-spin bx-rotate-90"></i>
+          </div>
+        </div>
+      )}
       <div className="login-page">
         <div className="register-container">
           <div className="login-header">
@@ -118,11 +126,7 @@ function RegisterVerify() {
               onClick={handleSubmit(onSubmit)}
               disabled={loading}
             >
-              {loading ? (
-                <ClipLoader color={"#ffffff"} size={18} />
-              ) : (
-                <h4>ยืนยัน</h4>
-              )}
+              <h4>ยืนยัน</h4>
             </button>
           </div>
         </div>

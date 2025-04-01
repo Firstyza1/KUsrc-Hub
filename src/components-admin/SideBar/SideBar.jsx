@@ -14,7 +14,7 @@ function SideBar() {
       case "/Dashboard":
         return "แดชบอร์ด";
       case "/ManageUser":
-        return "จัดการผู้ใช้";
+        return "จัดการบัญชีผู้ใช้";
       case "/ManageSubject":
         return "จัดการรายวิชา";
       case "/ManagePost":

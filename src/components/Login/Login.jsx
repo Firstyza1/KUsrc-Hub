@@ -91,6 +91,13 @@ function Login() {
     <>
       <Navbar />
 
+      {loadingLogin && (
+        <div className="loader-overlay">
+          <div className="loader">
+            <i class="bx bx-loader-circle bx-spin bx-rotate-90"></i>
+          </div>
+        </div>
+      )}
       <div className="login-page">
         <div className="login-container">
           <div className="login-header">
@@ -142,11 +149,11 @@ function Login() {
               onClick={handleSubmit(onSubmit)}
               disabled={loadingLogin}
             >
-              {loadingLogin ? (
+              {/* {loadingLogin ? (
                 <ClipLoader color={"#ffffff"} size={18} />
-              ) : (
-                <h4>เข้าสู่ระบบ</h4>
-              )}
+              ) : ( */}
+              <h4>เข้าสู่ระบบ</h4>
+              {/* )} */}
             </button>
           </div>
         </div>

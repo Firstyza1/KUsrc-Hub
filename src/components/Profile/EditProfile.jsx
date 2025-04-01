@@ -171,8 +171,7 @@ function EditProfile() {
       {isLoading && (
         <div className="loader-overlay">
           <div className="loader">
-            <ClipLoader color="#02BC77" size={50} />
-            <p>กำลังอัปเดตข้อมูล...</p>
+            <i class="bx bx-loader-circle bx-spin bx-rotate-90"></i>
           </div>
         </div>
       )}

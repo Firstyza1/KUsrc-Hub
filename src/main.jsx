@@ -34,8 +34,7 @@ import PopupLogin from "./components/Popup/PopupLogin.jsx";
 import ManageUser from "./components-admin/ManageUser/ManageUser.jsx";
 import ManageSubject from "./components-admin/ManageSubject/ManageSubject.jsx";
 import ManagePost from "./components-admin/ManagePost/ManagePost.jsx";
-import CreateSubjectForm from "./components-admin/CreateSubjectAdmin/CreateSubjectAdmin.jsx";
-import EditSubjectAdmin from "./components-admin/EditSubjectAdmin/EditSubjectAdmin.jsx";
+import SubjectForm from "./components-admin/CreateSubjectAdmin/CreateSubjectAdmin.jsx";
 import ManageReview from "./components-admin/ManageReview/ManageReview.jsx";
 import ManageReportReview from "./components-admin/ManageReportReview/ManageReportReview.jsx";
 import ManageReportPost from "./components-admin/ManageReportPost/ManageReportPost.jsx";
@@ -121,7 +120,11 @@ const router = createBrowserRouter([
 
   {
     path: "/Post/:post_id",
-    element: <Post />,
+    element: (
+      <ProtectedRoute>
+        <Post />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "/Review",
@@ -174,18 +177,10 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/CreateSubject",
+    path: "/SubjectForm",
     element: (
       <AdminProtectedRoute>
-        <CreateSubjectForm />
-      </AdminProtectedRoute>
-    ),
-  },
-  {
-    path: "/EditSubjectAdmin/:subject_id",
-    element: (
-      <AdminProtectedRoute>
-        <EditSubjectAdmin />
+        <SubjectForm />
       </AdminProtectedRoute>
     ),
   },

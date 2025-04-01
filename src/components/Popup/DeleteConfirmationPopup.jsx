@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./DeleteConfirmationPopup.css";
 import { useUser } from "../UserContext/User";
@@ -11,6 +11,7 @@ const DeleteConfirmationPopup = ({
   refetch,
   showDeleteSuccessToast,
 }) => {
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
     document.body.classList.add("modal-open");
     return () => {
@@ -19,6 +20,7 @@ const DeleteConfirmationPopup = ({
   }, []);
   const { user } = useUser();
   const handleDelete = async () => {
+    setIsLoading(true);
     try {
       let endpoint;
       if (type === "post") {
@@ -52,23 +54,34 @@ const DeleteConfirmationPopup = ({
         draggable: true,
         progress: undefined,
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="deletePopupOverlay">
-      <div className="deletePopup">
-        <h3>{message}</h3>
-        <div className="deletePopupButtons">
-          <button onClick={onCancel} className="cancelButton">
-            ยกเลิก
-          </button>
-          <button onClick={handleDelete} className="confirmButton">
-            ลบ
-          </button>
+    <>
+      {isLoading && (
+        <div className="loader-overlay">
+          <div className="loader">
+            <i class="bx bx-loader-circle bx-spin bx-rotate-90"></i>
+          </div>
+        </div>
+      )}
+      <div className="deletePopupOverlay">
+        <div className="deletePopup">
+          <h3>{message}</h3>
+          <div className="deletePopupButtons">
+            <button onClick={onCancel} className="cancelButton">
+              ยกเลิก
+            </button>
+            <button onClick={handleDelete} className="confirmButton">
+              ลบ
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

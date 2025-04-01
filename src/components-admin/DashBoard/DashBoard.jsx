@@ -49,7 +49,7 @@ export default function Dashboard() {
             icon={<i className="bx bx-user"></i>}
           />
           <StatCard
-            title="วิชาเรียนทั้งหมด"
+            title="รายวิชาทั้งหมด"
             value={stat?.stats?.total_subjects || "0"}
             change={stat?.growth?.subjects.current_month}
             icon={<i className="bx bx-book"></i>}

@@ -19,6 +19,7 @@ function ReviewPopup({
   const [loading, setLoading] = useState(false);
   const [charCount, setCharCount] = useState(0); // สร้าง state สำหรับนับตัวอักษร
   const maxCharLimit = 500; // กำหนดขีดจำกัดตัวอักษร
+  const [pdfPath, setPdfPath] = useState(null);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -102,6 +103,7 @@ function ReviewPopup({
           setValue("grade", reviewData.grade);
           setValue("semester", reviewData.semester);
           setValue("year", reviewData.academic_year);
+          setPdfPath(reviewData.pdf_path);
         }
       } catch (error) {
         toast.error("เกิดข้อผิดพลาด", {
@@ -185,195 +187,202 @@ function ReviewPopup({
   };
 
   return (
-    <div className="popup-page">
-      <div className="review-popup-container">
-        <div className="review-header">
-          <h3>เขียนรีวิว</h3>
-          <i className="bx bx-x" onClick={onClose}></i>
+    <>
+      {loading && (
+        <div className="loader-overlay">
+          <div className="loader">
+            <i class="bx bx-loader-circle bx-spin bx-rotate-90"></i>
+          </div>
         </div>
-        <div className="review-content-container">
-          <div className="review-text">
-            <h4>
-              เนื้อหา<span style={{ color: "red" }}> *</span>
-            </h4>
-            <textarea
-              {...register("review_desc")}
-              placeholder="เขียนรีวิวของคุณที่นี่..."
-              maxLength={maxCharLimit} // จำกัดจำนวนตัวอักษร
-              onChange={(e) => {
-                if (e.target.value.length > maxCharLimit) {
-                  e.target.value = e.target.value.substring(0, maxCharLimit);
-                }
-                setCharCount(e.target.value.length);
-              }}
-            />
-            <div className="char-counter">
-              <p>
-                {charCount}/{maxCharLimit}
-              </p>
-            </div>
-            {errors.review_desc && (
-              <div className="text-error">{errors.review_desc.message}</div>
-            )}
+      )}
+      <div className="popup-page">
+        <div className="review-popup-container">
+          <div className="review-header">
+            <h3>เขียนรีวิว</h3>
+            <i className="bx bx-x" onClick={onClose}></i>
           </div>
-          <div className="score-container">
-            <div className="score-header">
+          <div className="review-content-container">
+            <div className="review-text">
               <h4>
-                ให้คะแนนรายวิชา<span style={{ color: "red" }}> *</span>
+                เนื้อหา<span style={{ color: "red" }}> *</span>
               </h4>
-              <div className="score-lv">
-                <p>ไม่พึงพอใจ</p>
-                <p>พึงพอใจ</p>
+              <textarea
+                {...register("review_desc")}
+                placeholder="เขียนรีวิวของคุณที่นี่..."
+                maxLength={maxCharLimit} // จำกัดจำนวนตัวอักษร
+                onChange={(e) => {
+                  if (e.target.value.length > maxCharLimit) {
+                    e.target.value = e.target.value.substring(0, maxCharLimit);
+                  }
+                  setCharCount(e.target.value.length);
+                }}
+              />
+              <div className="char-counter">
+                <p>
+                  {charCount}/{maxCharLimit}
+                </p>
               </div>
+              {errors.review_desc && (
+                <div className="text-error">{errors.review_desc.message}</div>
+              )}
             </div>
-            {scoreTypes.map((scoreType, index) => (
-              <div key={index} className="score-error">
-                <div className="score-type">
-                  <p>{scoreType}</p>
-                  <div className="score-group">
-                    {options.map((label, i) => {
-                      const selectedValue = watch(`score${index}`);
-                      return (
-                        <label
-                          key={i}
-                          className={`score-label ${
-                            selectedValue == label ? "selected" : ""
-                          }`}
-                        >
-                          <input
-                            type="radio"
-                            value={label}
-                            {...register(`score${index}`)}
-                            // id={`score-${index}-${i}`}
-                          />
-                          {getIconForScore(label)}
-                        </label>
-                      );
-                    })}
-                  </div>
+            <div className="score-container">
+              <div className="score-header">
+                <h4>
+                  ให้คะแนนรายวิชา<span style={{ color: "red" }}> *</span>
+                </h4>
+                <div className="score-lv">
+                  <p>ไม่พึงพอใจ</p>
+                  <p>พึงพอใจ</p>
                 </div>
-                {errors[`score${index}`] && (
-                  <div className="text-error">
-                    {errors[`score${index}`]?.message}
-                  </div>
-                )}
               </div>
-            ))}
-          </div>
-          <div className="grade-container">
-            <div className="grade-header">
-              <h4>เกรดที่ได้</h4>
+              {scoreTypes.map((scoreType, index) => (
+                <div key={index} className="score-error">
+                  <div className="score-type">
+                    <p>{scoreType}</p>
+                    <div className="score-group">
+                      {options.map((label, i) => {
+                        const selectedValue = watch(`score${index}`);
+                        return (
+                          <label
+                            key={i}
+                            className={`score-label ${
+                              selectedValue == label ? "selected" : ""
+                            }`}
+                          >
+                            <input
+                              type="radio"
+                              value={label}
+                              {...register(`score${index}`)}
+                              // id={`score-${index}-${i}`}
+                            />
+                            {getIconForScore(label)}
+                          </label>
+                        );
+                      })}
+                    </div>
+                  </div>
+                  {errors[`score${index}`] && (
+                    <div className="text-error">
+                      {errors[`score${index}`]?.message}
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
-            <div className="grade-group">
-              {grades.map((label, index) => {
-                const selectedValue = watch(`grade`);
-                return (
-                  <label
-                    key={index}
-                    className={`grade-label ${
-                      selectedValue === label ? "selected" : ""
-                    }`}
-                    onClick={(e) => {
-                      if (selectedValue === label) {
-                        e.preventDefault();
-                        setValue(`grade`, null); // ตั้งค่าเป็น null เมื่อคลิกที่ตัวเลือกเดิม
-                      }
-                    }}
-                  >
+            <div className="grade-container">
+              <div className="grade-header">
+                <h4>เกรดที่ได้</h4>
+              </div>
+              <div className="grade-group">
+                {grades.map((label, index) => {
+                  const selectedValue = watch(`grade`);
+                  return (
+                    <label
+                      key={index}
+                      className={`grade-label ${
+                        selectedValue === label ? "selected" : ""
+                      }`}
+                      onClick={(e) => {
+                        if (selectedValue === label) {
+                          e.preventDefault();
+                          setValue(`grade`, null); // ตั้งค่าเป็น null เมื่อคลิกที่ตัวเลือกเดิม
+                        }
+                      }}
+                    >
+                      <input
+                        type="radio"
+                        value={label}
+                        {...register(`grade`)}
+                        checked={selectedValue === label}
+                      />
+                      {label}
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+            {errors[`grade`] && (
+              <div className="text-error">{errors[`grade`]?.message}</div>
+            )}
+
+            <div className="semester-input">
+              <h4>
+                ภาคเรียน<span style={{ color: "red" }}> *</span>
+              </h4>
+              <div className="semester-group">
+                {Year.map((label, index) => (
+                  <label key={index} className="semester-label">
                     <input
                       type="radio"
+                      name="semester"
                       value={label}
-                      {...register(`grade`)}
-                      checked={selectedValue === label}
+                      {...register(`semester`)}
                     />
                     {label}
                   </label>
-                );
-              })}
+                ))}
+              </div>
             </div>
-          </div>
-          {errors[`grade`] && (
-            <div className="text-error">{errors[`grade`]?.message}</div>
-          )}
-
-          <div className="semester-input">
-            <h4>
-              ภาคเรียน<span style={{ color: "red" }}> *</span>
-            </h4>
-            <div className="semester-group">
-              {Year.map((label, index) => (
-                <label key={index} className="semester-label">
-                  <input
-                    type="radio"
-                    name="semester"
-                    value={label}
-                    {...register(`semester`)}
-                  />
-                  {label}
-                </label>
-              ))}
+            {errors[`semester`] && (
+              <div className="text-error">{errors[`semester`]?.message}</div>
+            )}
+            <div className="academic-year-input">
+              <h4>
+                ปีการศึกษา<span style={{ color: "red" }}> *</span>
+              </h4>
+              <select
+                id="yearSelect"
+                className="year-select"
+                {...register("year")}
+                // value={selectedYear}
+                onChange={(e) => setSelectedYear(e.target.value)}
+              >
+                <option value="">-- กรุณาเลือกปี --</option>
+                {years.map((year) => (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                ))}
+              </select>
             </div>
-          </div>
-          {errors[`semester`] && (
-            <div className="text-error">{errors[`semester`]?.message}</div>
-          )}
-          <div className="academic-year-input">
-            <h4>
-              ปีการศึกษา<span style={{ color: "red" }}> *</span>
-            </h4>
-            <select
-              id="yearSelect"
-              className="year-select"
-              {...register("year")}
-              // value={selectedYear}
-              onChange={(e) => setSelectedYear(e.target.value)}
-            >
-              <option value="">-- กรุณาเลือกปี --</option>
-              {years.map((year) => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              ))}
-            </select>
-          </div>
-          {errors[`year`] && (
-            <div className="text-error">{errors[`year`]?.message}</div>
-          )}
-
-          <div className="file-pdf-input">
-            <h4>ไฟล์สรุปรายวิชา</h4>
-            <label type="file-upload" className="file-upload-label">
-              เลือกไฟล์
-              <input
-                type="file"
-                id="file-upload"
-                accept=".pdf"
-                className="file-upload-input"
-                onChange={handleFileChange}
-              />
-            </label>
-            {fileName && <span className="file-name">{fileName}</span>}
-          </div>
-          {fileError && <div className="text-error">{fileError}</div>}
-          <div className="submit-review-container">
-            <button
-              className="submit-review"
-              onClick={handleSubmit(onSubmit)}
-              disabled={loading}
-            >
-              {loading ? (
-                <i
-                  className="bx bx-loader-alt bx-spin bx-rotate-90"
-                  style={{ fontSize: "17px" }} // ใช้ object
-                ></i>
-              ) : (
+            {errors[`year`] && (
+              <div className="text-error">{errors[`year`]?.message}</div>
+            )}
+            {pdfPath ? (
+              <></>
+            ) : (
+              <>
+                <div className="file-pdf-input">
+                  <h4>ไฟล์สรุปรายวิชา</h4>
+                  <label type="file-upload" className="file-upload-label">
+                    เลือกไฟล์
+                    <input
+                      type="file"
+                      id="file-upload"
+                      accept=".pdf"
+                      className="file-upload-input"
+                      onChange={handleFileChange}
+                    />
+                  </label>
+                  {fileName && <span className="file-name">{fileName}</span>}
+                </div>
+                {fileError && <div className="text-error">{fileError}</div>}
+              </>
+            )}
+            <div className="submit-review-container">
+              <button
+                className="submit-review"
+                onClick={handleSubmit(onSubmit)}
+                disabled={loading}
+              >
                 <h4>รีวิว</h4>
-              )}
-            </button>
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

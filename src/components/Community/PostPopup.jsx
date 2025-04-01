@@ -12,7 +12,7 @@ function PostPopup({ onClose, post_id, refetch, showSuccessToast }) {
   const { user } = useUser();
   const [charCount, setCharCount] = useState(0); // สร้าง state สำหรับนับตัวอักษร
   const maxCharLimit = 500; // กำหนดขีดจำกัดตัวอักษร
-
+  const [isLoading, setIsLoading] = useState(false);
   const {
     handleSubmit,
     formState: { errors },
@@ -31,6 +31,8 @@ function PostPopup({ onClose, post_id, refetch, showSuccessToast }) {
   }, [postDesc]);
 
   const onSubmit = async (data) => {
+    setIsLoading(true);
+
     try {
       const token = user.token;
       await axios.post(
@@ -62,6 +64,8 @@ function PostPopup({ onClose, post_id, refetch, showSuccessToast }) {
         draggable: true,
         progress: undefined,
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -93,10 +97,17 @@ function PostPopup({ onClose, post_id, refetch, showSuccessToast }) {
 
   return (
     <>
+      {isLoading && (
+        <div className="loader-overlay">
+          <div className="loader">
+            <i class="bx bx-loader-circle bx-spin bx-rotate-90"></i>
+          </div>
+        </div>
+      )}
       <div className="popup-page">
         <div className={styles.PostPopupContainer}>
           <div className={styles.header}>
-            <h3 className={styles.headerName}>สร้างโพสต์</h3>
+            <h3 className={styles.headerName}>เขียนโพสต์</h3>
             <i className="bx bx-x" onClick={onClose}></i>
           </div>
 
@@ -123,7 +134,7 @@ function PostPopup({ onClose, post_id, refetch, showSuccessToast }) {
                   setCharCount(e.target.value.length);
                 }}
               ></textarea>
-              <div className={styles.charCounter} style={{right:"0"}}>
+              <div className={styles.charCounter} style={{ right: "0" }}>
                 <p>
                   {charCount}/{maxCharLimit}
                 </p>

@@ -4,6 +4,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  margin-left: 60px;
 }
 
 /* กล่องฟอร์ม */
@@ -14,10 +15,30 @@
   padding: 20px 80px; /* เพิ่ม padding แนวนอน */
   max-width: 800px; /* จำกัดขนาด */
   width: 100%;
-  margin-top: 30px;
+  margin: 30px;
 }
 
-/* ส่วนหัว */
+.edit-subject-header {
+  display: flex;
+  align-items: center;
+}
+.edit-subject-header i {
+  margin-left: auto;
+  cursor: pointer;
+  color: #333;
+  font-size: 25px;
+}
+.edit-subject-header h2 {
+  width: 100%;
+  gap: 9px;
+  color: #02bc77;
+  text-decoration: underline;
+  text-underline-offset: 8px;
+  flex: 1;
+  text-align: center;
+  margin-right: 20px;
+}
+
 .create-subject-header {
   text-align: center;
   margin-bottom: 20px;
@@ -70,56 +91,30 @@
 
 /* ส่วนเลือกหมวดหมู่ */
 .create-subject-inputs-2 {
-  margin: 20px 0;
-}
-
-.create-subject-inputs-2 .radio-item {
+  margin-top: 20px;
   display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 10px;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.radio-item input[type="radio"] {
-  width: 16px;
-  height: 16px;
+.category-group label:nth-child(1) radio {
+  accent-color: #90da9f;
 }
 
-mark {
-  font-size: 15px;
+.category-group label:nth-child(2) radio {
+  accent-color: #7c9bff;
 }
 
-#health {
-  background-color: rgba(72, 139, 240, 0.445);
-  border-radius: 8px;
-  padding: 4px;
+.category-group label:nth-child(3) radio {
+  accent-color: #80d4ff;
+}
+.category-group label:nth-child(4) radio {
+  accent-color: #ffbf80;
+}
+.category-group label:nth-child(5) radio {
+  accent-color: #ff8080;
 }
 
-#entrepreneur {
-  background-color: rgba(72, 170, 240, 0.445);
-  border-radius: 8px;
-  padding: 4px;
-}
-
-#aesthetics {
-  background-color: rgba(72, 240, 201, 0.445);
-  border-radius: 8px;
-  padding: 4px;
-}
-
-#language {
-  background-color: rgba(72, 240, 89, 0.445);
-  border-radius: 8px;
-  padding: 4px;
-}
-
-#citizen {
-  background-color: rgba(204, 240, 72, 0.445);
-  border-radius: 8px;
-  padding: 4px;
-}
-
-/* ปุ่มส่ง */
 .create-subject-submit {
   display: flex;
   justify-content: center;
@@ -133,7 +128,7 @@ mark {
   color: white;
   font-weight: bold;
   cursor: pointer;
-  width: 150px;
+  width: 20%;
   text-align: center;
 }
 
@@ -151,11 +146,13 @@ mark {
 /* Responsive */
 @media screen and (max-width: 768px) {
   .create-subject-inputs-1 {
-    grid-template-columns: repeat(1, 1fr); /* แสดงเป็น 1 คอลัมน์ */
+    grid-template-columns: repeat(1, 1fr);
   }
 
   .create-subject-container {
     width: 100%;
     padding: 20px;
+    border-radius: 0%;
+    box-shadow: 0 0px 0px rgba(0, 0, 0, 0);
   }
 }

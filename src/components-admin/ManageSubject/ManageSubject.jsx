@@ -188,7 +188,12 @@ const ManageSubject = () => {
         <div className="action-button">
           <i
             className="bx bx-pencil"
-            onClick={() => navigate(`/EditSubjectAdmin/${row.subject_id}`)}
+            // onClick={() => navigate(`/SubjectForm/${row.subject_id}`)}
+            onClick={() =>
+              navigate(`/SubjectForm`, {
+                state: { subject_id: row.subject_id },
+              })
+            }
           ></i>
           <i
             className="bx bx-trash"
@@ -251,7 +256,12 @@ const ManageSubject = () => {
               <div className="action-button">
                 <i
                   className="bx bx-plus"
-                  onClick={() => navigate(`/CreateSubject`)}
+                  // onClick={() => navigate(`/SubjectForm`)}
+                  onClick={() =>
+                    navigate(`/SubjectForm`, {
+                      state: { subject_id: null },
+                    })
+                  }
                 >
                   <p>เพิ่มรายวิชา</p>
                 </i>
