@@ -54,7 +54,7 @@ export const requestForm = {
   subjectThai: "",
   subjectEnglish: "",
   credit: "",
-  selectedSubject: 0,
+  categoryId: 0,
 };
 
 export const requestFormSchema = yup.object({
@@ -62,13 +62,16 @@ export const requestFormSchema = yup.object({
   subjectThai: yup.string().required("* กรุณากรอกชื่อรายวิชา ภาษาไทย"),
   subjectEnglish: yup.string().required("* กรุณากรอกชื่อรายวิชา ภาษาอังกฤษ"),
   credit: yup
-    .number("* กรุณาเลือกหมวดหมู่ศึกษาทั่วไป")
-    .typeError("* กรุณากรอกหน่วยกิตเป็นตัวเลข")
-    .positive("* หน่วยกิตต้องเป็นตัวเลขบวก")
-    .integer("* หน่วยกิตต้องเป็นจำนวนเต็ม"),
-  selectedSubject: yup
-    .number("* กรุณาเลือกหมวดหมู่ศึกษาทั่วไป")
-    .typeError("* กรุณาเลือกหมวดหมู่ศึกษาทั่วไป")
+    //   .number("* กรุณาเลือกหมวดหมู่ศึกษาทั่วไป")
+    //   .typeError("* กรุณากรอกหน่วยกิตเป็นตัวเลข")
+    //   .positive("* หน่วยกิตต้องเป็นตัวเลขบวก")
+    //   .integer("* หน่วยกิตต้องเป็นจำนวนเต็ม"),
+    // categoryId: yup
+    //   .number("* กรุณาเลือกหมวดหมู่ศึกษาทั่วไป")
+    //   .typeError("* กรุณาเลือกหมวดหมู่ศึกษาทั่วไป")
+    //   .oneOf([1, 2, 3, 4, 5], "* กรุณาเลือกหมวดหมู่ที่ถูกต้อง")
+    //   .required("* กรุณาเลือกหมวดหมู่ศึกษาทั่วไป"),
+    .number()
     .oneOf([1, 2, 3, 4, 5], "* กรุณาเลือกหมวดหมู่ที่ถูกต้อง")
     .required("* กรุณาเลือกหมวดหมู่ศึกษาทั่วไป"),
 });
@@ -82,7 +85,7 @@ export const createSubjectFormSchema = yup.object({
     .typeError("* กรุณากรอกหน่วยกิตเป็นตัวเลข")
     .positive("* หน่วยกิตต้องเป็นตัวเลขบวก")
     .integer("* หน่วยกิตต้องเป็นจำนวนเต็ม"),
-  selectedSubject: yup
+  categoryId: yup
     .number("* กรุณาเลือกหมวดหมู่ศึกษาทั่วไป")
     .typeError("* กรุณาเลือกหมวดหมู่ศึกษาทั่วไป")
     .oneOf([1, 2, 3, 4, 5], "* กรุณาเลือกหมวดหมู่ที่ถูกต้อง")

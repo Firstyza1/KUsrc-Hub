@@ -184,7 +184,7 @@ function EditProfile() {
             onClick={() => navigate(-1)}
           ></i>
           <h1>เเก้ไขโปรไฟล์</h1>
-        </div>
+        </div> 
         <div className="editprofile-container">
           <div className="img-profile">
             <img src={preview} alt="Profile" />

@@ -96,7 +96,7 @@ function PostPopup({ onClose, post_id, refetch, showSuccessToast }) {
       <div className="popup-page">
         <div className={styles.PostPopupContainer}>
           <div className={styles.header}>
-            <h3 className={styles.headerName}>สร้างโพสต์</h3>
+            <h3 className={styles.headerName}>เขียนโพสต์</h3>
             <i className="bx bx-x" onClick={onClose}></i>
           </div>
 
